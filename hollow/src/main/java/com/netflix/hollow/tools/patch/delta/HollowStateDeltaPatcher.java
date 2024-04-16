@@ -74,8 +74,8 @@ public class HollowStateDeltaPatcher {
     
     private final HollowWriteStateEngine writeEngine;
     private final List<HollowSchema> schemas;
-    
-    private Map<String, BitSet> changedOrdinalsBetweenStates;
+
+    private final Map<String, BitSet> changedOrdinalsBetweenStates;
 
     /**
      * Create a delta patcher which will patch between the states contained in the two state engines.
@@ -194,8 +194,9 @@ public class HollowStateDeltaPatcher {
             
             int ordinal = toOrdinals.nextSetBit(0);
             while(ordinal != -1) {
-                if(!changedOrdinals.get(ordinal) && fromOrdinals.get(ordinal))
+                if(!changedOrdinals.get(ordinal) && fromOrdinals.get(ordinal)) {
                     writeTypeState.addOrdinalFromPreviousCycle(ordinal);
+                }
                 
                 ordinal = toOrdinals.nextSetBit(ordinal + 1);
             }
@@ -230,7 +231,7 @@ public class HollowStateDeltaPatcher {
 
     private Map<String, BitSet> discoverChangedOrdinalsBetweenStates() {
         SimultaneousExecutor executor = new SimultaneousExecutor(getClass(), "discover-changed");
-        Map<String, BitSet> excludeOrdinalsFromCopy = new HashMap<String, BitSet>();
+        Map<String, BitSet> excludeOrdinalsFromCopy = new HashMap<>();
         
         for(HollowSchema schema : schemas) {
             BitSet recordsToExclude = findOrdinalsPopulatedWithDifferentRecords(schema.getName(), executor);
@@ -246,9 +247,10 @@ public class HollowStateDeltaPatcher {
     private BitSet findOrdinalsPopulatedWithDifferentRecords(String typeName, SimultaneousExecutor executor) {
        final HollowTypeReadState fromTypeState = from.getTypeState(typeName);
        final HollowTypeReadState toTypeState = to.getTypeState(typeName);
-       
-       if(fromTypeState.getSchema().getSchemaType() != SchemaType.OBJECT)
-           ensureEqualSchemas(fromTypeState, toTypeState);
+
+        if(fromTypeState.getSchema().getSchemaType() != SchemaType.OBJECT) {
+            ensureEqualSchemas(fromTypeState, toTypeState);
+        }
        
        final BitSet fromOrdinals = fromTypeState.getListener(PopulatedOrdinalListener.class).getPopulatedOrdinals();
        final BitSet toOrdinals = toTypeState.getListener(PopulatedOrdinalListener.class).getPopulatedOrdinals();
@@ -332,8 +334,9 @@ public class HollowStateDeltaPatcher {
                     int toFieldPos = toObjectState.getSchema().getPosition(commonSchema.getFieldName(i));
                     
                     if(commonSchema.getFieldType(i) == FieldType.REFERENCE) {
-                        if(fromObjectState.readOrdinal(ordinal, fromFieldPos) != toObjectState.readOrdinal(ordinal, toFieldPos))
+                        if(fromObjectState.readOrdinal(ordinal, fromFieldPos) != toObjectState.readOrdinal(ordinal, toFieldPos)) {
                             return false;
+                        }
                     } else if(!HollowReadFieldUtils.fieldsAreEqual(fromObjectState, ordinal, fromFieldPos, toObjectState, ordinal, toFieldPos)) {
                         return false;
                     }
@@ -351,12 +354,14 @@ public class HollowStateDeltaPatcher {
         return new EqualityCondition() {
             public boolean recordsAreEqual(int ordinal) {
                 int size = fromListState.size(ordinal);
-                if(toListState.size(ordinal) != size)
+                if(toListState.size(ordinal) != size) {
                     return false;
+                }
                 
                 for(int i=0;i<size;i++) {
-                    if(fromListState.getElementOrdinal(ordinal, i) != toListState.getElementOrdinal(ordinal, i))
+                    if(fromListState.getElementOrdinal(ordinal, i) != toListState.getElementOrdinal(ordinal, i)) {
                         return false;
+                    }
                 }
                 
                 return true;
@@ -374,8 +379,9 @@ public class HollowStateDeltaPatcher {
             
             public boolean recordsAreEqual(int ordinal) {
                 int size = fromSetState.size(ordinal);
-                if(toSetState.size(ordinal) != size)
+                if(toSetState.size(ordinal) != size) {
                     return false;
+                }
                 
                 fromScratch.clear();
                 toScratch.clear();
@@ -412,19 +418,22 @@ public class HollowStateDeltaPatcher {
             
             public boolean recordsAreEqual(int ordinal) {
                 int size = fromMapState.size(ordinal);
-                if(toMapState.size(ordinal) != size)
+                if(toMapState.size(ordinal) != size) {
                     return false;
+                }
                 
                 fromScratch.clear();
                 toScratch.clear();
                 
                 HollowMapEntryOrdinalIterator iter = fromMapState.ordinalIterator(ordinal);
-                while(iter.next())
+                while (iter.next()) {
                     fromScratch.add(((long)iter.getKey() << 32) | iter.getValue());
+                }
                 
                 iter = toMapState.ordinalIterator(ordinal);
-                while(iter.next())
+                while (iter.next()) {
                     toScratch.add(((long)iter.getKey() << 32) | iter.getValue());
+                }
                 
                 fromScratch.sort();
                 toScratch.sort();
@@ -435,12 +444,13 @@ public class HollowStateDeltaPatcher {
     }
     
     private void ensureEqualSchemas(HollowTypeReadState fromState, HollowTypeReadState toState) {
-        if(!fromState.getSchema().equals(toState.getSchema()))
+        if(!fromState.getSchema().equals(toState.getSchema())) {
             throw new IllegalStateException("FROM and TO schemas were not the same: " + fromState.getSchema().getName());
+        }
     }
     
     private Set<HollowSchema> getCommonSchemas(HollowReadStateEngine from, HollowReadStateEngine to) {
-        Set<HollowSchema> schemas = new HashSet<HollowSchema>();
+        Set<HollowSchema> schemas = new HashSet<>();
         
         for(HollowSchema fromSchema : from.getSchemas()) {
             HollowSchema toSchema = to.getTypeState(fromSchema.getName()).getSchema();

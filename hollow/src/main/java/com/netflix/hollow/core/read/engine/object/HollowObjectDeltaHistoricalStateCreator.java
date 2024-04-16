@@ -44,7 +44,7 @@ public class HollowObjectDeltaHistoricalStateCreator {
     private RemovedOrdinalIterator iter;
     private IntMap ordinalMapping;
     private int nextOrdinal;
-    private final long currentWriteVarLengthDataPointers[];
+    private final long[] currentWriteVarLengthDataPointers;
 
     public HollowObjectDeltaHistoricalStateCreator(HollowObjectTypeReadState typeState, boolean reverse) {
         this.typeState = typeState;
@@ -95,15 +95,13 @@ public class HollowObjectDeltaHistoricalStateCreator {
     }
 
     public HollowObjectTypeReadState createHistoricalTypeReadState() {
-        HollowObjectTypeReadState historicalTypeState = new HollowObjectTypeReadState(typeState.getSchema(), historicalDataElements);
-
-        return historicalTypeState;
+        return new HollowObjectTypeReadState(typeState.getSchema(), historicalDataElements);
     }
 
     private void populateStats() {
         iter.reset();
         int removedEntryCount = 0;
-        long totalVarLengthSizes[] = new long[typeState.getSchema().numFields()];
+        long[] totalVarLengthSizes = new long[typeState.getSchema().numFields()];
 
         int ordinal = iter.next();
 

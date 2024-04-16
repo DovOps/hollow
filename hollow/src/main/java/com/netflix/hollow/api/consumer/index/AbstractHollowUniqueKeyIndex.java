@@ -73,7 +73,9 @@ public abstract class AbstractHollowUniqueKeyIndex<API, T> {
     }
 
     public void listenToDataRefresh() {
-        if (isListenToDataRefresh) return;
+        if(isListenToDataRefresh) {
+            return;
+        }
 
         isListenToDataRefresh = true;
         idx.listenForDeltaUpdates();

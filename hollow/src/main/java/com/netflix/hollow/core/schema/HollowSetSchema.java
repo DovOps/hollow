@@ -70,15 +70,19 @@ public class HollowSetSchema extends HollowCollectionSchema {
 
     @Override
     public boolean equals(Object other) {
-        if (this == other)
+        if(this == other) {
             return true;
-        if(!(other instanceof HollowSetSchema))
+        }
+        if(!(other instanceof HollowSetSchema)) {
             return false;
+        }
         HollowSetSchema otherSchema = (HollowSetSchema)other;
-        if(!getName().equals(otherSchema.getName()))
+        if(!getName().equals(otherSchema.getName())) {
             return false;
-        if(!getElementType().equals(otherSchema.getElementType()))
+        }
+        if(!getElementType().equals(otherSchema.getElementType())) {
             return false;
+        }
 
         return isNullableObjectEquals(hashKey, otherSchema.getHashKey());
     }
@@ -116,10 +120,11 @@ public class HollowSetSchema extends HollowCollectionSchema {
     public void writeTo(OutputStream os) throws IOException {
         DataOutputStream dos = new DataOutputStream(os);
 
-        if(getHashKey() != null)
+        if(getHashKey() != null) {
             dos.write(SchemaType.SET.getTypeIdWithPrimaryKey());
-        else
+        } else {
             dos.write(SchemaType.SET.getTypeId());
+        }
 
         dos.writeUTF(getName());
         dos.writeUTF(getElementType());

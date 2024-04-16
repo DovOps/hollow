@@ -64,13 +64,13 @@ public class HollowIncrementalProducer {
 
     protected HollowIncrementalProducer(HollowProducer producer, double threadsPerCpu, HollowConsumer.AnnouncementWatcher announcementWatcher, HollowConsumer.BlobRetriever blobRetriever, List<IncrementalCycleListener> listeners, Class<?>... classes) {
         this.producer = producer;
-        this.mutations = new ConcurrentHashMap<RecordPrimaryKey, Object>();
+        this.mutations = new ConcurrentHashMap<>();
         this.populator = new HollowIncrementalCyclePopulator(mutations, threadsPerCpu);
         this.dataModel = classes;
         this.announcementWatcher = announcementWatcher;
         this.blobRetriever = blobRetriever;
         this.listeners = new ProducerListenerSupport();
-        this.cycleMetadata = new HashMap<String, Object>();
+        this.cycleMetadata = new HashMap<>();
         this.threadsPerCpu = threadsPerCpu;
 
         for (IncrementalCycleListener listener : listeners)
@@ -212,13 +212,13 @@ public class HollowIncrementalProducer {
             if(version == lastSucessfulCycle) {
                 return version;
             }
-            listeners.fireIncrementalCycleComplete(version, recordsAddedOrModified, recordsRemoved, new HashMap<String, Object>(cycleMetadata));
+            listeners.fireIncrementalCycleComplete(version, recordsAddedOrModified, recordsRemoved, new HashMap<>(cycleMetadata));
             //Only clean changes when the version is new.
             clearChanges();
             lastSucessfulCycle = version;
             return version;
         } catch (Exception e) {
-            listeners.fireIncrementalCycleFail(e, recordsAddedOrModified, recordsRemoved, new HashMap<String, Object>(cycleMetadata));
+            listeners.fireIncrementalCycleFail(e, recordsAddedOrModified, recordsRemoved, new HashMap<>(cycleMetadata));
             return FAILED_VERSION;
         } finally {
             clearCycleMetadata();
@@ -229,7 +229,9 @@ public class HollowIncrementalProducer {
         long recordsToRemove = 0L;
         Collection<Object> records = mutations.values();
         for (Object record : records) {
-            if (record == HollowIncrementalCyclePopulator.DELETE_RECORD) recordsToRemove++;
+            if(record == HollowIncrementalCyclePopulator.DELETE_RECORD) {
+                recordsToRemove++;
+            }
         }
         return recordsToRemove;
     }
@@ -247,11 +249,11 @@ public class HollowIncrementalProducer {
 
     public static class Builder<B extends HollowIncrementalProducer.Builder<B>> {
         protected HollowProducer producer;
-        protected double threadsPerCpu = 1.0d;
+        protected double threadsPerCpu = 1.0D;
         protected HollowConsumer.AnnouncementWatcher announcementWatcher;
         protected HollowConsumer.BlobRetriever blobRetriever;
         protected Class<?>[] dataModel;
-        protected List<IncrementalCycleListener> listeners = new ArrayList<IncrementalCycleListener>();
+        protected List<IncrementalCycleListener> listeners = new ArrayList<>();
 
         public B withProducer(HollowProducer producer) {
             this.producer = producer;
@@ -290,8 +292,9 @@ public class HollowIncrementalProducer {
         }
 
         protected void checkArguments() {
-            if (producer == null)
+            if(producer == null) {
                 throw new IllegalArgumentException("HollowProducer must be specified.");
+            }
         }
 
         public HollowIncrementalProducer build() {

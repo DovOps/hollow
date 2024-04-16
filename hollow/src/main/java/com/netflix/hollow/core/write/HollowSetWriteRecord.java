@@ -68,8 +68,9 @@ public class HollowSetWriteRecord implements HollowHashableWriteRecord {
 
             if(hashBehavior != IGNORED_HASHES) {
                 int hashCode = (int)elementsAndHashes.get(i);
-                if(hashBehavior == MIXED_HASHES)
+                if(hashBehavior == MIXED_HASHES) {
                     hashCode = HashCodes.hashInt(hashCode);
+                }
                 int bucketToHashTo = hashCode & bucketMask;
                 VarInt.writeVInt(buf, bucketToHashTo);
             }

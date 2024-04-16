@@ -44,7 +44,7 @@ import java.util.Set;
  * Produces human-readable String representations of Hollow records.
  */
 public class HollowRecordStringifier implements HollowStringifier<HollowRecordStringifier> {
-    private final Set<String> excludeObjectTypes = new HashSet<String>();
+    private final Set<String> excludeObjectTypes = new HashSet<>();
     private final boolean showOrdinals;
     private final boolean showTypes;
     private final boolean collapseSingleFieldObjects;
@@ -140,11 +140,13 @@ public class HollowRecordStringifier implements HollowStringifier<HollowRecordSt
             HollowMapTypeDataAccess typeDataAccess, int ordinal, int indentation) throws IOException {
         HollowMapSchema schema = typeDataAccess.getSchema();
 
-        if(showTypes)
+        if(showTypes) {
             writer.append("(").append(schema.getName()).append(")");
+        }
 
-        if(showOrdinals)
+        if(showOrdinals) {
             writer.append(" (ordinal ").append(Integer.toString(ordinal)).append(")");
+        }
 
         indentation++;
 
@@ -170,11 +172,13 @@ public class HollowRecordStringifier implements HollowStringifier<HollowRecordSt
     private void appendSetStringify(Writer writer, HollowDataAccess dataAccess,
             HollowSetTypeDataAccess typeDataAccess, int ordinal, int indentation) throws IOException {
         HollowSetSchema schema = typeDataAccess.getSchema();
-        if(showTypes)
+        if(showTypes) {
             writer.append("(").append(schema.getName()).append(")");
+        }
 
-        if(showOrdinals)
+        if(showOrdinals) {
             writer.append(" (ordinal ").append(Integer.toString(ordinal)).append(")");
+        }
 
         indentation++;
 
@@ -199,11 +203,13 @@ public class HollowRecordStringifier implements HollowStringifier<HollowRecordSt
     private void appendListStringify(Writer writer, HollowDataAccess dataAccess,
             HollowListTypeDataAccess typeDataAccess, int ordinal, int indentation) throws IOException {
         HollowListSchema schema = typeDataAccess.getSchema();
-        if(showTypes)
+        if(showTypes) {
             writer.append("(").append(schema.getName()).append(")");
+        }
 
-        if(showOrdinals)
+        if(showOrdinals) {
             writer.append(" (ordinal ").append(Integer.toString(ordinal)).append(")");
+        }
 
         indentation++;
 
@@ -232,11 +238,13 @@ public class HollowRecordStringifier implements HollowStringifier<HollowRecordSt
         if(collapseSingleFieldObjects && typeDataAccess.getSchema().numFields() == 1) {
             appendFieldStringify(writer, dataAccess, indentation, schema, obj, 0, schema.getFieldName(0));
         } else {
-            if(showTypes)
+            if(showTypes) {
                 writer.append("(").append(schema.getName()).append(")");
+            }
 
-            if(showOrdinals)
+            if(showOrdinals) {
                 writer.append(" (ordinal ").append(Integer.toString(ordinal)).append(")");
+            }
 
             indentation++;
 

@@ -79,9 +79,8 @@ public class HollowProducerIncrementalTest {
             iws.delete(new RecordPrimaryKey("TypeB", new Object[] {3}));
         });
 
-        long finalVersion = producer.runIncrementalCycle(iws -> {
-            iws.addOrModify(new TypeA(1, "one", 1000));
-        });
+        long finalVersion = producer.runIncrementalCycle(iws ->
+            iws.addOrModify(new TypeA(1, "one", 1000)));
 
         /// now we read the changes and assert
         HollowConsumer consumer = HollowConsumer.withBlobRetriever(blobStore).build();
@@ -270,16 +269,14 @@ public class HollowProducerIncrementalTest {
         FailingValidationListener failingListener = new FailingValidationListener();
         restoringProducer.addListener(failingListener);
         try {
-            restoringProducer.runIncrementalCycle(iws -> {
-                iws.addOrModify(new TypeA(1, "one", 3));
-            });
+            restoringProducer.runIncrementalCycle(iws ->
+                iws.addOrModify(new TypeA(1, "one", 3)));
             fail("listener fails validation");
         } catch (Exception e) {
         }
         try {
-            restoringProducer.runIncrementalCycle(iws -> {
-                iws.addOrModify(new TypeA(1, "one", 4));
-            });
+            restoringProducer.runIncrementalCycle(iws ->
+                iws.addOrModify(new TypeA(1, "one", 4)));
             fail("listener fails validation");
         } catch (Exception e) {
         }
@@ -324,9 +321,8 @@ public class HollowProducerIncrementalTest {
         HollowProducer genesisProducer = createInMemoryProducer();
 
         /// initialize the data -- classic producer creates the first state in the delta chain.
-        long originalVersion = genesisProducer.runCycle(state -> {
-            state.add(new TypeA(1, "one", 1));
-        });
+        long originalVersion = genesisProducer.runCycle(state ->
+            state.add(new TypeA(1, "one", 1)));
 
         /// now at some point in the future, we will start up and create a new classic producer
         /// to back the HollowIncrementalProducer.
@@ -376,9 +372,8 @@ public class HollowProducerIncrementalTest {
     @Test
     public void removeOrphanObjectsWithTypeInSnapshot() {
         HollowProducer.Incremental producer = createInMemoryIncrementalProducer();
-        producer.runIncrementalCycle(iws -> {
-            iws.addOrModify(new TypeC(1, new TypeD(1, "one")));
-        });
+        producer.runIncrementalCycle(iws ->
+            iws.addOrModify(new TypeC(1, new TypeD(1, "one"))));
 
         long nextVersion = producer.runIncrementalCycle(iws -> {
             TypeD typeD2 = new TypeD(2, "two");
@@ -422,9 +417,8 @@ public class HollowProducerIncrementalTest {
         HollowProducer.Incremental producer = createInMemoryIncrementalProducer();
         producer.initializeDataModel(TypeC.class);
 
-        producer.runIncrementalCycle(iws -> {
-            iws.addOrModify(new TypeA(1, "one", 1));
-        });
+        producer.runIncrementalCycle(iws ->
+            iws.addOrModify(new TypeA(1, "one", 1)));
 
         producer.runIncrementalCycle(iws -> {
             TypeD typeD2 = new TypeD(2, "two");
@@ -528,9 +522,8 @@ public class HollowProducerIncrementalTest {
         Assert.assertEquals(3, l.addedOrModified);
 
 
-        version = producer.runIncrementalCycle(iws -> {
-            iws.addOrModify(new TypeA(1, "one", 1000));
-        });
+        version = producer.runIncrementalCycle(iws ->
+            iws.addOrModify(new TypeA(1, "one", 1000)));
         Assert.assertEquals(version, l.version);
         Assert.assertEquals(0, l.removed);
         Assert.assertEquals(1, l.addedOrModified);

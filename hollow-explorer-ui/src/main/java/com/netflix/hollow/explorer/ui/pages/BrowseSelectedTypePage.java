@@ -64,8 +64,9 @@ public class BrowseSelectedTypePage extends HollowExplorerPage {
         
         BitSet selectedOrdinals = typeState.getPopulatedOrdinals();
 
-        if("true".equals(req.getParameter("clearQuery")))
+        if("true".equals(req.getParameter("clearQuery"))) {
             session.clearAttribute(SESSION_ATTR_QUERY_RESULT);
+        }
 
         if(session.getAttribute(SESSION_ATTR_QUERY_RESULT) != null) {
             QueryResult queryResult =
@@ -73,8 +74,9 @@ public class BrowseSelectedTypePage extends HollowExplorerPage {
             queryResult.recalculateIfNotCurrent(ui.getStateEngine());
             
             selectedOrdinals = queryResult.getQueryMatches().get(typeState.getSchema().getName());
-            if(selectedOrdinals == null)
+            if(selectedOrdinals == null) {
                 selectedOrdinals = new BitSet();
+            }
             
             ctx.put("filteredByQuery", queryResult.getQueryDisplayString());
         }
@@ -85,7 +87,7 @@ public class BrowseSelectedTypePage extends HollowExplorerPage {
         }
         
         PrimaryKey primaryKey = getPrimaryKey(typeState.getSchema());
-        int fieldPathIndexes[][] = getFieldPathIndexes(ui.getStateEngine(), primaryKey);
+        int[][] fieldPathIndexes = getFieldPathIndexes(ui.getStateEngine(), primaryKey);
         
         List<TypeKey> keys = new ArrayList<>(pageSize);
         
@@ -96,7 +98,7 @@ public class BrowseSelectedTypePage extends HollowExplorerPage {
 
         
         String key = req.getParameter("key") == null ? "" : req.getParameter("key");
-        Object parsedKey[] = null;
+        Object[] parsedKey = null;
         try {
             parsedKey = parseKey(ui.getStateEngine(), primaryKey, key);
         } catch(Exception e) {

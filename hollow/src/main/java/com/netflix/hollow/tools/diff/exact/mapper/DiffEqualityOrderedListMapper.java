@@ -43,8 +43,9 @@ public class DiffEqualityOrderedListMapper extends DiffEqualityCollectionMapper 
         while(elementOrdinal != HollowOrdinalIterator.NO_MORE_ORDINALS) {
             int identityElementOrdinal = identityTranslator.getIdentityOrdinal(elementOrdinal);
 
-            if(identityElementOrdinal == -1 && elementOrdinal != -1)
+            if(identityElementOrdinal == -1 && elementOrdinal != -1) {
                 return -1;
+            }
 
             hashCode = 7919 * hashCode + identityElementOrdinal;
 

@@ -49,7 +49,7 @@ public class HistoryStateTypePage extends HistoryPage {
         HistoryStateTypeChanges typeChange = getStateTypeChanges(req, session, ui);
         HollowHistoricalState historicalState = ui.getHistory().getHistoricalState(version);
         
-        List<String> groupByOptions = new ArrayList<String>(Arrays.asList(historicalState.getKeyOrdinalMapping().getTypeMapping(req.getParameter("type")).getKeyIndex().getKeyFields()));
+        List<String> groupByOptions = new ArrayList<>(Arrays.asList(historicalState.getKeyOrdinalMapping().getTypeMapping(req.getParameter("type")).getKeyIndex().getKeyFields()));
         groupByOptions.removeAll(Arrays.asList(typeChange.getGroupedFieldNames()));
         
         ctx.put("typeChange", typeChange);
@@ -63,12 +63,12 @@ public class HistoryStateTypePage extends HistoryPage {
     	HistoryStateTypeChanges typeChange = getStateTypeChanges(request, session, ui);
     	HollowHistoricalState historicalState = ui.getHistory().getHistoricalState(version);
     	
-    	List<String> groupByOptions = new ArrayList<String>(Arrays.asList(historicalState.getKeyOrdinalMapping().getTypeMapping(request.getParameter("type")).getKeyIndex().getKeyFields()));
+    	List<String> groupByOptions = new ArrayList<>(Arrays.asList(historicalState.getKeyOrdinalMapping().getTypeMapping(request.getParameter("type")).getKeyIndex().getKeyFields()));
     	groupByOptions.removeAll(Arrays.asList(typeChange.getGroupedFieldNames()));
     	
-    	Map<String, List<List<String>>> changes = new LinkedHashMap<String, List<List<String>>>();
+    	Map<String, List<List<String>>> changes = new LinkedHashMap<>();
     	
-    	List<List<String>> groups = new ArrayList<List<String>>();
+    	List<List<String>> groups = new ArrayList<>();
     	groups.add(groupByOptions);
     	changes.put("groups", groups);
     	
@@ -77,19 +77,19 @@ public class HistoryStateTypePage extends HistoryPage {
     		changes.put("additions", new ArrayList<List<String>>());
     	} else if(!typeChange.getAddedRecords().hasSubGroups()){
     		List<RecordDiff> addedDiffs = typeChange.getAddedRecords().getRecordDiffs();
-    		List<List<String>> idRecords = new ArrayList<List<String>>();
+    		List<List<String>> idRecords = new ArrayList<>();
     		for(RecordDiff diff : addedDiffs) {
-    			List<String> data = new ArrayList<String>();
+    			List<String> data = new ArrayList<>();
     			data.add(diff.getIdentifierString());
-    			data.add(new Integer(diff.getKeyOrdinal()).toString());
+    			data.add(Integer.toString(diff.getKeyOrdinal()));
     			idRecords.add(data);
     		}
     		changes.put("additions", idRecords);
     	} else {
     		// This has sub groups
-    		List<List<String>> idRecords = new ArrayList<List<String>>();
+    		List<List<String>> idRecords = new ArrayList<>();
     		for(RecordDiffTreeNode changeGroup : typeChange.getAddedRecords().getSubGroups()) {
-    			List<String> data = new ArrayList<String>();
+    			List<String> data = new ArrayList<>();
     			data.add(changeGroup.getGroupName() + "(" + changeGroup.getDiffCount() +  ")");
     			data.add(changeGroup.getHierarchicalFieldName());
     			idRecords.add(data);
@@ -102,19 +102,19 @@ public class HistoryStateTypePage extends HistoryPage {
     		changes.put("modifications", new ArrayList<List<String>>());
     	} else if(!typeChange.getModifiedRecords().hasSubGroups()){
     		List<RecordDiff> modifiedDiffs = typeChange.getModifiedRecords().getRecordDiffs();
-    		List<List<String>> idRecords = new ArrayList<List<String>>();
+    		List<List<String>> idRecords = new ArrayList<>();
     		for(RecordDiff diff : modifiedDiffs) {
-    			List<String> data = new ArrayList<String>();
+    			List<String> data = new ArrayList<>();
     			data.add(diff.getIdentifierString());
-    			data.add(new Integer(diff.getKeyOrdinal()).toString());
+    			data.add(Integer.toString(diff.getKeyOrdinal()));
     			idRecords.add(data);
     		}
     		changes.put("modifications", idRecords);
     	} else {
     		// This has sub groups
-    		List<List<String>> idRecords = new ArrayList<List<String>>();
+    		List<List<String>> idRecords = new ArrayList<>();
     		for(RecordDiffTreeNode changeGroup : typeChange.getModifiedRecords().getSubGroups()) {
-    			List<String> data = new ArrayList<String>();
+    			List<String> data = new ArrayList<>();
     			data.add(changeGroup.getGroupName() + "(" + changeGroup.getDiffCount() +  ")");
     			data.add(changeGroup.getHierarchicalFieldName());
     			idRecords.add(data);
@@ -127,19 +127,19 @@ public class HistoryStateTypePage extends HistoryPage {
     		changes.put("removals", new ArrayList<List<String>>());
     	} else if(!typeChange.getRemovedRecords().hasSubGroups()){
     		List<RecordDiff> removedDiffs = typeChange.getRemovedRecords().getRecordDiffs();
-    		List<List<String>> idRecords = new ArrayList<List<String>>();
+    		List<List<String>> idRecords = new ArrayList<>();
     		for(RecordDiff diff : removedDiffs) {
-    			List<String> data = new ArrayList<String>();
+    			List<String> data = new ArrayList<>();
     			data.add(diff.getIdentifierString());
-    			data.add(new Integer(diff.getKeyOrdinal()).toString());
+    			data.add(Integer.toString(diff.getKeyOrdinal()));
     			idRecords.add(data);
     		}
     		changes.put("removals", idRecords);
     	} else {
     		// This has sub groups
-    		List<List<String>> idRecords = new ArrayList<List<String>>();
+    		List<List<String>> idRecords = new ArrayList<>();
     		for(RecordDiffTreeNode changeGroup : typeChange.getRemovedRecords().getSubGroups()) {
-    			List<String> data = new ArrayList<String>();
+    			List<String> data = new ArrayList<>();
     			data.add(changeGroup.getGroupName() + "(" + changeGroup.getDiffCount() +  ")");
     			data.add(changeGroup.getHierarchicalFieldName());
     			idRecords.add(data);
@@ -181,8 +181,9 @@ public class HistoryStateTypePage extends HistoryPage {
     }
     
     private static String[] getGroupedFieldNames(String groupBy) {
-        if(groupBy == null)
+        if(groupBy == null) {
             return new String[0];
+        }
         
         return groupBy.split(",");
     }

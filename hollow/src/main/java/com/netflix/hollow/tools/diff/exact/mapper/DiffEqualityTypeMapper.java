@@ -43,7 +43,7 @@ public abstract class DiffEqualityTypeMapper {
     }
 
     public DiffEqualOrdinalMap mapEqualObjects() {
-        int toOrdinalsHashed[] = hashToOrdinals();
+        int[] toOrdinalsHashed = hashToOrdinals();
         return mapMatchingFromOrdinals(toOrdinalsHashed);
     }
 
@@ -55,8 +55,9 @@ public abstract class DiffEqualityTypeMapper {
         int hashedOrdinalsLength = 1 << (32 - Integer.numberOfLeadingZeros((toPopulatedOrdinals.cardinality() * 2) - 1));
 
         final AtomicIntegerArray hashedToOrdinals = new AtomicIntegerArray(hashedOrdinalsLength);
-        for(int i=0;i<hashedOrdinalsLength;i++)
+        for (int i = 0;i < hashedOrdinalsLength;i++) {
             hashedToOrdinals.set(i, -1);
+        }
 
         SimultaneousExecutor executor = new SimultaneousExecutor(1.5d, getClass(), "hash-to-ordinals");
         final int numThreads = executor.getCorePoolSize();
@@ -85,7 +86,7 @@ public abstract class DiffEqualityTypeMapper {
             throw new RuntimeException(e);
         }
 
-        int arr[] = new int[hashedToOrdinals.length()];
+        int[] arr = new int[hashedToOrdinals.length()];
         for(int i=0;i<arr.length;i++) {
             arr[i] = hashedToOrdinals.get(i);
         }

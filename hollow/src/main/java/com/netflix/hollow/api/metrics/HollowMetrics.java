@@ -23,11 +23,11 @@ import java.util.HashMap;
 
 public abstract class HollowMetrics {
 
-    private HashMap<String, Long> typeHeapFootprint = new HashMap<>();
-    private HashMap<String, Integer> typePopulatedOrdinals = new HashMap<>();
+    private final HashMap<String, Long> typeHeapFootprint = new HashMap<>();
+    private final HashMap<String, Integer> typePopulatedOrdinals = new HashMap<>();
     private long currentVersion;
-    private long totalHeapFootprint = 0L;
-    private int totalPopulatedOrdinals = 0;
+    private long totalHeapFootprint;
+    private int totalPopulatedOrdinals;
 
     protected void update(long version) {
         setCurrentVersion(version);
@@ -44,8 +44,9 @@ public abstract class HollowMetrics {
      */
     void calculateTypeMetrics(HollowReadStateEngine hollowReadStateEngine) {
         Collection<HollowTypeReadState> typeStates = hollowReadStateEngine.getTypeStates();
-        if (typeStates == null)
+        if(typeStates == null) {
             return;
+        }
 
         totalHeapFootprint = 0L;
         totalPopulatedOrdinals = 0;

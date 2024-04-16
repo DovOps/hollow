@@ -27,7 +27,7 @@ public class HistoryStateTypeChanges {
 
     private final long stateVersion;
     private final String typeName;
-    private final String groupedFieldNames[];
+    private final String[] groupedFieldNames;
     private final RecordDiffTreeNode modifiedRecords;
     private final RecordDiffTreeNode addedRecords;
     private final RecordDiffTreeNode removedRecords;
@@ -100,7 +100,7 @@ public class HistoryStateTypeChanges {
         return modifiedRecords.isEmpty() && addedRecords.isEmpty() && removedRecords.isEmpty();
     }
     
-    private int[] getGroupedFieldIndexes(String groupedFieldNames[], String[] keyFields) {
+    private int[] getGroupedFieldIndexes(String[] groupedFieldNames, String[] keyFields) {
         int[] groupedFieldIndexes = new int[groupedFieldNames.length];
         Arrays.fill(groupedFieldIndexes, -1);
         for(int i=0;i<groupedFieldNames.length;i++) {
@@ -116,21 +116,25 @@ public class HistoryStateTypeChanges {
     
     public RecordDiffTreeNode findTreeNode(String hierarchicalFieldName) {
         RecordDiffTreeNode node = findTreeNode(modifiedRecords, hierarchicalFieldName);
-        if(node != null)
+        if(node != null) {
             return node;
+        }
         node = findTreeNode(addedRecords, hierarchicalFieldName);
-        if(node != null)
+        if(node != null) {
             return node;
+        }
         return findTreeNode(removedRecords, hierarchicalFieldName);
     }
 
     private RecordDiffTreeNode findTreeNode(RecordDiffTreeNode treeNode, String hierarchicalFieldName) {
-        if(treeNode.getHierarchicalFieldName().equals(hierarchicalFieldName))
+        if(treeNode.getHierarchicalFieldName().equals(hierarchicalFieldName)) {
             return treeNode;
+        }
         for(RecordDiffTreeNode child : treeNode.getSubGroups()) {
             RecordDiffTreeNode matchedDescendent = findTreeNode(child, hierarchicalFieldName);
-            if(matchedDescendent != null)
+            if(matchedDescendent != null) {
                 return matchedDescendent;
+            }
         }
         return null;
     }

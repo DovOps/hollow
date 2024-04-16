@@ -383,7 +383,9 @@ public class HollowHistoryTest extends AbstractStateEngineTest {
             if (schema instanceof HollowObjectSchema) {
                 HollowObjectSchema oSchema = (HollowObjectSchema) schema;
                 PrimaryKey pKey = oSchema.getPrimaryKey();
-                if (pKey == null) continue;
+                if(pKey == null) {
+                    continue;
+                }
 
                 keyIndex.indexTypeField(pKey, stateEngine);
                 System.out.println("Setup KeyIndex: type=" + type + "\t" + pKey);

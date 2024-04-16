@@ -37,18 +37,18 @@ class HollowTestDataAPIClassGenerator {
     public String generate() {
         StringBuilder builder = new StringBuilder();
         
-        builder.append("package " + packageName + ";\n\n");
+        builder.append("package ").append(packageName).append(";\n\n");
         
         builder.append("import com.netflix.hollow.api.testdata.HollowTestDataset;\n\n");
         
-        builder.append("public class " + apiClassName + " extends HollowTestDataset {\n\n");
+        builder.append("public class ").append(apiClassName).append(" extends HollowTestDataset {\n\n");
         
         List<HollowSchema> schemas = new ArrayList<>(dataset.getSchemas());
         schemas.sort(Comparator.comparing(HollowSchema::getName));
 
         for(HollowSchema schema : schemas) {
-            builder.append("    public " + schema.getName() + "TestData<Void> " + schema.getName() + "() {\n");
-            builder.append("        " + schema.getName() + "TestData<Void> rec = new " + schema.getName() + "TestData<>(null);\n");
+            builder.append("    public ").append(schema.getName()).append("TestData<Void> ").append(schema.getName()).append("() {\n");
+            builder.append("        ").append(schema.getName()).append("TestData<Void> rec = new ").append(schema.getName()).append("TestData<>(null);\n");
             builder.append("        add(rec);\n");
             builder.append("        return rec;\n");
             builder.append("    }\n\n");

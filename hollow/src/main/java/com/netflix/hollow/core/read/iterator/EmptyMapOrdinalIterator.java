@@ -18,7 +18,7 @@ package com.netflix.hollow.core.read.iterator;
 
 import java.util.NoSuchElementException;
 
-public class EmptyMapOrdinalIterator implements HollowMapEntryOrdinalIterator {
+public final class EmptyMapOrdinalIterator implements HollowMapEntryOrdinalIterator {
 
     public static final EmptyMapOrdinalIterator INSTANCE = new EmptyMapOrdinalIterator();
 

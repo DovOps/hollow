@@ -161,7 +161,7 @@ public final class ValidationResult {
      * The builder may be reused after it has built a validation result, but the details will be reset
      * to contain no entries.
      */
-    static public class ValidationResultBuilder {
+    public static class ValidationResultBuilder {
         private final String name;
         private Map<String, String> details;
 

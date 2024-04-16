@@ -25,7 +25,7 @@ public class HollowHistoricalStateKeyOrdinalMapping {
     private final Map<String, HollowHistoricalStateTypeKeyOrdinalMapping> typeMappings;
 
     public HollowHistoricalStateKeyOrdinalMapping(HollowHistoryKeyIndex keyIndex) {
-        this.typeMappings = new HashMap<String, HollowHistoricalStateTypeKeyOrdinalMapping>();
+        this.typeMappings = new HashMap<>();
 
         for(Map.Entry<String, HollowHistoryTypeKeyIndex> entry : keyIndex.getTypeKeyIndexes().entrySet()) {
             typeMappings.put(entry.getKey(), new HollowHistoricalStateTypeKeyOrdinalMapping(entry.getKey(), entry.getValue()));
@@ -37,7 +37,7 @@ public class HollowHistoricalStateKeyOrdinalMapping {
     }
 
     public HollowHistoricalStateKeyOrdinalMapping remap(OrdinalRemapper remapper) {
-        Map<String, HollowHistoricalStateTypeKeyOrdinalMapping> typeMappings = new HashMap<String, HollowHistoricalStateTypeKeyOrdinalMapping>();
+        Map<String, HollowHistoricalStateTypeKeyOrdinalMapping> typeMappings = new HashMap<>();
 
         for(Map.Entry<String, HollowHistoricalStateTypeKeyOrdinalMapping> entry : this.typeMappings.entrySet()) {
             typeMappings.put(entry.getKey(), entry.getValue().remap(remapper));

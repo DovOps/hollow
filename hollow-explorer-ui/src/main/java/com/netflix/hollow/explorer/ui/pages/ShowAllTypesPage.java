@@ -46,7 +46,7 @@ public class ShowAllTypesPage extends HollowExplorerPage {
         
         String sort = req.getParameter("sort") == null ? "primaryKey" : req.getParameter("sort");
         
-        List<TypeOverview> typeOverviews = new ArrayList<TypeOverview>();
+        List<TypeOverview> typeOverviews = new ArrayList<>();
         
         for(HollowTypeReadState typeState : ui.getStateEngine().getTypeStates()) {
             String typeName = typeState.getSchema().getName();
@@ -96,10 +96,12 @@ public class ShowAllTypesPage extends HollowExplorerPage {
         default:
             Collections.sort(typeOverviews, new Comparator<TypeOverview>() {
                 public int compare(TypeOverview o1, TypeOverview o2) {
-                    if(!"".equals(o1.getPrimaryKey()) && "".equals(o2.getPrimaryKey()))
+                    if(!"".equals(o1.getPrimaryKey()) && "".equals(o2.getPrimaryKey())) {
                         return -1;
-                    if("".equals(o1.getPrimaryKey()) && !"".equals(o2.getPrimaryKey()))
+                    }
+                    if("".equals(o1.getPrimaryKey()) && !"".equals(o2.getPrimaryKey())) {
                         return 1;
+                    }
                     
                     return o1.getTypeName().compareTo(o2.getTypeName()); 
                 }

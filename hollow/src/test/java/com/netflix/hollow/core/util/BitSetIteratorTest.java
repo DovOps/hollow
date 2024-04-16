@@ -73,12 +73,14 @@ public class BitSetIteratorTest {
         }
 
         if (limit == null) {
-            int expected = (start == null || start==0) ? bs.cardinality() : (bs.cardinality() - start)+1;
+            int expected = start == null || start==0 ? bs.cardinality() : (bs.cardinality() - start)+1;
             Assert.assertEquals(expected, count);
         } else {
             int max = Math.min(limit, bs.cardinality());
-            int expected =  (start == null || start==0) ? max : Math.min((bs.cardinality() - start)+1, max);
-            if (expected<0) expected=0;
+            int expected =  start == null || start==0 ? max : Math.min((bs.cardinality() - start)+1, max);
+            if(expected < 0) {
+                expected = 0;
+            }
             Assert.assertEquals(expected, count);
         }
     }

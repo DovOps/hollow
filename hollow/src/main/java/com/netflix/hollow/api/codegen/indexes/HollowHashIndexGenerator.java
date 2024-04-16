@@ -56,12 +56,12 @@ public class HollowHashIndexGenerator extends HollowIndexGenerator {
         StringBuilder builder = new StringBuilder();
         appendPackageAndCommonImports(builder, apiClassname, schemaList);
 
-        builder.append("import " + HollowConsumer.class.getName() + ";\n");
-        builder.append("import " + HollowHashIndexResult.class.getName() + ";\n");
-        builder.append("import " + Collections.class.getName() + ";\n");
-        builder.append("import " + Iterable.class.getName() + ";\n");
-        builder.append("import " + AbstractHollowHashIndex.class.getName() + ";\n");
-        builder.append("import " + AbstractHollowOrdinalIterable.class.getName() + ";\n\n");
+        builder.append("import ").append(HollowConsumer.class.getName()).append(";\n");
+        builder.append("import ").append(HollowHashIndexResult.class.getName()).append(";\n");
+        builder.append("import ").append(Collections.class.getName()).append(";\n");
+        builder.append("import ").append(Iterable.class.getName()).append(";\n");
+        builder.append("import ").append(AbstractHollowHashIndex.class.getName()).append(";\n");
+        builder.append("import ").append(AbstractHollowOrdinalIterable.class.getName()).append(";\n\n");
 
         builder.append("\n");
         builder.append("/**\n");
@@ -69,23 +69,23 @@ public class HollowHashIndexGenerator extends HollowIndexGenerator {
         builder.append(" */\n");
         builder.append("@Deprecated\n");
         builder.append("@SuppressWarnings(\"all\")\n");
-        builder.append("public class " + className + " extends " + AbstractHollowHashIndex.class.getSimpleName() + "<" + apiClassname + "> {\n\n");
+        builder.append("public class ").append(className).append(" extends ").append(AbstractHollowHashIndex.class.getSimpleName()).append("<").append(apiClassname).append("> {\n\n");
 
-        builder.append("    public " + className + "(HollowConsumer consumer, String queryType, String selectFieldPath, String... matchFieldPaths) {\n");
-        builder.append("        super(consumer, " + isListenToDataRefreah +", queryType, selectFieldPath, matchFieldPaths);\n");
+        builder.append("    public ").append(className).append("(HollowConsumer consumer, String queryType, String selectFieldPath, String... matchFieldPaths) {\n");
+        builder.append("        super(consumer, ").append(isListenToDataRefreah).append(", queryType, selectFieldPath, matchFieldPaths);\n");
         builder.append("    }\n\n");
 
-        builder.append("    public " + className + "(HollowConsumer consumer, boolean isListenToDataRefresh, String queryType, String selectFieldPath, String... matchFieldPaths) {\n");
+        builder.append("    public ").append(className).append("(HollowConsumer consumer, boolean isListenToDataRefresh, String queryType, String selectFieldPath, String... matchFieldPaths) {\n");
         builder.append("        super(consumer, isListenToDataRefresh, queryType, selectFieldPath, matchFieldPaths);\n");
         builder.append("    }\n\n");
 
         for(HollowSchema schema : schemaList) {
-            builder.append("    public Iterable<" + hollowImplClassname(schema.getName()) + "> find" + substituteInvalidChars(schema.getName()) + "Matches(Object... keys) {\n");
+            builder.append("    public Iterable<").append(hollowImplClassname(schema.getName())).append("> find").append(substituteInvalidChars(schema.getName())).append("Matches(Object... keys) {\n");
             builder.append("        HollowHashIndexResult matches = idx.findMatches(keys);\n");
             builder.append("        if(matches == null) return Collections.emptySet();\n\n");
-            builder.append("        return new AbstractHollowOrdinalIterable<" + hollowImplClassname(schema.getName()) + ">(matches.iterator()) {\n");
-            builder.append("            public " + hollowImplClassname(schema.getName()) + " getData(int ordinal) {\n");
-            builder.append("                return api.get" + hollowImplClassname(schema.getName()) + "(ordinal);\n");
+            builder.append("        return new AbstractHollowOrdinalIterable<").append(hollowImplClassname(schema.getName())).append(">(matches.iterator()) {\n");
+            builder.append("            public ").append(hollowImplClassname(schema.getName())).append(" getData(int ordinal) {\n");
+            builder.append("                return api.get").append(hollowImplClassname(schema.getName())).append("(ordinal);\n");
             builder.append("            }\n");
             builder.append("        };\n");
             builder.append("    }\n\n");
@@ -96,19 +96,21 @@ public class HollowHashIndexGenerator extends HollowIndexGenerator {
     }
 
     private void genDeprecatedJavaDoc(List<HollowSchema> schemaList, StringBuilder builder) {
-        if (schemaList.isEmpty()) return;
+        if(schemaList.isEmpty()) {
+            return;
+        }
 
         HollowSchema schema = schemaList.get(0);
         String typeName = hollowImplClassname(schema.getName());
 
         builder.append(" * @deprecated see {@link com.netflix.hollow.api.consumer.index.HashIndex} which can be built as follows:\n");
         builder.append(" * <pre>{@code\n");
-        builder.append(String.format(" *     HashIndex<%s, K> uki = HashIndex.from(consumer, %1$s.class)\n", typeName));
+        builder.append(String.format(" *     HashIndex<%s, K> uki = HashIndex.from(consumer, %1$s.class)%n", typeName));
         builder.append(" *         .usingBean(k);\n");
-        builder.append(String.format(" *     Stream<%s> results = uki.findMatches(k);\n", typeName));
+        builder.append(String.format(" *     Stream<%s> results = uki.findMatches(k);%n", typeName));
         builder.append(" * }</pre>\n");
         builder.append(" * where {@code K} is a class declaring key field paths members, annotated with\n");
         builder.append(" * {@link com.netflix.hollow.api.consumer.index.FieldPath}, and {@code k} is an instance of\n");
-        builder.append(String.format(" * {@code K} that is the query to find the matching {@code %s} objects.\n", typeName));
+        builder.append(String.format(" * {@code K} that is the query to find the matching {@code %s} objects.%n", typeName));
     }
 }

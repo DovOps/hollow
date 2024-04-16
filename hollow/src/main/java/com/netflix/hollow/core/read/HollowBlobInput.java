@@ -20,7 +20,7 @@ import java.nio.channels.FileChannel;
  * This class provides an abstraction to help navigate between use of DataInputStream or RandomAccessFile
  * as the underlying resource for Hollow Producer/Consumer Blob to support the different memory modes.
  */
-public class HollowBlobInput implements Closeable {
+public final class HollowBlobInput implements Closeable {
     private final MemoryMode memoryMode;
 
     private Object input;
@@ -145,7 +145,7 @@ public class HollowBlobInput implements Closeable {
      * @throws IOException if underlying {@code DataInputStream} or {@code RandomAccessFile}
      * @throws UnsupportedOperationException if the input type wasn't  one of {@code DataInputStream} or {@code RandomAccessFile}
      */
-    public int read(byte b[], int off, int len) throws IOException {
+    public int read(byte[] b, int off, int len) throws IOException {
         if (input instanceof RandomAccessFile) {
             return ((RandomAccessFile) input).read(b, off, len);
         } else if (input instanceof DataInputStream) {

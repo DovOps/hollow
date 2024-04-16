@@ -175,7 +175,7 @@ class FieldPath {
             HollowMapSchema mapSchema = (HollowMapSchema) schema;
 
             // what to iterate on in map
-            boolean iterateThroughKeys = fields[fieldIndex].equals("key");
+            boolean iterateThroughKeys = "key".equals(fields[fieldIndex]);
             String keyOrValueType = iterateThroughKeys ? mapSchema.getKeyType() : mapSchema.getValueType();
 
             HollowMapEntryOrdinalIterator mapEntryIterator = mapTypeDataAccess.ordinalIterator(ordinal);
@@ -236,7 +236,7 @@ class FieldPath {
             HollowMapSchema mapSchema = (HollowMapSchema) schema;
 
             // what to iterate on in map
-            boolean iterateThroughKeys = fields[fieldIndex].equals("key");
+            boolean iterateThroughKeys = "key".equals(fields[fieldIndex]);
             String keyOrValueType = iterateThroughKeys ? mapSchema.getKeyType() : mapSchema.getValueType();
 
             HollowMapEntryOrdinalIterator mapEntryIterator = mapTypeDataAccess.ordinalIterator(ordinal);

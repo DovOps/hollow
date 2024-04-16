@@ -39,77 +39,77 @@ public class DoubleDataAccessorTest extends AbstractPrimitiveTypeDataAccessorTes
 
     @Test
     public void test() throws IOException {
-        addRecord(new Double(1));
-        addRecord(new Double(2));
-        addRecord(new Double(3));
+        addRecord(Double.valueOf(1));
+        addRecord(Double.valueOf(2));
+        addRecord(Double.valueOf(3));
 
         roundTripSnapshot();
         {
             DoubleDataAccessor dAccessor = new DoubleDataAccessor(readStateEngine, new PrimitiveTypeTestAPI(readStateEngine));
             Assert.assertEquals(3, dAccessor.getAddedRecords().size());
-            assertList(dAccessor.getAddedRecords(), Arrays.<Double>asList(new Double(1), new Double(2), new Double(3)));
+            assertList(dAccessor.getAddedRecords(), Arrays.<Double>asList(Double.valueOf(1), Double.valueOf(2), Double.valueOf(3)));
             Assert.assertTrue(dAccessor.getRemovedRecords().isEmpty());
             Assert.assertTrue(dAccessor.getUpdatedRecords().isEmpty());
         }
 
         writeStateEngine.prepareForNextCycle(); /// not necessary to call, but needs to be a no-op.
 
-        addRecord(new Double(1));
+        addRecord(Double.valueOf(1));
         // addRecord(new Double(2)); // removed
-        addRecord(new Double(3));
-        addRecord(new Double(1000)); // added
-        addRecord(new Double(0)); // added
+        addRecord(Double.valueOf(3));
+        addRecord(Double.valueOf(1000)); // added
+        addRecord(Double.valueOf(0)); // added
 
         roundTripDelta();
         {
             DoubleDataAccessor dAccessor = new DoubleDataAccessor(readStateEngine, new PrimitiveTypeTestAPI(readStateEngine));
             Assert.assertEquals(2, dAccessor.getAddedRecords().size());
-            assertList(dAccessor.getAddedRecords(), Arrays.asList(new Double(1000), new Double(0)));
+            assertList(dAccessor.getAddedRecords(), Arrays.asList(Double.valueOf(1000), Double.valueOf(0)));
             Assert.assertEquals(1, dAccessor.getRemovedRecords().size());
-            assertList(dAccessor.getRemovedRecords(), Arrays.asList(new Double(2)));
+            assertList(dAccessor.getRemovedRecords(), Arrays.asList(Double.valueOf(2)));
             Assert.assertEquals(0, dAccessor.getUpdatedRecords().size());
         }
 
         HollowObjectTypeReadState typeState = (HollowObjectTypeReadState) readStateEngine.getTypeState("Double");
         Assert.assertEquals(4, typeState.maxOrdinal());
 
-        assertObject(typeState, 0, new Double(1));
-        assertObject(typeState, 1, new Double(2)); /// this was "removed", but the data hangs around as a "ghost" until the following cycle.
-        assertObject(typeState, 2, new Double(3));
-        assertObject(typeState, 3, new Double(1000));
-        assertObject(typeState, 4, new Double(0));
+        assertObject(typeState, 0, Double.valueOf(1));
+        assertObject(typeState, 1, Double.valueOf(2)); /// this was "removed", but the data hangs around as a "ghost" until the following cycle.
+        assertObject(typeState, 2, Double.valueOf(3));
+        assertObject(typeState, 3, Double.valueOf(1000));
+        assertObject(typeState, 4, Double.valueOf(0));
 
         roundTripDelta(); // remove everything
         {
             DoubleDataAccessor dAccessor = new DoubleDataAccessor(readStateEngine, new PrimitiveTypeTestAPI(readStateEngine));
             Assert.assertEquals(0, dAccessor.getAddedRecords().size());
             Assert.assertEquals(4, dAccessor.getRemovedRecords().size());
-            assertList(dAccessor.getRemovedRecords(), Arrays.asList(new Double(1), new Double(3), new Double(1000), new Double(0)));
+            assertList(dAccessor.getRemovedRecords(), Arrays.asList(Double.valueOf(1), Double.valueOf(3), Double.valueOf(1000), Double.valueOf(0)));
             Assert.assertEquals(0, dAccessor.getUpdatedRecords().size());
         }
 
-        assertObject(typeState, 0, new Double(1)); /// all records were "removed", but again hang around until the following cycle.
+        assertObject(typeState, 0, Double.valueOf(1)); /// all records were "removed", but again hang around until the following cycle.
         // assertObject(typeState, 1, new Double(2)); /// this record should now be disappeared.
-        assertObject(typeState, 2, new Double(3)); /// "ghost"
-        assertObject(typeState, 3, new Double(1000)); /// "ghost"
-        assertObject(typeState, 4, new Double(0)); /// "ghost"
+        assertObject(typeState, 2, Double.valueOf(3)); /// "ghost"
+        assertObject(typeState, 3, Double.valueOf(1000)); /// "ghost"
+        assertObject(typeState, 4, Double.valueOf(0)); /// "ghost"
 
         Assert.assertEquals(4, typeState.maxOrdinal());
 
-        addRecord(new Double(634));
-        addRecord(new Double(0));
+        addRecord(Double.valueOf(634));
+        addRecord(Double.valueOf(0));
 
         roundTripDelta();
         {
             DoubleDataAccessor dAccessor = new DoubleDataAccessor(readStateEngine, new PrimitiveTypeTestAPI(readStateEngine));
             Assert.assertEquals(2, dAccessor.getAddedRecords().size());
-            assertList(dAccessor.getAddedRecords(), Arrays.asList(new Double(634), new Double(0)));
+            assertList(dAccessor.getAddedRecords(), Arrays.asList(Double.valueOf(634), Double.valueOf(0)));
             Assert.assertEquals(0, dAccessor.getRemovedRecords().size());
             Assert.assertEquals(0, dAccessor.getUpdatedRecords().size());
         }
 
         Assert.assertEquals(1, typeState.maxOrdinal());
-        assertObject(typeState, 0, new Double(634)); /// now, since all records were removed, we can recycle the ordinal "0", even though it was a "ghost" in the last cycle.
-        assertObject(typeState, 1, new Double(0)); /// even though new Double(0) had an equivalent record in the previous cycle at ordinal "4", it is now assigned to recycled ordinal "1".
+        assertObject(typeState, 0, Double.valueOf(634)); /// now, since all records were removed, we can recycle the ordinal "0", even though it was a "ghost" in the last cycle.
+        assertObject(typeState, 1, Double.valueOf(0)); /// even though new Double(0) had an equivalent record in the previous cycle at ordinal "4", it is now assigned to recycled ordinal "1".
     }
 }

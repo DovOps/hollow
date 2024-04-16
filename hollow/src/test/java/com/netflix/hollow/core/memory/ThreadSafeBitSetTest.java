@@ -186,14 +186,14 @@ public class ThreadSafeBitSetTest {
         }
 
         // determine andNot
-        BitSet andNot_bSet = new BitSet();
-        ThreadSafeBitSet andNot_tsbSet = new ThreadSafeBitSet();
+        BitSet andNotBSet = new BitSet();
+        ThreadSafeBitSet andNotTsbSet = new ThreadSafeBitSet();
 
         int ordinal = tsbSet1.nextSetBit(0);
         while (ordinal != -1) {
             if (!tsbSet2.get(ordinal)) {
-                andNot_bSet.set(ordinal);
-                andNot_tsbSet.set(ordinal);
+                andNotBSet.set(ordinal);
+                andNotTsbSet.set(ordinal);
             }
             ordinal = tsbSet1.nextSetBit(ordinal + 1);
         }
@@ -203,9 +203,9 @@ public class ThreadSafeBitSetTest {
 
         // validate content
         ThreadSafeBitSet result = tsbSet1.andNot(tsbSet2);
-        Assert.assertEquals(andNot_tsbSet.cardinality(), result.cardinality());
-        Assert.assertTrue(andNot_tsbSet.equals(result));
-        Assert.assertEquals(andNot_tsbSet, result);
-        Assert.assertEquals(andNot_bSet, result.toBitSet());
+        Assert.assertEquals(andNotTsbSet.cardinality(), result.cardinality());
+        Assert.assertTrue(andNotTsbSet.equals(result));
+        Assert.assertEquals(andNotTsbSet, result);
+        Assert.assertEquals(andNotBSet, result.toBitSet());
     }
 }

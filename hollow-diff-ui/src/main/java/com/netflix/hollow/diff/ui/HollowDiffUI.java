@@ -62,7 +62,7 @@ public class HollowDiffUI implements HollowRecordDiffUI {
 
     HollowDiffUI(String baseURLPath, String diffUIPath, HollowDiff diff, String fromBlobName, String toBlobName, VelocityEngine ve) {
         this.baseURLPath = baseURLPath;
-        this.diffUIPath = (diffUIPath == null || diffUIPath.length() == 0) ? baseURLPath : baseURLPath + "/" + diffUIPath;
+        this.diffUIPath = diffUIPath == null || diffUIPath.length() == 0 ? baseURLPath : baseURLPath + "/" + diffUIPath;
         this.diff = diff;
         this.velocity = ve;
         this.fromBlobName = fromBlobName;
@@ -73,8 +73,8 @@ public class HollowDiffUI implements HollowRecordDiffUI {
         this.objectPage = new DiffObjectPage(this);
         this.viewProvider = new HollowDiffViewProvider(this);
         this.diffViewOutputGenerator = new DiffViewOutputGenerator(viewProvider);
-        this.customHollowEffigyFactories = new HashMap<String, CustomHollowEffigyFactory>();
-        this.matchHints = new HashMap<String, PrimaryKey>();
+        this.customHollowEffigyFactories = new HashMap<>();
+        this.matchHints = new HashMap<>();
         this.exactRecordMatcher = new DiffExactRecordMatcher(diff.getEqualityMapping());
     }
     

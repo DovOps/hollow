@@ -95,8 +95,9 @@ public class HollowHashIndexBuilder {
             int maxOrdinalForTypeState = traverser.getFieldTypeDataAccess(i).getTypeState().maxOrdinal();
             bitsPerTraverserField[i] = bitsRequiredToRepresentValue(maxOrdinalForTypeState + 1);
             offsetPerTraverserField[i] = bitsPerMatchHashKey;
-            if(i < preindexer.getNumMatchTraverserFields())
+            if(i < preindexer.getNumMatchTraverserFields()) {
                 bitsPerMatchHashKey += bitsPerTraverserField[i];
+            }
         }
 
         this.bitsPerMatchHashKey = bitsPerMatchHashKey;
@@ -152,8 +153,9 @@ public class HollowHashIndexBuilder {
 
                 if(bucketIsEmpty) {
                     matchListIdx = intermediateSelectLists.newList();
-                    for(int j=0;j<preindexer.getNumMatchTraverserFields();j++)
+                    for (int j = 0;j < preindexer.getNumMatchTraverserFields();j++) {
                         intermediateMatchHashTable.setElementValue(hashBucketBit + offsetPerTraverserField[j], bitsPerTraverserField[j], traverser.getMatchOrdinal(i, j) + 1);
+                    }
 
                     intermediateMatchHashTable.setElementValue(hashBucketBit + bitsPerMatchHashKey, bitsPerIntermediateListIdentifier, matchListIdx);
 
@@ -213,8 +215,9 @@ public class HollowHashIndexBuilder {
                     bucketOrdinal = (int)finalSelectArray.getElementValue((currentSelectArrayBucket + selectBucket) * bitsPerSelectHashEntry, bitsPerSelectHashEntry) - 1;
                 }
 
-                if(bucketOrdinal == HollowConstants.ORDINAL_NONE)
+                if(bucketOrdinal == HollowConstants.ORDINAL_NONE) {
                     finalSelectArray.setElementValue((currentSelectArrayBucket + selectBucket) * bitsPerSelectHashEntry, bitsPerSelectHashEntry, selectOrdinal + 1);
+                }
 
                 selectOrdinal = selectOrdinalIter.next();
             }
@@ -317,10 +320,12 @@ public class HollowHashIndexBuilder {
             int setSize = 0;
             int predictedBuckets = HashCodes.hashTableSize(listSize);
             int hashMask = predictedBuckets - 1;
-            if(predictedBuckets > selectArray.length)
+            if(predictedBuckets > selectArray.length) {
                 selectArray = new int[predictedBuckets];
-            for(int j=0;j<predictedBuckets;j++)
+            }
+            for (int j = 0;j < predictedBuckets;j++) {
                 selectArray[j] = -1;
+            }
 
             HollowOrdinalIterator iter = elementArray.iterator(i);
             int selectOrdinal = iter.next();
@@ -329,8 +334,9 @@ public class HollowHashIndexBuilder {
                 int bucket = hash & hashMask;
 
                 while(true) {
-                    if(selectArray[bucket] == selectOrdinal)
+                    if(selectArray[bucket] == selectOrdinal) {
                         break;
+                    }
                     if(selectArray[bucket] == -1) {
                         selectArray[bucket] = selectOrdinal;
                         setSize++;
@@ -348,8 +354,9 @@ public class HollowHashIndexBuilder {
             matchIndexHashAndSizeArray.set(i, matchIndexHashAndSize);
 
             totalBuckets += HashCodes.hashTableSize(setSize);
-            if(setSize > maxSize)
+            if(setSize > maxSize) {
                 maxSize = setSize;
+            }
         }
 
         return totalBuckets | (long)bitsRequiredToRepresentValue(maxSize) << 56;
@@ -364,8 +371,9 @@ public class HollowHashIndexBuilder {
             FieldPathSegment[] fieldPath = field.getSchemaFieldPositionPath();
 
             if(fieldPath.length == 0) {
-                if(matchOrdinal != hashOrdinal)
+                if(matchOrdinal != hashOrdinal) {
                     return false;
+                }
             } else {
                 for(int j=0;j<fieldPath.length - 1;j++) {
                     FieldPathSegment fieldPathSegment = fieldPath[j];
@@ -380,9 +388,10 @@ public class HollowHashIndexBuilder {
                 if(matchOrdinal != hashOrdinal) {
                     FieldPathSegment lastPathElement = fieldPath[fieldPath.length - 1];
                     if(isAnyFieldNull(matchOrdinal, hashOrdinal) || !HollowReadFieldUtils.fieldsAreEqual(
-                            lastPathElement.getObjectTypeDataAccess(), matchOrdinal, lastPathElement.getSegmentFieldPosition(),
-                            lastPathElement.getObjectTypeDataAccess(), hashOrdinal, lastPathElement.getSegmentFieldPosition()))
+                    lastPathElement.getObjectTypeDataAccess(), matchOrdinal, lastPathElement.getSegmentFieldPosition(),
+                    lastPathElement.getObjectTypeDataAccess(), hashOrdinal, lastPathElement.getSegmentFieldPosition())) {
                         return false;
+                    }
                 }
             }
         }

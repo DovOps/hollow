@@ -68,8 +68,9 @@ class HollowMapTypeReadStateShard {
                     continue threadsafe;
                 }
                 bucket++;
-                if(bucket == endBucket)
+                if(bucket == endBucket) {
                     bucket = startBucket;
+                }
                 bucketKeyOrdinal = getBucketKeyByAbsoluteIndex(currentData, bucket);
             }
 
@@ -99,16 +100,18 @@ class HollowMapTypeReadStateShard {
             int bucketKeyOrdinal = getBucketKeyByAbsoluteIndex(currentData, bucket);
 
             while(bucketKeyOrdinal != currentData.emptyBucketKeyValue) {
-                if(readWasUnsafe(currentData))
+                if(readWasUnsafe(currentData)) {
                     continue threadsafe;
+                }
 
                 if(keyDeriver.keyMatches(bucketKeyOrdinal, hashKey)) {
                     return bucketKeyOrdinal;
                 }
 
                 bucket++;
-                if(bucket == endBucket)
+                if(bucket == endBucket) {
                     bucket = startBucket;
+                }
                 bucketKeyOrdinal = getBucketKeyByAbsoluteIndex(currentData, bucket);
             }
 
@@ -137,20 +140,23 @@ class HollowMapTypeReadStateShard {
             int bucketKeyOrdinal = getBucketKeyByAbsoluteIndex(currentData, bucket);
 
             while(bucketKeyOrdinal != currentData.emptyBucketKeyValue) {
-                if(readWasUnsafe(currentData))
+                if(readWasUnsafe(currentData)) {
                     continue threadsafe;
+                }
 
                 if(keyDeriver.keyMatches(bucketKeyOrdinal, hashKey)) {
                     long valueOrdinal = getBucketValueByAbsoluteIndex(currentData, bucket);
-                    if(readWasUnsafe(currentData))
+                    if(readWasUnsafe(currentData)) {
                         continue threadsafe;
+                    }
 
                     return (long)bucketKeyOrdinal << 32 | valueOrdinal;
                 }
 
                 bucket++;
-                if(bucket == endBucket)
+                if(bucket == endBucket) {
                     bucket = startBucket;
+                }
                 bucketKeyOrdinal = getBucketKeyByAbsoluteIndex(currentData, bucket);
             }
 
@@ -169,8 +175,9 @@ class HollowMapTypeReadStateShard {
                 absoluteBucketIndex = getAbsoluteBucketStart(currentData, ordinal) + bucketIndex;
             } while(readWasUnsafe(currentData));
             long key = getBucketKeyByAbsoluteIndex(currentData, absoluteBucketIndex);
-            if(key == currentData.emptyBucketKeyValue)
+            if(key == currentData.emptyBucketKeyValue) {
                 return -1L;
+            }
 
             bucketValue = key << 32 | getBucketValueByAbsoluteIndex(currentData, absoluteBucketIndex);
         } while(readWasUnsafe(currentData));
@@ -179,8 +186,7 @@ class HollowMapTypeReadStateShard {
     }
 
     private long getAbsoluteBucketStart(HollowMapTypeDataElements currentData, int ordinal) {
-        long startBucket = ordinal == 0 ? 0 : currentData.mapPointerAndSizeData.getElementValue((long)(ordinal - 1) * currentData.bitsPerFixedLengthMapPortion, currentData.bitsPerMapPointer);
-        return startBucket;
+        return ordinal == 0 ? 0 : currentData.mapPointerAndSizeData.getElementValue((long)(ordinal - 1) * currentData.bitsPerFixedLengthMapPortion, currentData.bitsPerMapPointer);
     }
 
     private int getBucketKeyByAbsoluteIndex(HollowMapTypeDataElements currentData, long absoluteBucketIndex) {
@@ -230,7 +236,7 @@ class HollowMapTypeReadStateShard {
             } else {
                 // Round up ordinal
                 int r = (ordinal & -numShards) + shardNumber;
-                ordinal = (r <= ordinal) ? r + numShards : r;
+                ordinal = r <= ordinal ? r + numShards : r;
             }
             ordinal = populatedOrdinals.nextSetBit(ordinal);
         }
@@ -250,8 +256,9 @@ class HollowMapTypeReadStateShard {
         
         int holeOrdinal = populatedOrdinals.nextClearBit(0);
         while(holeOrdinal <= currentData.maxOrdinal) {
-            if((holeOrdinal & (numShards - 1)) == shardNumber)
+            if((holeOrdinal & (numShards - 1)) == shardNumber) {
                 holeBits += currentData.bitsPerFixedLengthMapPortion;
+            }
             
             holeOrdinal = populatedOrdinals.nextClearBit(holeOrdinal + 1);
         }

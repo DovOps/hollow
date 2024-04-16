@@ -29,8 +29,8 @@ public class FailedTransitionTracker {
     private final HashSet<DeltaTransition> failedDeltaTransitions;
 
     public FailedTransitionTracker() {
-        this.failedSnapshotTransitions = new HashSet<Long>();
-        this.failedDeltaTransitions = new HashSet<DeltaTransition>();
+        this.failedSnapshotTransitions = new HashSet<>();
+        this.failedDeltaTransitions = new HashSet<>();
     }
 
     public void markAllTransitionsAsFailed(HollowUpdatePlan plan) {
@@ -48,8 +48,9 @@ public class FailedTransitionTracker {
 
     public boolean anyTransitionWasFailed(HollowUpdatePlan plan) {
         for(HollowConsumer.Blob transition : plan) {
-            if(transitionWasFailed(transition))
+            if(transitionWasFailed(transition)) {
                 return true;
+            }
         }
         return false;
     }
@@ -77,8 +78,9 @@ public class FailedTransitionTracker {
     }
 
     private boolean transitionWasFailed(HollowConsumer.Blob transition) {
-        if(transition.isSnapshot())
+        if(transition.isSnapshot()) {
             return failedSnapshotTransitions.contains(transition.getToVersion());
+        }
 
         return failedDeltaTransitions.contains(delta(transition));
     }

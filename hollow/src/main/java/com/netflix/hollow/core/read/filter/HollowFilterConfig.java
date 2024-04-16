@@ -63,8 +63,8 @@ import java.util.Set;
 @Deprecated
 public class HollowFilterConfig implements TypeFilter {
 
-    private final ObjectFilterConfig INCLUDE_ALL = new ObjectFilterConfig(Boolean.TRUE);
-    private final ObjectFilterConfig INCLUDE_NONE = new ObjectFilterConfig(Boolean.FALSE);
+    private final ObjectFilterConfig includeAll = new ObjectFilterConfig(Boolean.TRUE);
+    private final ObjectFilterConfig includeNone = new ObjectFilterConfig(Boolean.FALSE);
 
     private final boolean isExcludeFilter;
     private final Set<String> specifiedTypes;
@@ -83,8 +83,8 @@ public class HollowFilterConfig implements TypeFilter {
      */
     public HollowFilterConfig(boolean isExcludeFilter) {
         this.isExcludeFilter = isExcludeFilter;
-        this.specifiedTypes = new HashSet<String>();
-        this.specifiedFieldConfigs = new HashMap<String, ObjectFilterConfig>();
+        this.specifiedTypes = new HashSet<>();
+        this.specifiedFieldConfigs = new HashMap<>();
     }
 
     /**
@@ -127,8 +127,9 @@ public class HollowFilterConfig implements TypeFilter {
         case OBJECT:
             HollowObjectSchema objSchema = (HollowObjectSchema)schema;
             for(int i=0;i<objSchema.numFields();i++) {
-                if(objSchema.getFieldType(i) == FieldType.REFERENCE)
+                if(objSchema.getFieldType(i) == FieldType.REFERENCE) {
                     addTypeRecursive(objSchema.getReferencedType(i), schemas);
+                }
             }
             break;
         case MAP:
@@ -191,8 +192,9 @@ public class HollowFilterConfig implements TypeFilter {
      * @return whether or not this filter includes the specified type.
      */
     public boolean doesIncludeType(String type) {
-        if(isExcludeFilter)
+        if(isExcludeFilter) {
             return !specifiedTypes.contains(type);
+        }
 
         return specifiedTypes.contains(type) || specifiedFieldConfigs.containsKey(type);
     }
@@ -214,17 +216,20 @@ public class HollowFilterConfig implements TypeFilter {
 
     public ObjectFilterConfig getObjectTypeConfig(String type) {
         ObjectFilterConfig typeConfig = specifiedFieldConfigs.get(type);
-        if(typeConfig != null)
+        if(typeConfig != null) {
             return typeConfig;
+        }
 
         if(isExcludeFilter) {
-            if(specifiedTypes.contains(type))
-                return INCLUDE_NONE;
-            return INCLUDE_ALL;
+            if(specifiedTypes.contains(type)) {
+                return includeNone;
+            }
+            return includeAll;
         } else {
-            if(specifiedTypes.contains(type))
-                return INCLUDE_ALL;
-            return INCLUDE_NONE;
+            if(specifiedTypes.contains(type)) {
+                return includeAll;
+            }
+            return includeNone;
         }
     }
 
@@ -247,7 +252,7 @@ public class HollowFilterConfig implements TypeFilter {
         }
 
         public ObjectFilterConfig(Boolean alwaysAnswer) {
-            this.specifiedFields = new HashSet<String>();
+            this.specifiedFields = new HashSet<>();
             this.alwaysAnswer = alwaysAnswer;
         }
 
@@ -256,11 +261,13 @@ public class HollowFilterConfig implements TypeFilter {
         }
 
         public boolean includesField(String field) {
-            if(alwaysAnswer != null)
+            if(alwaysAnswer != null) {
                 return alwaysAnswer.booleanValue();
+            }
 
-            if(isExcludeFilter)
+            if(isExcludeFilter) {
                 return !specifiedFields.contains(field);
+            }
             return specifiedFields.contains(field);
         }
 
@@ -310,7 +317,7 @@ public class HollowFilterConfig implements TypeFilter {
      * @return the filter configuration
      */
     public static HollowFilterConfig fromString(String conf) {
-        String lines[] = conf.split("\n");
+        String[] lines = conf.split("\n");
 
         HollowFilterConfig config = new HollowFilterConfig("EXCLUDE".equals(lines[0]));
 
@@ -329,7 +336,7 @@ public class HollowFilterConfig implements TypeFilter {
     }
 
     private Map<String, HollowSchema> mapSchemas(Collection<HollowSchema> schemas) {
-        Map<String, HollowSchema> schemaMap = new HashMap<String, HollowSchema>();
+        Map<String, HollowSchema> schemaMap = new HashMap<>();
         for(HollowSchema schema : schemas) {
             schemaMap.put(schema.getName(), schema);
         }

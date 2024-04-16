@@ -113,8 +113,9 @@ public class HollowPerfBackedMap<K, V> extends AbstractMap<K, V> {
                 
                 if(valueOrdinal != -1) {
                     V iV = valueInstantiator.instantiate(valueMaskedTypeIdx | valueOrdinal);
-                    if(Objects.equals(iV, e.getValue()))
+                    if(Objects.equals(iV, e.getValue())) {
                         return true;
+                    }
                 }
                 
                 return false;

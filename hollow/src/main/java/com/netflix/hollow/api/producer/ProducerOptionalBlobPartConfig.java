@@ -45,8 +45,9 @@ public class ProducerOptionalBlobPartConfig {
     }
     
     public void addTypesToPart(String partName, String... types) {
-        if(types.length == 0)
+        if(types.length == 0) {
             return;
+        }
         
         Set<String> typeSet = parts.computeIfAbsent(partName, n -> new HashSet<>());
         
@@ -71,7 +72,7 @@ public class ProducerOptionalBlobPartConfig {
         return s;
     }
 
-    public class OptionalBlobPartOutputStreams {
+    public final class OptionalBlobPartOutputStreams {
         
         private final Map<String, ConfiguredOutputStream> partStreams;
         
@@ -81,16 +82,18 @@ public class ProducerOptionalBlobPartConfig {
         
         public void addOutputStream(String partName, OutputStream os) {
             Set<String> types = parts.get(partName);
-            
-            if(types == null)
+
+            if(types == null) {
                 throw new IllegalArgumentException("There is no blob part named " + partName + " in this configuration");
+            }
             
             partStreams.put(partName, new ConfiguredOutputStream(partName, types, new DataOutputStream(os)));
         }
         
         public Map<String, DataOutputStream> getStreamsByType() {
-            if(!allPartsHaveStreams())
+            if(!allPartsHaveStreams()) {
                 throw new IllegalStateException("Not all configured parts have streams!");
+            }
             
             Map<String, DataOutputStream> streamsByType = new HashMap<>();
             
@@ -106,8 +109,9 @@ public class ProducerOptionalBlobPartConfig {
         }
         
         public Map<String, String> getPartNameByType() {
-            if(!allPartsHaveStreams())
+            if(!allPartsHaveStreams()) {
                 throw new IllegalStateException("Not all configured parts have streams!");
+            }
             
             Map<String, String> streamsByType = new HashMap<>();
             

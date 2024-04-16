@@ -70,13 +70,15 @@ public class HollowHistoricalStateTypeKeyOrdinalMapping {
     public HollowHistoricalStateTypeKeyOrdinalMapping remap(OrdinalRemapper remapper) {
         IntMap newAddedOrdinalMap = new IntMap(addedOrdinalMap.size());
         IntMapEntryIterator addedIter = addedOrdinalMap.iterator();
-        while(addedIter.next())
+        while (addedIter.next()) {
             newAddedOrdinalMap.put(addedIter.getKey(), remapper.getMappedOrdinal(typeName, addedIter.getValue()));
+        }
 
         IntMap newRemovedOrdinalMap = new IntMap(removedOrdinalMap.size());
         IntMapEntryIterator removedIter = removedOrdinalMap.iterator();
-        while(removedIter.next())
+        while (removedIter.next()) {
             newRemovedOrdinalMap.put(removedIter.getKey(), remapper.getMappedOrdinal(typeName, removedIter.getValue()));
+        }
 
         return new HollowHistoricalStateTypeKeyOrdinalMapping(typeName, keyIndex, newAddedOrdinalMap, newRemovedOrdinalMap);
     }
@@ -85,8 +87,9 @@ public class HollowHistoricalStateTypeKeyOrdinalMapping {
         IntMapEntryIterator iter = addedOrdinalMap.iterator();
 
         while(iter.next()) {
-            if(removedOrdinalMap.get(iter.getKey()) != -1)
+            if(removedOrdinalMap.get(iter.getKey()) != -1) {
                 numberOfModifiedRecords++;
+            }
         }
 
         numberOfNewRecords = addedOrdinalMap.size() - numberOfModifiedRecords;

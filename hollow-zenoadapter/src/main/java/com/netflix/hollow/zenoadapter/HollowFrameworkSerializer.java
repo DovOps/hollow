@@ -45,8 +45,9 @@ public class HollowFrameworkSerializer extends FrameworkSerializer<HollowSeriali
 
     @Override
     public void serializePrimitive(HollowSerializationRecord rec, String fieldName, Object value) {
-        if (value == null)
+        if(value == null) {
             return;
+        }
 
         if (value instanceof Integer) {
             serializePrimitive(rec, fieldName, ((Integer) value).intValue());
@@ -104,8 +105,9 @@ public class HollowFrameworkSerializer extends FrameworkSerializer<HollowSeriali
 
     @Override
     public void serializeBytes(HollowSerializationRecord rec, String fieldName, byte[] value) {
-        if(value == null)
+        if(value == null) {
             return;
+        }
 
         HollowObjectWriteRecord writeRec = (HollowObjectWriteRecord)rec.getHollowWriteRecord();
 
@@ -113,8 +115,9 @@ public class HollowFrameworkSerializer extends FrameworkSerializer<HollowSeriali
     }
 
     public void serializeString(HollowSerializationRecord rec, String fieldName, String value) {
-        if(value == null)
+        if(value == null) {
             return;
+        }
 
         HollowObjectWriteRecord writeRec = (HollowObjectWriteRecord)rec.getHollowWriteRecord();
 
@@ -129,8 +132,9 @@ public class HollowFrameworkSerializer extends FrameworkSerializer<HollowSeriali
 
     @Override
     public void serializeObject(HollowSerializationRecord rec, String fieldName, Object obj) {
-        if(obj == null)
+        if(obj == null) {
             return;
+        }
 
         HollowObjectWriteRecord writeRec = (HollowObjectWriteRecord)rec.getHollowWriteRecord();
 
@@ -144,8 +148,9 @@ public class HollowFrameworkSerializer extends FrameworkSerializer<HollowSeriali
 
     @Override
     public <T> void serializeList(HollowSerializationRecord rec, String fieldName, String typeName, Collection<T> obj) {
-        if(obj == null)
+        if(obj == null) {
             return;
+        }
 
         String subType = getSubType(rec.getSchema().getName(), fieldName);
         HollowSerializationRecord subRec = getRec(subType);
@@ -158,8 +163,9 @@ public class HollowFrameworkSerializer extends FrameworkSerializer<HollowSeriali
         listRec.reset();
 
         for(T t : obj) {
-            if(t != null)
+            if(t != null) {
                 listRec.addElement(getFramework().add(typeName, t));
+            }
         }
 
         return getFramework().getStateEngine().add(rec.getTypeName(), listRec);
@@ -167,8 +173,9 @@ public class HollowFrameworkSerializer extends FrameworkSerializer<HollowSeriali
 
     @Override
     public <T> void serializeSet(HollowSerializationRecord rec, String fieldName, String typeName, Set<T> obj) {
-        if(obj == null)
+        if(obj == null) {
             return;
+        }
 
         String subType = getSubType(rec.getSchema().getName(), fieldName);
         HollowSerializationRecord subRec = getRec(subType);
@@ -193,8 +200,9 @@ public class HollowFrameworkSerializer extends FrameworkSerializer<HollowSeriali
 
     @Override
     public <K, V> void serializeMap(HollowSerializationRecord rec, String fieldName, String keyTypeName, String valueTypeName, Map<K, V> obj) {
-        if(obj == null)
+        if(obj == null) {
             return;
+        }
 
         String subType = getSubType(rec.getSchema().getName(), fieldName);
         HollowSerializationRecord subRec = getRec(subType);
@@ -218,12 +226,12 @@ public class HollowFrameworkSerializer extends FrameworkSerializer<HollowSeriali
         return getFramework().getStateEngine().add(rec.getTypeName(), mapRec);
     }
 
-    private final ThreadLocal<Map<String, HollowSerializationRecord>> serializationRecordHandle = new ThreadLocal<Map<String, HollowSerializationRecord>>();
+    private final ThreadLocal<Map<String, HollowSerializationRecord>> serializationRecordHandle = new ThreadLocal<>();
 
     public HollowSerializationRecord getRec(String type) {
         Map<String, HollowSerializationRecord> map = serializationRecordHandle.get();
         if(map == null) {
-            map = new HashMap<String, HollowSerializationRecord>();
+            map = new HashMap<>();
             serializationRecordHandle.set(map);
         }
 
@@ -257,12 +265,12 @@ public class HollowFrameworkSerializer extends FrameworkSerializer<HollowSeriali
     }
 
 
-    Map<String, Map<String, String>> subTypeMap = new ConcurrentHashMap<String, Map<String, String>>();
+    Map<String, Map<String, String>> subTypeMap = new ConcurrentHashMap<>();
 
     private String getSubType(String typeName, String fieldName) {
         Map<String, String> map = subTypeMap.get(typeName);
         if(map == null) {
-            map = new ConcurrentHashMap<String, String>();
+            map = new ConcurrentHashMap<>();
             subTypeMap.put(typeName, map);
         }
 

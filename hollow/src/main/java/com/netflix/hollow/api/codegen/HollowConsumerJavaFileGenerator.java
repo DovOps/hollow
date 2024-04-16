@@ -40,7 +40,7 @@ public abstract class HollowConsumerJavaFileGenerator implements HollowJavaFileG
     protected final HollowDataset dataset;
 
     protected String className;
-    protected boolean useCollectionsImport=false;
+    protected boolean useCollectionsImport;
 
     public HollowConsumerJavaFileGenerator(String packageName, String subPackageName, HollowDataset dataset,
             CodeGeneratorConfig config) {

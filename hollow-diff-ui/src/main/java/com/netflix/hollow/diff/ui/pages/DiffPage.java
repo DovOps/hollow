@@ -42,7 +42,7 @@ public abstract class DiffPage {
     protected final Template footerTemplate;
 
     protected String env = "";
-    protected boolean isHeaderEnabled = false;
+    protected boolean isHeaderEnabled;
 
     public DiffPage(HollowDiffUI diffUI, String templateName) {
         this.diffUI = diffUI;
@@ -123,16 +123,18 @@ public abstract class DiffPage {
         }
 
         String sessionParam = (String) session.getAttribute(sessionParamName);
-        if(sessionParam != null)
+        if(sessionParam != null) {
             return sessionParam;
+        }
 
         return defaultValue;
     }
 
     protected HollowTypeDiff getTypeDiff(String typeName) {
         for(HollowTypeDiff typeDiff : getDiff().getTypeDiffs()) {
-            if(typeDiff.getTypeName().equals(typeName))
+            if(typeDiff.getTypeName().equals(typeName)) {
                 return typeDiff;
+            }
         }
         return null;
     }
@@ -141,11 +143,11 @@ public abstract class DiffPage {
         Map<String, String> fromTags = diffUI.getDiff().getFromStateEngine().getHeaderTags();
         Map<String, String> toTags = diffUI.getDiff().getToStateEngine().getHeaderTags();
 
-        Set<String> allKeys = new HashSet<String>();
+        Set<String> allKeys = new HashSet<>();
         allKeys.addAll(fromTags.keySet());
         allKeys.addAll(toTags.keySet());
 
-        List<HollowHeaderEntry> entries = new ArrayList<HollowHeaderEntry>();
+        List<HollowHeaderEntry> entries = new ArrayList<>();
 
         int i=0;
 

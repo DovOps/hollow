@@ -65,8 +65,9 @@ public class HollowListLookupDelegate<T> implements HollowListDelegate<T> {
         int size = size(ordinal);
         for(int i=0;i<size;i++) {
             int elementOrdinal = dataAccess.getElementOrdinal(ordinal, i);
-            if(list.equalsElement(elementOrdinal, o))
+            if(list.equalsElement(elementOrdinal, o)) {
                 return i;
+            }
         }
         return -1;
     }
@@ -76,8 +77,9 @@ public class HollowListLookupDelegate<T> implements HollowListDelegate<T> {
         int size = size(ordinal);
         for(int i=size - 1; i>=0; i--) {
             int elementOrdinal = dataAccess.getElementOrdinal(ordinal, i);
-            if(list.equalsElement(elementOrdinal, o))
+            if(list.equalsElement(elementOrdinal, o)) {
                 return i;
+            }
         }
         return -1;
     }

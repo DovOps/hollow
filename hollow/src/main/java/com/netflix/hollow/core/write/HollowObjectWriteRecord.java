@@ -27,8 +27,8 @@ public class HollowObjectWriteRecord implements HollowWriteRecord {
 
     private final HollowObjectSchema schema;
 
-    private final ByteDataArray fieldData[];
-    private final boolean isNonNull[];
+    private final ByteDataArray[] fieldData;
+    private final boolean[] isNonNull;
 
     public HollowObjectWriteRecord(HollowObjectSchema schema) {
         this.schema = schema;
@@ -69,8 +69,9 @@ public class HollowObjectWriteRecord implements HollowWriteRecord {
 
     private void writeField(ByteDataArray buf, int fieldIndex) {
         if (isNonNull[fieldIndex]) {
-            if (getSchema().getFieldType(fieldIndex).isVariableLength())
+            if(getSchema().getFieldType(fieldIndex).isVariableLength()) {
                 VarInt.writeVInt(buf, (int)fieldData[fieldIndex].length());
+            }
             fieldData[fieldIndex].copyTo(buf);
         } else {
             writeNull(buf, schema.getFieldType(fieldIndex));
@@ -158,7 +159,9 @@ public class HollowObjectWriteRecord implements HollowWriteRecord {
     }
 
     public void setBytes(String fieldName, byte[] value) {
-        if(value == null)  return;
+        if(value == null) {
+            return;
+        }
 
         int fieldIndex = getSchema().getPosition(fieldName);
 
@@ -172,7 +175,9 @@ public class HollowObjectWriteRecord implements HollowWriteRecord {
     }
 
     public void setString(String fieldName, String value) {
-        if(value == null)  return;
+        if(value == null) {
+            return;
+        }
 
         int fieldIndex = getSchema().getPosition(fieldName);
 

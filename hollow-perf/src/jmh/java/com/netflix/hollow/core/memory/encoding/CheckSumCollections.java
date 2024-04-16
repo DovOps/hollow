@@ -84,7 +84,7 @@ public class CheckSumCollections {
     private int shards = 8;
 
     @Param("false")
-    private boolean remove = false;
+    private boolean remove;
 
     @Setup
     public void setUp() throws IOException {

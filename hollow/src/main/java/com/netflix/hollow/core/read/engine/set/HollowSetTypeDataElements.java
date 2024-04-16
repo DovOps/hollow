@@ -89,10 +89,11 @@ public class HollowSetTypeDataElements {
     }
 
     static void discardFromStream(HollowBlobInput in, int numShards, boolean isDelta) throws IOException {
-        if(numShards > 1)
+        if(numShards > 1) {
             VarInt.readVInt(in); // max ordinal
 
-        for(int i=0;i<numShards;i++) {
+        }
+        for (int i = 0;i < numShards;i++) {
             VarInt.readVInt(in); // max ordinal
 
             if(isDelta) {

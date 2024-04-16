@@ -26,8 +26,9 @@ interface Util {
         AtomicReference<T> value = new AtomicReference<>();
         return () -> {
             T val = value.get();
-            if (val == null)
+            if(val == null) {
                 val = value.updateAndGet(v -> v == null ? requireNonNull(supplier.get()) : v);
+            }
             return val;
         };
     }

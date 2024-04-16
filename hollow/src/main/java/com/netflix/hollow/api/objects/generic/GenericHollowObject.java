@@ -68,16 +68,18 @@ public class GenericHollowObject extends HollowObject {
             try {
                 HollowObjectSchema hollowObjectSchema = (HollowObjectSchema)getTypeDataAccess().getDataAccess().getMissingDataHandler().handleSchema(getSchema().getName());
                 referencedType = hollowObjectSchema.getReferencedType(fieldName);
-                if(referencedType == null)
+                if(referencedType == null) {
                     return null;
+                }
             } catch(Exception e) {
                 return null;
             }
         }
         
         int ordinal = getOrdinal(fieldName);
-        if(ordinal == -1)
+        if(ordinal == -1) {
             return null;
+        }
         
         return GenericHollowRecordHelper.instantiate(getTypeDataAccess().getDataAccess(), referencedType, ordinal);
     }

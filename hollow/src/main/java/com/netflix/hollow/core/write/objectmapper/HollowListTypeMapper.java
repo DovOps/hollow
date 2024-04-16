@@ -42,7 +42,7 @@ public class HollowListTypeMapper extends HollowTypeMapper {
     private final HollowListSchema schema;
     private final HollowListTypeWriteState writeState;
 
-    private final ThreadLocal<IntList> intList = new ThreadLocal<IntList>();
+    private final ThreadLocal<IntList> intList = new ThreadLocal<>();
     private final boolean ignoreListOrdering;
 
     private final HollowTypeMapper elementMapper;
@@ -67,8 +67,9 @@ public class HollowListTypeMapper extends HollowTypeMapper {
         if(obj instanceof MemoizedList) {
             long assignedOrdinal = ((MemoizedList<?>)obj).__assigned_ordinal;
 
-            if((assignedOrdinal & ASSIGNED_ORDINAL_CYCLE_MASK) == cycleSpecificAssignedOrdinalBits())
+            if((assignedOrdinal & ASSIGNED_ORDINAL_CYCLE_MASK) == cycleSpecificAssignedOrdinalBits()) {
                 return (int)assignedOrdinal & Integer.MAX_VALUE;
+            }
         }
 
         List<?> l = (List<?>)obj;
@@ -101,8 +102,9 @@ public class HollowListTypeMapper extends HollowTypeMapper {
                 ordinalList.add(ordinal);
             }
             ordinalList.sort();
-            for (int i = 0; i < ordinalList.size(); i++)
+            for (int i = 0;i < ordinalList.size();i++) {
                 rec.addElement(ordinalList.get(i));
+            }
         } else {
             for (Object o : l) {
                 if (o == null) {

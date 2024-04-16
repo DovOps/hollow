@@ -29,7 +29,7 @@ import com.netflix.hollow.core.schema.HollowListSchema;
  */
 public class HollowListCachedDelegate<T> implements HollowListDelegate<T>, HollowCachedDelegate {
 
-    private final int ordinals[];
+    private final int[] ordinals;
     protected HollowListTypeAPI typeAPI;
     private HollowListTypeDataAccess dataAccess;
 
@@ -42,10 +42,11 @@ public class HollowListCachedDelegate<T> implements HollowListDelegate<T>, Hollo
     }
 
     private HollowListCachedDelegate(HollowListTypeDataAccess dataAccess, HollowListTypeAPI typeAPI, int ordinal) {
-        int ordinals[] = new int[dataAccess.size(ordinal)];
+        int[] ordinals = new int[dataAccess.size(ordinal)];
 
-        for(int i=0;i<ordinals.length;i++)
+        for (int i = 0;i < ordinals.length;i++) {
             ordinals[i] = dataAccess.getElementOrdinal(ordinal, i);
+        }
 
         this.ordinals = ordinals;
         this.dataAccess = dataAccess;
@@ -70,8 +71,9 @@ public class HollowListCachedDelegate<T> implements HollowListDelegate<T>, Hollo
     @Override
     public final int indexOf(HollowList<T> list, int ordinal, Object o) {
         for(int i=0;i<ordinals.length;i++) {
-            if(list.equalsElement(ordinals[i], o))
+            if(list.equalsElement(ordinals[i], o)) {
                 return i;
+            }
         }
         return -1;
     }
@@ -79,8 +81,9 @@ public class HollowListCachedDelegate<T> implements HollowListDelegate<T>, Hollo
     @Override
     public final int lastIndexOf(HollowList<T> list, int ordinal, Object o) {
         for(int i=ordinals.length - 1; i>=0; i--) {
-            if(list.equalsElement(ordinals[i], o))
+            if(list.equalsElement(ordinals[i], o)) {
                 return i;
+            }
         }
         return -1;
     }

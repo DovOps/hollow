@@ -37,7 +37,7 @@ public class GenericHollowSet extends HollowSet<HollowRecord> {
     }
     
     public GenericHollowSet(HollowSetTypeDataAccess dataAccess, int ordinal) {
-        this(new HollowSetLookupDelegate<HollowRecord>(dataAccess), ordinal);
+        this(new HollowSetLookupDelegate<>(dataAccess), ordinal);
     }
 
     public GenericHollowSet(HollowSetDelegate<HollowRecord> delegate, int ordinal) {
@@ -45,19 +45,19 @@ public class GenericHollowSet extends HollowSet<HollowRecord> {
     }
     
     public Iterable<GenericHollowObject> objects() {
-        return new GenericHollowIterable<GenericHollowObject>(this);
+        return new GenericHollowIterable<>(this);
     }
     
     public Iterable<GenericHollowList> lists() {
-        return new GenericHollowIterable<GenericHollowList>(this);
+        return new GenericHollowIterable<>(this);
     }
     
     public Iterable<GenericHollowSet> sets() {
-        return new GenericHollowIterable<GenericHollowSet>(this);
+        return new GenericHollowIterable<>(this);
     }
     
     public Iterable<GenericHollowMap> maps() {
-        return new GenericHollowIterable<GenericHollowMap>(this);
+        return new GenericHollowIterable<>(this);
     }
     
     @Override

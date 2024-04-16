@@ -78,11 +78,11 @@ public class HollowPrimaryKeyIndexGenerator extends HollowUniqueKeyIndexGenerato
             fieldNamesAsStr.append(fieldNames.get(i));
         }
 
-        builder.append("    public " + hollowImplClassname(schema.getName()) + " findMatch(" + paramsAsStr + ") {\n");
-        builder.append("        int ordinal = idx.getMatchingOrdinal(" + fieldNamesAsStr + ");\n");
+        builder.append("    public ").append(hollowImplClassname(schema.getName())).append(" findMatch(").append(paramsAsStr).append(") {\n");
+        builder.append("        int ordinal = idx.getMatchingOrdinal(").append(fieldNamesAsStr).append(");\n");
         builder.append("        if(ordinal == -1)\n");
         builder.append("            return null;\n");
-        builder.append("        return api.get" + hollowImplClassname(schema.getName()) + "(ordinal);\n");
+        builder.append("        return api.get").append(hollowImplClassname(schema.getName())).append("(ordinal);\n");
         builder.append("    }\n\n");
     }
 
@@ -93,9 +93,9 @@ public class HollowPrimaryKeyIndexGenerator extends HollowUniqueKeyIndexGenerato
         builder.append(" * @deprecated see {@link com.netflix.hollow.api.consumer.index.UniqueKeyIndex} which can be created as follows:\n");
         builder.append(" * <pre>{@code\n");
         if (pk.numFields() > 1) {
-            builder.append(String.format(" *     UniqueKeyIndex<%s, %1$s.Key> uki = %1$s.uniqueIndex(consumer);\n", typeName));
-            builder.append(String.format(" *     %s.Key k = new %1$s.Key(...);\n", typeName));
-            builder.append(String.format(" *     %s m = uki.findMatch(k);\n", typeName));
+            builder.append(String.format(" *     UniqueKeyIndex<%s, %1$s.Key> uki = %1$s.uniqueIndex(consumer);%n", typeName));
+            builder.append(String.format(" *     %s.Key k = new %1$s.Key(...);%n", typeName));
+            builder.append(String.format(" *     %s m = uki.findMatch(k);%n", typeName));
         } else {
             FieldType ft = pk.getFieldType(dataset, 0);
             String keyName;
@@ -106,11 +106,11 @@ public class HollowPrimaryKeyIndexGenerator extends HollowUniqueKeyIndexGenerato
                 keyName = HollowCodeGenerationUtils.getJavaScalarType(ft);
             }
 
-            builder.append(String.format(" *     UniqueKeyIndex<%1$s, %2$s> uki = %1$s.uniqueIndex(consumer);\n", typeName, keyName));
-            builder.append(String.format(" *     %s k = ...;\n", keyName));
-            builder.append(String.format(" *     %s m = uki.findMatch(k);\n", typeName));
+            builder.append(String.format(" *     UniqueKeyIndex<%1$s, %2$s> uki = %1$s.uniqueIndex(consumer);%n", typeName, keyName));
+            builder.append(String.format(" *     %s k = ...;%n", keyName));
+            builder.append(String.format(" *     %s m = uki.findMatch(k);%n", typeName));
         }
         builder.append(" * }</pre>\n");
-        builder.append(String.format(" * @see %s#uniqueIndex\n", typeName));
+        builder.append(String.format(" * @see %s#uniqueIndex%n", typeName));
     }
 }

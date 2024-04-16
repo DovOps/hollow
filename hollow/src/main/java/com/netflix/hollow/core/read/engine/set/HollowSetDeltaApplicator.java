@@ -31,13 +31,13 @@ class HollowSetDeltaApplicator {
     private final HollowSetTypeDataElements delta;
     private final HollowSetTypeDataElements target;
 
-    private long currentFromStateCopyStartBit = 0;
-    private long currentDeltaCopyStartBit = 0;
-    private long currentWriteStartBit = 0;
+    private long currentFromStateCopyStartBit;
+    private long currentDeltaCopyStartBit;
+    private long currentWriteStartBit;
 
-    private long currentFromStateStartBucket = 0;
-    private long currentDeltaStartBucket = 0;
-    private long currentWriteStartBucket = 0;
+    private long currentFromStateStartBucket;
+    private long currentDeltaStartBucket;
+    private long currentWriteStartBucket;
 
     private GapEncodedVariableLengthIntegerReader removalsReader;
     private GapEncodedVariableLengthIntegerReader additionsReader;
@@ -70,11 +70,12 @@ class HollowSetDeltaApplicator {
         target.elementData = new FixedLengthElementArray(target.memoryRecycler, target.totalNumberOfBuckets * target.bitsPerElement);
 
         if(target.bitsPerSetPointer == from.bitsPerSetPointer
-                && target.bitsPerSetSizeValue == from.bitsPerSetSizeValue
-                && target.bitsPerElement == from.bitsPerElement)
-                    fastDelta();
-        else
+        && target.bitsPerSetSizeValue == from.bitsPerSetSizeValue
+        && target.bitsPerElement == from.bitsPerElement) {
+            fastDelta();
+        } else {
             slowDelta();
+        }
 
         from.encodedRemovals = null;
         removalsReader.destroy();
@@ -98,8 +99,9 @@ class HollowSetDeltaApplicator {
                 mergeOrdinal(i++);
             } else {
                 int recordsToCopy = nextElementDiff - i;
-                if(nextElementDiff > bulkCopyEndOrdinal)
+                if(nextElementDiff > bulkCopyEndOrdinal) {
                     recordsToCopy = bulkCopyEndOrdinal - i + 1;
+                }
 
                 fastCopyRecords(recordsToCopy);
 
@@ -141,8 +143,9 @@ class HollowSetDeltaApplicator {
             if(!removeData) {
                 for(long bucketIdx=currentFromStateStartBucket; bucketIdx<fromDataEndBucket; bucketIdx++) {
                     long bucketValue = from.elementData.getElementValue(bucketIdx * from.bitsPerElement, from.bitsPerElement);
-                    if(bucketValue == from.emptyBucketValue)
+                    if(bucketValue == from.emptyBucketValue) {
                         bucketValue = target.emptyBucketValue;
+                    }
                     target.elementData.setElementValue(currentWriteStartBucket * target.bitsPerElement, target.bitsPerElement, bucketValue);
                     currentWriteStartBucket++;
                 }

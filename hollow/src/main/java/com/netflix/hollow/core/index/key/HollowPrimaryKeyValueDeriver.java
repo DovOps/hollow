@@ -65,12 +65,14 @@ public class HollowPrimaryKeyValueDeriver {
      * @return true if the ordinal contains the primary keys
      */
     public boolean keyMatches(int ordinal, Object... keys) {
-        if(keys.length != fieldPathIndexes.length)
+        if(keys.length != fieldPathIndexes.length) {
             return false;
+        }
 
         for(int i=0;i<keys.length;i++) {
-            if(!keyMatches(keys[i], ordinal, i))
+            if(!keyMatches(keys[i], ordinal, i)) {
                 return false;
+            }
         }
 
         return true;
@@ -98,10 +100,12 @@ public class HollowPrimaryKeyValueDeriver {
         switch(fieldType) {
             case BOOLEAN:
                 Boolean b = dataAccess.readBoolean(ordinal, lastFieldIdx);
-                if(b == key)
+                if(b == key) {
                     return true;
-                if(b == null || key == null)
+                }
+                if(b == null || key == null) {
                     return false;
+                }
                 return b.booleanValue() == ((Boolean)key).booleanValue();
             case BYTES:
                 return Arrays.equals(dataAccess.readBytes(ordinal, lastFieldIdx), (byte[])key);

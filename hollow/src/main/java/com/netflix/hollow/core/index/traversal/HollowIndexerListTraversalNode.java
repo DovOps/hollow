@@ -30,8 +30,9 @@ class HollowIndexerListTraversalNode extends HollowIndexerCollectionTraversalNod
 
     @Override
     public int doTraversal(int ordinal) {
-        if(child == null)
+        if(child == null) {
             return 1;
+        }
 
         int size = dataAccess().size(ordinal);
         

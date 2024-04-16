@@ -50,8 +50,9 @@ class HollowListTypeReadStateShard {
 
             long elementIndex = startElement + listIndex;
 
-            if(elementIndex >= endElement)
+            if(elementIndex >= endElement) {
                 throw new ArrayIndexOutOfBoundsException("Array index out of bounds: " + listIndex + ", list size: " + (endElement - startElement));
+            }
 
             elementOrdinal = (int)currentData.elementData.getElementValue(elementIndex * currentData.bitsPerElement, currentData.bitsPerElement);
         } while(readWasUnsafe(currentData));
@@ -109,14 +110,15 @@ class HollowListTypeReadStateShard {
                 int size = size(shardOrdinal);
     
                 checksum.applyInt(ordinal);
-                for(int i=0;i<size;i++)
+                for (int i = 0;i < size;i++) {
                     checksum.applyInt(getElementOrdinal(shardOrdinal, i));
+                }
 
                 ordinal = ordinal + numShards;
             } else {
                 // Round up ordinal
                 int r = (ordinal & -numShards) + shardNumber;
-                ordinal = (r <= ordinal) ? r + numShards : r;
+                ordinal = r <= ordinal ? r + numShards : r;
             }
             ordinal = populatedOrdinals.nextSetBit(ordinal);
         }
@@ -136,8 +138,9 @@ class HollowListTypeReadStateShard {
         
         int holeOrdinal = populatedOrdinals.nextClearBit(0);
         while(holeOrdinal <= currentData.maxOrdinal) {
-            if((holeOrdinal & (numShards - 1)) == shardNumber)
+            if((holeOrdinal & (numShards - 1)) == shardNumber) {
                 holeBits += currentData.bitsPerListPointer;
+            }
             
             holeOrdinal = populatedOrdinals.nextClearBit(holeOrdinal + 1);
         }

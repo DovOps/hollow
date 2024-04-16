@@ -35,13 +35,14 @@ public class HistoryStateQueryMatches {
     public HistoryStateQueryMatches(HollowHistoricalState historicalState, HollowHistoryUI ui, String dateDisplayString, Map<String, IntList> perTypeQueryMatchingKeys) {
         this.stateVersion = historicalState.getVersion();
         this.dateDisplayString = dateDisplayString;
-        this.typeMatches = new ArrayList<TypeMatches>(historicalState.getKeyOrdinalMapping().getTypeMappings().size());
+        this.typeMatches = new ArrayList<>(historicalState.getKeyOrdinalMapping().getTypeMappings().size());
 
         for(Map.Entry<String, IntList> entry : perTypeQueryMatchingKeys.entrySet()) {
             HollowHistoryRecordNamer recordNamer = ui.getHistoryRecordNamer(entry.getKey());
             TypeMatches typeMatches = new TypeMatches(historicalState, recordNamer, entry.getKey(), entry.getValue());
-            if(typeMatches.hasMatches())
+            if(typeMatches.hasMatches()) {
                 this.typeMatches.add(typeMatches);
+            }
         }
     }
 
@@ -70,9 +71,9 @@ public class HistoryStateQueryMatches {
 
         public TypeMatches(HollowHistoricalState historicalState, HollowHistoryRecordNamer recordNamer, String type, IntList queryMatchingKeys) {
             this.type = type;
-            this.modifiedRecords = new ArrayList<RecordDiff>();
-            this.removedRecords = new ArrayList<RecordDiff>();
-            this.addedRecords = new ArrayList<RecordDiff>();
+            this.modifiedRecords = new ArrayList<>();
+            this.removedRecords = new ArrayList<>();
+            this.addedRecords = new ArrayList<>();
 
             
             HollowHistoricalStateTypeKeyOrdinalMapping typeKeyMapping = historicalState.getKeyOrdinalMapping().getTypeMapping(type);

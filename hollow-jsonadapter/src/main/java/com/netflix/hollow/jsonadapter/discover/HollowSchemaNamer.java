@@ -21,8 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class HollowSchemaNamer {
 
-    private final ConcurrentHashMap<String, Map<String, String>> listNames = new ConcurrentHashMap<String, Map<String, String>>();
-    private final ConcurrentHashMap<String, Map<String, String>> subObjectNames = new ConcurrentHashMap<String, Map<String, String>>();
+    private final ConcurrentHashMap<String, Map<String, String>> listNames = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Map<String, String>> subObjectNames = new ConcurrentHashMap<>();
 
     public String subObjectName(String typeName, String prefix, String fieldName) {
         return subTypeName(subObjectNames, typeName, prefix, fieldName);
@@ -38,10 +38,11 @@ public class HollowSchemaNamer {
             synchronized (subNamesMap) {
                 typeNamesMap = subNamesMap.get(typeName);
                 if (typeNamesMap == null) {
-                    typeNamesMap = new ConcurrentHashMap<String, String>();
+                    typeNamesMap = new ConcurrentHashMap<>();
                     Map<String, String> existingMap = subNamesMap.putIfAbsent(typeName, typeNamesMap);
-                    if(existingMap != null)
+                    if(existingMap != null) {
                         typeNamesMap = existingMap;
+                    }
                 }
             }
         }
@@ -75,7 +76,9 @@ public class HollowSchemaNamer {
     }
 
     private String uppercaseFirstCharacter(String value) {
-        if (value == null) return "";
+        if(value == null) {
+            return "";
+        }
         return value.substring(0, 1).toUpperCase() + value.substring(1);
     }
 

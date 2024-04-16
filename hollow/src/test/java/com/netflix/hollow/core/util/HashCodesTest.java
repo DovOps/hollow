@@ -30,7 +30,7 @@ import org.junit.Test;
 
 public class HashCodesTest {
 
-    private Random rand = new Random();
+    private final Random rand = new Random();
     
     @Test
     public void testStringHashCode() {

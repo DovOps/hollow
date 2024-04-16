@@ -46,8 +46,8 @@ import java.util.Set;
 public class HollowCodeGenerationUtils {
 
     private static final Set<String> PRIMITIVE_TYPES = new HashSet<>();
-    private static final Map<String,String> DEFAULT_CLASS_NAME_SUBSTITUTIONS = new HashMap<String,String>();
-    private static final Map<String,String> AGGRESSIVE_CLASS_NAME_SUBSTITUTIONS = new HashMap<String,String>();
+    private static final Map<String,String> DEFAULT_CLASS_NAME_SUBSTITUTIONS = new HashMap<>();
+    private static final Map<String,String> AGGRESSIVE_CLASS_NAME_SUBSTITUTIONS = new HashMap<>();
 
     static {
         for(Class<?> clzz : Arrays.asList(Boolean.class, Integer.class, Long.class, Float.class, Double.class, String.class)) {
@@ -190,14 +190,18 @@ public class HollowCodeGenerationUtils {
     }
 
     public static String delegateInterfaceName(HollowSchema schema) {
-        if(schema instanceof HollowObjectSchema)
+        if(schema instanceof HollowObjectSchema) {
             return delegateInterfaceName(schema.getName());
-        if(schema instanceof HollowListSchema)
+        }
+        if(schema instanceof HollowListSchema) {
             return HollowListDelegate.class.getSimpleName();
-        if(schema instanceof HollowSetSchema)
+        }
+        if(schema instanceof HollowSetSchema) {
             return HollowSetDelegate.class.getSimpleName();
-        if(schema instanceof HollowMapSchema)
+        }
+        if(schema instanceof HollowMapSchema) {
             return HollowMapDelegate.class.getSimpleName();
+        }
         throw new UnsupportedOperationException("What kind of schema is a " + schema.getClass().getSimpleName() + "?");
     }
 
@@ -206,14 +210,18 @@ public class HollowCodeGenerationUtils {
     }
 
     public static String delegateCachedClassname(HollowSchema schema) {
-        if(schema instanceof HollowObjectSchema)
+        if(schema instanceof HollowObjectSchema) {
             return delegateCachedImplName(schema.getName());
-        if(schema instanceof HollowListSchema)
+        }
+        if(schema instanceof HollowListSchema) {
             return HollowListCachedDelegate.class.getSimpleName();
-        if(schema instanceof HollowSetSchema)
+        }
+        if(schema instanceof HollowSetSchema) {
             return HollowSetCachedDelegate.class.getSimpleName();
-        if(schema instanceof HollowMapSchema)
+        }
+        if(schema instanceof HollowMapSchema) {
             return HollowMapCachedDelegate.class.getSimpleName();
+        }
         throw new UnsupportedOperationException("What kind of schema is a " + schema.getClass().getSimpleName() + "?");
     }
 
@@ -222,20 +230,25 @@ public class HollowCodeGenerationUtils {
     }
 
     public static String delegateLookupClassname(HollowSchema schema) {
-        if(schema instanceof HollowObjectSchema)
+        if(schema instanceof HollowObjectSchema) {
             return delegateLookupImplName(schema.getName());
-        if(schema instanceof HollowListSchema)
+        }
+        if(schema instanceof HollowListSchema) {
             return HollowListLookupDelegate.class.getSimpleName();
-        if(schema instanceof HollowSetSchema)
+        }
+        if(schema instanceof HollowSetSchema) {
             return HollowSetLookupDelegate.class.getSimpleName();
-        if(schema instanceof HollowMapSchema)
+        }
+        if(schema instanceof HollowMapSchema) {
             return HollowMapLookupDelegate.class.getSimpleName();
+        }
         throw new UnsupportedOperationException("What kind of schema is a " + schema.getClass().getSimpleName() + "?");
     }
 
     public static String lowercase(String str) {
-        if(str == null || str.length() == 0)
+        if(str == null || str.length() == 0) {
             return str;
+        }
 
         StringBuilder builder = new StringBuilder();
 
@@ -250,8 +263,9 @@ public class HollowCodeGenerationUtils {
     }
 
     public static String upperFirstChar(String str) {
-        if(str == null || str.length() == 0)
+        if(str == null || str.length() == 0) {
             return str;
+        }
 
         StringBuilder builder = new StringBuilder();
 
@@ -392,7 +406,9 @@ public class HollowCodeGenerationUtils {
         Set<String> primitiveTypes = new HashSet<>();
         for (HollowSchema schema : schemaList) {
             String type = schema.getName();
-            if (!isPrimitiveType(type)) continue;
+            if(!isPrimitiveType(type)) {
+                continue;
+            }
 
             primitiveTypes.add(type);
         }

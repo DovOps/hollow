@@ -74,7 +74,7 @@ public class HashIndexTest {
         api = consumer.getAPI(DataModel.Consumer.Api.class);
     }
 
-    public static abstract class MatchTestParameterized<T extends HollowObject, Q> extends HashIndexTest {
+    public abstract static class MatchTestParameterized<T extends HollowObject, Q> extends HashIndexTest {
         final String path;
         final Class<Q> type;
         final Q value;

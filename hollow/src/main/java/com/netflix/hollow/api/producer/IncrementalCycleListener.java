@@ -126,7 +126,7 @@ public interface IncrementalCycleListener extends EventListener {
 
             private long version = Long.MIN_VALUE;
             private Status status = FAIL;
-            private Throwable cause = null;
+            private Throwable cause;
             private long recordsAddedOrModified;
             private long recordsRemoved;
             private Map<String, Object> cycleMetadata;

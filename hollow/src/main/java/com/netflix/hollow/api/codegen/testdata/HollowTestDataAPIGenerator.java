@@ -106,10 +106,11 @@ public class HollowTestDataAPIGenerator {
                 classContent = new HollowMapTypeTestDataAPIClassGenerator(dataset, (HollowMapSchema) schema, packageName).generate();
                 break;
             }
-            
-            if(classContent != null)
-            try(FileWriter writer = new FileWriter(classDestination)) {
-                writer.write(classContent);
+
+            if(classContent != null) {
+                try (FileWriter writer = new FileWriter(classDestination)) {
+                    writer.write(classContent);
+                }
             }
         }
     }

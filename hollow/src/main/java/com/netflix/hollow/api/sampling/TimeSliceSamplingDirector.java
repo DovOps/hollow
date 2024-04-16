@@ -23,14 +23,14 @@ import java.util.List;
 
 public class TimeSliceSamplingDirector extends HollowSamplingDirector {
 
-    private final List<SamplingStatusListener> listeners = new ArrayList<SamplingStatusListener>();
+    private final List<SamplingStatusListener> listeners = new ArrayList<>();
 
     private int msOff;
     private int msOn;
 
-    private boolean isInPlay = false;
+    private boolean isInPlay;
 
-    private boolean record = false;
+    private boolean record;
 
     public TimeSliceSamplingDirector() {
         this(1000, 1);

@@ -42,9 +42,13 @@ public class BrowseSchemaPage extends HollowExplorerPage {
             schemaDisplay = new SchemaDisplay(ui.getStateEngine().getSchema(type));
             schemaDisplay.setExpanded(true);
         }
-        
-        if(expand != null) expandOrCollapse(schemaDisplay, expand.split("\\."), 1, true);
-        if(collapse != null) expandOrCollapse(schemaDisplay, collapse.split("\\."), 1, false);
+
+        if(expand != null) {
+            expandOrCollapse(schemaDisplay, expand.split("\\."), 1, true);
+        }
+        if(collapse != null) {
+            expandOrCollapse(schemaDisplay, collapse.split("\\."), 1, false);
+        }
         
         session.setAttribute("schema-display-" + type, schemaDisplay);
         
@@ -57,9 +61,10 @@ public class BrowseSchemaPage extends HollowExplorerPage {
         ui.getVelocityEngine().getTemplate("browse-schema.vm").merge(ctx, writer);
     }
     
-    private void expandOrCollapse(SchemaDisplay display, String fieldPaths[], int cursor, boolean isExpand) {
-        if(display == null)
+    private void expandOrCollapse(SchemaDisplay display, String[] fieldPaths, int cursor, boolean isExpand) {
+        if(display == null) {
             return;
+        }
         
         if(cursor >= fieldPaths.length) {
             display.setExpanded(isExpand);
@@ -67,8 +72,9 @@ public class BrowseSchemaPage extends HollowExplorerPage {
         } 
         
         for(SchemaDisplayField field : display.getFields()) {
-            if(field.getFieldName().equals(fieldPaths[cursor]))
-                expandOrCollapse(field.getReferencedType(), fieldPaths, cursor+1, isExpand);
+            if(field.getFieldName().equals(fieldPaths[cursor])) {
+                expandOrCollapse(field.getReferencedType(), fieldPaths, cursor + 1, isExpand);
+            }
         }
     }
 }

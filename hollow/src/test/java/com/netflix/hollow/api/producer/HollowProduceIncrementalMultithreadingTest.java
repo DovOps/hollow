@@ -40,11 +40,10 @@ public class HollowProduceIncrementalMultithreadingTest {
             int[] notModifiedElementIds = IntStream.range(0, ELEMENTS / 2).toArray();
             int[] modifiedElementIds = IntStream.range(ELEMENTS / 2, ELEMENTS).toArray();
 
-            long versionAfterUpdate = producer.runIncrementalCycle(iws -> {
+            long versionAfterUpdate = producer.runIncrementalCycle(iws ->
                 Arrays.stream(modifiedElementIds).parallel()
                         .mapToObj(i -> new SimpleType(i, i + 1))
-                        .forEach(iws::addOrModify);
-            });
+                        .forEach(iws::addOrModify));
 
             /// now we read the changes and assert
             HollowPrimaryKeyIndex idx = createPrimaryKeyIndex(versionAfterUpdate);
@@ -70,11 +69,10 @@ public class HollowProduceIncrementalMultithreadingTest {
             int[] notModifiedElementIds = IntStream.range(0, ELEMENTS / 2).toArray();
             int[] deletedElementIds = IntStream.range(ELEMENTS / 2, ELEMENTS).toArray();
 
-            long versionAfterDelete = producer.runIncrementalCycle(iws -> {
+            long versionAfterDelete = producer.runIncrementalCycle(iws ->
                 Arrays.stream(deletedElementIds).parallel()
                         .mapToObj(i -> new SimpleType(i, i))
-                        .forEach(iws::delete);
-            });
+                        .forEach(iws::delete));
 
             /// now we read the changes and assert
             HollowPrimaryKeyIndex idx = createPrimaryKeyIndex(versionAfterDelete);

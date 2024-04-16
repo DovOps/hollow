@@ -47,7 +47,7 @@ import java.util.Set;
 public class HollowRecordJsonStringifier implements HollowStringifier<HollowRecordJsonStringifier> {
 
     private final Set<String> collapseObjectTypes;
-    private final Set<String> excludeObjectTypes = new HashSet<String>();
+    private final Set<String> excludeObjectTypes = new HashSet<>();
     private final boolean collapseAllSingleFieldObjects;
     private final boolean prettyPrint;
 
@@ -64,7 +64,7 @@ public class HollowRecordJsonStringifier implements HollowStringifier<HollowReco
     public HollowRecordJsonStringifier(boolean indent, String... collapseObjectTypes) {
         this.prettyPrint = indent;
         this.collapseAllSingleFieldObjects = false;
-        this.collapseObjectTypes = new HashSet<String>();
+        this.collapseObjectTypes = new HashSet<>();
 
         for (String collapseObjectType : collapseObjectTypes) {
             this.collapseObjectTypes.add(collapseObjectType);
@@ -185,14 +185,16 @@ public class HollowRecordJsonStringifier implements HollowStringifier<HollowReco
 
                     boolean needToQuoteKey = keySchema.getFieldType(0) != FieldType.STRING;
 
-                    if (needToQuoteKey)
+                    if(needToQuoteKey) {
                         writer.append("\"");
+                    }
 
                     int keyOrdinal = ordinalIterator.getKey();
                     appendFieldStringify(writer, dataAccess, indentation, keySchema, keyTypeDataAccess, keyOrdinal, 0);
 
-                    if (needToQuoteKey)
+                    if(needToQuoteKey) {
                         writer.append("\"");
+                    }
 
                     writer.append(": ");
 
@@ -206,8 +208,9 @@ public class HollowRecordJsonStringifier implements HollowStringifier<HollowReco
                 writer.append("}");
             } else {
                 writer.append("[");
-                if (prettyPrint)
+                if(prettyPrint) {
                     writer.append(NEWLINE);
+                }
 
                 boolean firstEntry = true;
 
@@ -216,8 +219,9 @@ public class HollowRecordJsonStringifier implements HollowStringifier<HollowReco
                         firstEntry = false;
                     } else {
                         writer.append(",");
-                        if (prettyPrint)
+                        if(prettyPrint) {
                             writer.append(NEWLINE);
+                        }
                     }
                     if (prettyPrint) {
                         appendIndentation(writer, indentation - 1);
@@ -272,17 +276,20 @@ public class HollowRecordJsonStringifier implements HollowStringifier<HollowReco
         } else {
             boolean firstElement = true;
             writer.append("[");
-            if (prettyPrint)
+            if(prettyPrint) {
                 writer.append(NEWLINE);
+            }
 
             while(elementOrdinal != HollowOrdinalIterator.NO_MORE_ORDINALS) {
-                if (firstElement)
+                if(firstElement) {
                     firstElement = false;
-                else
+                } else {
                     writer.append(",");
+                }
 
-                if (prettyPrint)
+                if(prettyPrint) {
                     appendIndentation(writer, indentation);
+                }
 
                 appendStringify(writer, dataAccess, elementType, elementOrdinal, indentation);
 
@@ -355,10 +362,11 @@ public class HollowRecordJsonStringifier implements HollowStringifier<HollowReco
                 String fieldName = schema.getFieldName(i);
 
                 if (!typeDataAccess.isNull(ordinal, i)) {
-                    if (firstField)
+                    if(firstField) {
                         firstField = false;
-                    else
+                    } else {
                         writer.append(",");
+                    }
 
                     if (prettyPrint) {
                         writer.append(NEWLINE);
@@ -410,8 +418,9 @@ public class HollowRecordJsonStringifier implements HollowStringifier<HollowReco
     }
 
     private String escapeString(String str) {
-        if (str.indexOf('\\') == -1 && str.indexOf('\"') == -1)
+        if(str.indexOf('\\') == -1 && str.indexOf('\"') == -1) {
             return str;
+        }
         return str.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 

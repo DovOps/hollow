@@ -63,7 +63,7 @@ public class HollowFieldMatchQuery {
      * @return the matching records
      */
     public Map<String, BitSet> findMatchingRecords(String fieldName, String fieldValue) {
-        Map<String, BitSet> matches = new HashMap<String, BitSet>();
+        Map<String, BitSet> matches = new HashMap<>();
         
         for(HollowTypeReadState typeState : readEngine.getTypeStates()) {
             augmentMatchingRecords(typeState, fieldName, fieldValue, matches);
@@ -81,11 +81,12 @@ public class HollowFieldMatchQuery {
      * @return the matching records
      */
     public Map<String, BitSet> findMatchingRecords(String typeName, String fieldName, String fieldValue) {
-        Map<String, BitSet> matches = new HashMap<String, BitSet>();
+        Map<String, BitSet> matches = new HashMap<>();
 
         HollowTypeReadState typeState = readEngine.getTypeState(typeName);
-        if(typeState != null)
+        if(typeState != null) {
             augmentMatchingRecords(typeState, fieldName, fieldValue, matches);
+        }
         
         return matches;
     }
@@ -109,9 +110,10 @@ public class HollowFieldMatchQuery {
                             typeQueryMatches = queryBasedOnValueMatches(objState, i, queryValue);
                         }
                     }
-                    
-                    if(typeQueryMatches != null && typeQueryMatches.cardinality() > 0)
+
+                    if(typeQueryMatches != null && typeQueryMatches.cardinality() > 0) {
                         matches.put(typeState.getSchema().getName(), typeQueryMatches);
+                    }
                 }
             }
         }
@@ -127,15 +129,17 @@ public class HollowFieldMatchQuery {
             if(refSchema.numFields() == 1) {
                 if(refSchema.getFieldType(0) == FieldType.REFERENCE) {
                     BitSet refQueryMatches = attemptReferenceTraversalQuery(refObjTypeState, 0, fieldValue);
-                    if(refQueryMatches != null)
+                    if(refQueryMatches != null) {
                         return queryBasedOnMatchedReferences(typeState, fieldIdx, refQueryMatches);
+                    }
                 } else {
                     Object queryValue = castQueryValue(fieldValue, refSchema.getFieldType(0));
                     
                     if(queryValue != null) {
                         BitSet refQueryMatches = queryBasedOnValueMatches(refObjTypeState, 0, queryValue);
-                        if(refQueryMatches.cardinality() > 0)
+                        if(refQueryMatches.cardinality() > 0) {
                             return queryBasedOnMatchedReferences(typeState, fieldIdx, refQueryMatches);
+                        }
                     }
                 }
             }
@@ -151,8 +155,9 @@ public class HollowFieldMatchQuery {
         int ordinal = populatedOrdinals.nextSetBit(0);
         while(ordinal != -1) {
             int refOrdinal = typeState.readOrdinal(ordinal, referenceFieldPosition);
-            if(refOrdinal != -1 && matchedReferences.get(refOrdinal))
+            if(refOrdinal != -1 && matchedReferences.get(refOrdinal)) {
                 typeQueryMatches.set(ordinal);
+            }
             ordinal = populatedOrdinals.nextSetBit(ordinal+1);
         }
         return typeQueryMatches;
@@ -164,8 +169,9 @@ public class HollowFieldMatchQuery {
       
         int ordinal = populatedOrdinals.nextSetBit(0);
         while(ordinal != -1) {
-            if(HollowReadFieldUtils.fieldValueEquals(typeState, ordinal, fieldPosition, queryValue))
+            if(HollowReadFieldUtils.fieldValueEquals(typeState, ordinal, fieldPosition, queryValue)) {
                 typeQueryMatches.set(ordinal);
+            }
             ordinal = populatedOrdinals.nextSetBit(ordinal+1);
         }
         return typeQueryMatches;

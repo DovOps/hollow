@@ -70,7 +70,7 @@ public class HollowPOJOGenerator {
         /**
          * Sets the suffix for the generated POJO class names.
          */
-        pojoClassNameSuffix;
+        pojoClassNameSuffix
     }
 
     private final String packageName;
@@ -138,7 +138,9 @@ public class HollowPOJOGenerator {
             destinationPath = destinationPath.resolve(packagePath);
         }
         directory = destinationPath.toFile();
-        if (!directory.exists()) directory.mkdirs();
+        if(!directory.exists()) {
+            directory.mkdirs();
+        }
         for (HollowSchema schema : dataset.getSchemas()) {
             if (schema instanceof HollowObjectSchema && !isPrimitiveType(schema.getName())) {
                 HollowPOJOClassGenerator generator = new HollowPOJOClassGenerator(dataset, (HollowObjectSchema) schema,

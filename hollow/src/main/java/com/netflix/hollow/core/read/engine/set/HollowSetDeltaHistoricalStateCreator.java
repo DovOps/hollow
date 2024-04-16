@@ -39,7 +39,7 @@ public class HollowSetDeltaHistoricalStateCreator {
     private final int shardOrdinalShift;
 
     private HollowSetTypeReadState typeState;
-    private HollowSetTypeDataElements stateEngineDataElements[];
+    private HollowSetTypeDataElements[] stateEngineDataElements;
     private RemovedOrdinalIterator iter;
     private IntMap ordinalMapping;
     private int nextOrdinal;
@@ -97,8 +97,9 @@ public class HollowSetDeltaHistoricalStateCreator {
         while(ordinal != ORDINAL_NONE) {
             removedEntryCount++;
             int size = typeState.size(ordinal);
-            if(size > maxSize)
+            if(size > maxSize) {
                 maxSize = size;
+            }
             totalBucketCount += HashCodes.hashTableSize(size);
             ordinal = iter.next();
         }

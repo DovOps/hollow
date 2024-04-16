@@ -89,7 +89,7 @@ public class HollowHistoricalStateCreator {
     public HollowHistoricalStateDataAccess createBasedOnNewDelta(long version, HollowReadStateEngine stateEngine, boolean reverse) {
         IntMapOrdinalRemapper typeRemovedOrdinalMapping = new IntMapOrdinalRemapper();
 
-        List<HollowTypeReadState> historicalTypeStates = new ArrayList<HollowTypeReadState>(stateEngine.getTypeStates().size());
+        List<HollowTypeReadState> historicalTypeStates = new ArrayList<>(stateEngine.getTypeStates().size());
 
         for(HollowTypeReadState typeState : stateEngine.getTypeStates()) {
             createDeltaHistoricalTypeState(typeRemovedOrdinalMapping, historicalTypeStates, typeState, reverse);
@@ -176,7 +176,7 @@ public class HollowHistoricalStateCreator {
     }
     
     private Map<String, HollowHistoricalSchemaChange> calculateSchemaChanges(HollowReadStateEngine previous, HollowReadStateEngine current, DiffEqualityMapping equalityMapping) {
-        Map<String, HollowHistoricalSchemaChange> schemaChanges = new HashMap<String, HollowHistoricalSchemaChange>();
+        Map<String, HollowHistoricalSchemaChange> schemaChanges = new HashMap<>();
         for(HollowTypeReadState previousTypeState : previous.getTypeStates()) {
             String typeName = previousTypeState.getSchema().getName();
             HollowTypeReadState currentTypeState = current.getTypeState(typeName);
@@ -262,8 +262,9 @@ public class HollowHistoricalStateCreator {
         int matchedRecordCount = 0;
         int ordinal = populatedOrdinals.nextSetBit(0);
         while(ordinal != -1) {
-            if(equalityMap.getIdentityFromOrdinal(ordinal) != -1)
+            if(equalityMap.getIdentityFromOrdinal(ordinal) != -1) {
                 matchedRecordCount++;
+            }
             ordinal = populatedOrdinals.nextSetBit(ordinal + 1);
         }
         return matchedRecordCount;
@@ -273,8 +274,9 @@ public class HollowHistoricalStateCreator {
         int unmatchedRecordCount = 0;
         int ordinal = populatedOrdinals.nextSetBit(0);
         while(ordinal != -1) {
-            if(equalityMap.getIdentityFromOrdinal(ordinal) == -1)
+            if(equalityMap.getIdentityFromOrdinal(ordinal) == -1) {
                 unmatchedRecordCount++;
+            }
             ordinal = populatedOrdinals.nextSetBit(ordinal + 1);
         }
         return unmatchedRecordCount;
@@ -327,8 +329,9 @@ public class HollowHistoricalStateCreator {
         IntMapEntryIterator ordinalMappingIter = previousOrdinalMapping.iterator();
         IntMap ordinalLookupMap = new IntMap(previousOrdinalMapping.size());
 
-        while(ordinalMappingIter.next())
+        while (ordinalMappingIter.next()) {
             ordinalLookupMap.put(ordinalRemapper.getMappedOrdinal(typeName, ordinalMappingIter.getKey()), ordinalMappingIter.getValue());
+        }
         return ordinalLookupMap;
     }
 
@@ -371,14 +374,15 @@ public class HollowHistoricalStateCreator {
 
             pipeException.addSuppressed(e);
         }
-        if (pipeException != null)
+        if(pipeException != null) {
             throw new RuntimeException(pipeException);
+        }
 
         return removedRecordCopies;
     }
 
     private List<HollowSchema> schemasWithoutKeys(List<HollowSchema> schemas) {
-        List<HollowSchema> baldSchemas = new ArrayList<HollowSchema>();
+        List<HollowSchema> baldSchemas = new ArrayList<>();
         for(HollowSchema prevSchema : schemas)
             baldSchemas.add(HollowSchema.withoutKeys(prevSchema));
         return baldSchemas;

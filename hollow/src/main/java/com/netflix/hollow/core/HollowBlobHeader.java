@@ -44,8 +44,8 @@ public class HollowBlobHeader {
 
     public static final int HOLLOW_BLOB_VERSION_HEADER = 1030;
 
-    private Map<String, String> headerTags = new HashMap<String, String>();
-    private List<HollowSchema> schemas = new ArrayList<HollowSchema>();
+    private Map<String, String> headerTags = new HashMap<>();
+    private List<HollowSchema> schemas = new ArrayList<>();
     private long originRandomizedTag;
     private long destinationRandomizedTag;
     private int blobFormatVersion = HOLLOW_BLOB_VERSION_HEADER;

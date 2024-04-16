@@ -22,9 +22,8 @@ public class LocalBlobStoreTest {
                 .withBlobStager(new HollowInMemoryBlobStager())
                 .build();
 
-        long v1 = producer.runCycle(ws -> {
-            ws.add(1);
-        });
+        long v1 = producer.runCycle(ws ->
+            ws.add(1));
 
         HollowConsumer consumer = HollowConsumer.withBlobRetriever(bs)
                 .withLocalBlobStore(localDir).build();
@@ -32,9 +31,8 @@ public class LocalBlobStoreTest {
         Assert.assertEquals(v1, consumer.getCurrentVersionId());
         assertNSnapshots(1, localDir);
 
-        long v2 = producer.runCycle(ws -> {
-            ws.add(2);
-        });
+        long v2 = producer.runCycle(ws ->
+            ws.add(2));
 
         consumer = HollowConsumer.withBlobRetriever(bs)
                 .withLocalBlobStore(localDir).build();

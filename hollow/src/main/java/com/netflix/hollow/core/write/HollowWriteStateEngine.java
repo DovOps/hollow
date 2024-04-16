@@ -71,9 +71,9 @@ public class HollowWriteStateEngine implements HollowStateEngine {
     //// target a maximum shard size to reduce excess memory pool requirement 
     private long targetMaxTypeShardSize = Long.MAX_VALUE;
     //// focus filling ordinal holes in as few shards as possible to make delta application more efficient for consumers
-    private boolean focusHoleFillInFewestShards = false;
+    private boolean focusHoleFillInFewestShards;
     //// adjust number of shards per type during the course of the delta chain to realize consumer-side delta applications at constant space overhead
-    private boolean allowTypeResharding = false;
+    private boolean allowTypeResharding;
 
     private List<String> restoredStates;
     private boolean preparedForNextCycle = true;
@@ -86,9 +86,9 @@ public class HollowWriteStateEngine implements HollowStateEngine {
 
     @Deprecated
     public HollowWriteStateEngine(HollowObjectHashCodeFinder hasher) {
-        this.writeStates = new HashMap<String, HollowTypeWriteState>();
-        this.hollowSchemas = new HashMap<String, HollowSchema>();
-        this.orderedTypeStates = new ArrayList<HollowTypeWriteState>();
+        this.writeStates = new HashMap<>();
+        this.hollowSchemas = new HashMap<>();
+        this.orderedTypeStates = new ArrayList<>();
         this.hashCodeFinder = hasher;
         this.nextStateRandomizedTag = mintNewRandomizedStateTag();
     }
@@ -101,8 +101,9 @@ public class HollowWriteStateEngine implements HollowStateEngine {
      */
     public int add(String type, HollowWriteRecord rec) {
         HollowTypeWriteState hollowTypeWriteState = writeStates.get(type);
-        if(hollowTypeWriteState == null)
+        if(hollowTypeWriteState == null) {
             throw new IllegalArgumentException("Type " + type + " does not exist!");
+        }
         return hollowTypeWriteState.add(rec);
     }
 
@@ -113,8 +114,9 @@ public class HollowWriteStateEngine implements HollowStateEngine {
     public synchronized void addTypeState(HollowTypeWriteState writeState) {
         HollowSchema schema = writeState.getSchema();
 
-        if(writeStates.containsKey(schema.getName()))
+        if(writeStates.containsKey(schema.getName())) {
             throw new IllegalStateException("The state for type " + schema.getName() + " has already been added!");
+        }
 
         hollowSchemas.put(schema.getName(), schema);
         writeStates.put(schema.getName(), writeState);
@@ -135,8 +137,9 @@ public class HollowWriteStateEngine implements HollowStateEngine {
      * @param readStateEngine the read state to restore from
      */
     public void restoreFrom(HollowReadStateEngine readStateEngine) {
-        if(!readStateEngine.isListenToAllPopulatedOrdinals())
+        if(!readStateEngine.isListenToAllPopulatedOrdinals()) {
             throw new IllegalStateException("The specified HollowReadStateEngine must be listening for all populated ordinals!");
+        }
 
         for(HollowTypeReadState readState : readStateEngine.getTypeStates()) {
             String typeName = readState.getSchema().getName();
@@ -154,7 +157,7 @@ public class HollowWriteStateEngine implements HollowStateEngine {
             }
         }
         
-        restoredStates = new ArrayList<String>();
+        restoredStates = new ArrayList<>();
 
         SimultaneousExecutor executor = new SimultaneousExecutor(getClass(), "restore");
 
@@ -190,8 +193,9 @@ public class HollowWriteStateEngine implements HollowStateEngine {
      * Transition from the "adding records" phase of a cycle to the "writing" phase of a cycle.
      */
     public void prepareForWrite() {
-        if(!preparedForNextCycle)  // this call should be a no-op if we are already prepared for write
+        if(!preparedForNextCycle) {  // this call should be a no-op if we are already prepared for write
             return;
+        }
 
         addTypeNamesWithDefinedHashCodesToHeader();
 
@@ -219,8 +223,9 @@ public class HollowWriteStateEngine implements HollowStateEngine {
      * Transition from the "writing" phase of a cycle to the "adding records" phase of the next cycle.
      */
     public void prepareForNextCycle() {
-        if(preparedForNextCycle)  // this call should be a no-op if we are already prepared for the next cycle
+        if(preparedForNextCycle) {  // this call should be a no-op if we are already prepared for the next cycle
             return;
+        }
 
         previousStateRandomizedTag = nextStateRandomizedTag;
         nextStateRandomizedTag = mintNewRandomizedStateTag();
@@ -293,8 +298,9 @@ public class HollowWriteStateEngine implements HollowStateEngine {
      */
     public boolean hasChangedSinceLastCycle() {
         for(Map.Entry<String, HollowTypeWriteState> typeStateEntry : writeStates.entrySet()) {
-            if(typeStateEntry.getValue().hasChangedSinceLastCycle())
+            if(typeStateEntry.getValue().hasChangedSinceLastCycle()) {
                 return true;
+            }
         }
         return false;
     }
@@ -304,15 +310,17 @@ public class HollowWriteStateEngine implements HollowStateEngine {
     }
     
     void ensureAllNecessaryStatesRestored() {
-        if(!isRestored())
+        if(!isRestored()) {
             return;
+        }
         
-        List<String> unrestoredStates = new ArrayList<String>();
+        List<String> unrestoredStates = new ArrayList<>();
         
         for(HollowTypeWriteState typeState : orderedTypeStates) {
             if(restoredStates.contains(typeState.getSchema().getName())) {
-                if(!typeState.isRestored())
+                if(!typeState.isRestored()) {
                     unrestoredStates.add(typeState.getSchema().getName());
+                }
             }
         }
         
@@ -338,7 +346,7 @@ public class HollowWriteStateEngine implements HollowStateEngine {
 
     @Override
     public List<HollowSchema> getSchemas() {
-        List<HollowSchema> schemas = new ArrayList<HollowSchema>();
+        List<HollowSchema> schemas = new ArrayList<>();
 
         for(HollowTypeWriteState typeState : orderedTypeStates) {
             schemas.add(typeState.getSchema());
@@ -467,10 +475,11 @@ public class HollowWriteStateEngine implements HollowStateEngine {
         Random rand = new Random();
         
         long newTag = rand.nextLong();
-        while((newTag & HollowTypeMapper.ASSIGNED_ORDINAL_CYCLE_MASK) == 0 ||
-              (newTag & HollowTypeMapper.ASSIGNED_ORDINAL_CYCLE_MASK) == HollowTypeMapper.ASSIGNED_ORDINAL_CYCLE_MASK ||
-              (newTag & HollowTypeMapper.ASSIGNED_ORDINAL_CYCLE_MASK) == (previousStateRandomizedTag & HollowTypeMapper.ASSIGNED_ORDINAL_CYCLE_MASK))
+        while ((newTag & HollowTypeMapper.ASSIGNED_ORDINAL_CYCLE_MASK) == 0 ||
+        (newTag & HollowTypeMapper.ASSIGNED_ORDINAL_CYCLE_MASK) == HollowTypeMapper.ASSIGNED_ORDINAL_CYCLE_MASK ||
+        (newTag & HollowTypeMapper.ASSIGNED_ORDINAL_CYCLE_MASK) == (previousStateRandomizedTag & HollowTypeMapper.ASSIGNED_ORDINAL_CYCLE_MASK)) {
             newTag = rand.nextLong();
+        }
         
         return newTag;
     }
@@ -482,10 +491,11 @@ public class HollowWriteStateEngine implements HollowStateEngine {
             int counter = 0;
 
             // Sort to be consistent between cycle
-            Set<String> sortedNames = new TreeSet<String>(typeNames);
+            Set<String> sortedNames = new TreeSet<>(typeNames);
             for (String typeName : sortedNames) {
-                if(counter++ != 0)
+                if(counter++ != 0) {
                     typeNamesBuilder.append(",");
+                }
                 typeNamesBuilder.append(typeName);
             }
 

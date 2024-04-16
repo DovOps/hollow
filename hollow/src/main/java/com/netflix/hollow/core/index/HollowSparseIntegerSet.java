@@ -43,7 +43,7 @@ public class HollowSparseIntegerSet implements HollowTypeStateListener {
         boolean shouldIndex(int ordinal);
     }
 
-    private final static IndexPredicate DEFAULT_PREDICATE = new IndexPredicate() {
+    private static final IndexPredicate DEFAULT_PREDICATE = new IndexPredicate() {
         @Override
         public boolean shouldIndex(int ordinal) {
             return true;
@@ -72,10 +72,15 @@ public class HollowSparseIntegerSet implements HollowTypeStateListener {
     public HollowSparseIntegerSet(HollowReadStateEngine readStateEngine, String type, String fieldPath, IndexPredicate predicate) {
 
         // check arguments
-        if (readStateEngine == null) throw new IllegalArgumentException("Read state engine cannot be null");
-        if (type == null) throw new IllegalArgumentException("type cannot be null");
-        if (fieldPath == null || fieldPath.isEmpty())
+        if(readStateEngine == null) {
+            throw new IllegalArgumentException("Read state engine cannot be null");
+        }
+        if(type == null) {
+            throw new IllegalArgumentException("type cannot be null");
+        }
+        if(fieldPath == null || fieldPath.isEmpty()) {
             throw new IllegalArgumentException("fieldPath cannot be null or empty");
+        }
 
         this.readStateEngine = readStateEngine;
         this.type = type;
@@ -199,7 +204,9 @@ public class HollowSparseIntegerSet implements HollowTypeStateListener {
             Object[] values = fieldPath.findValues(ordinal);
             for (Object value : values) {
                 valuesToSet.add((int) value);
-                if (maxValueToSet < (int) value) maxValueToSet = (int) value;
+                if(maxValueToSet < (int)value) {
+                    maxValueToSet = (int)value;
+                }
             }
         }
     }
@@ -216,7 +223,7 @@ public class HollowSparseIntegerSet implements HollowTypeStateListener {
         boolean didSomeWork = false;
         SparseBitSet updated = sparseBitSetVolatile;
         // first check if the max value among the new values to be added is more than the max value of the existing sparse bit set.
-        if (valuesToSet.size() > 0 && maxValueToSet > updated.findMaxValue()) {
+        if (!valuesToSet.isEmpty() && maxValueToSet > updated.findMaxValue()) {
             updated = SparseBitSet.resize(updated, maxValueToSet);
             didSomeWork = true;
         }
@@ -257,7 +264,7 @@ public class HollowSparseIntegerSet implements HollowTypeStateListener {
         private final int maxValue;
         private final AtomicReferenceArray<Bucket> buckets;
 
-        private static class Bucket {
+        private static final class Bucket {
             private long idx;
             private long[] longs;
 
@@ -297,17 +304,20 @@ public class HollowSparseIntegerSet implements HollowTypeStateListener {
             // set all bits to one before the bit that is set in bitInIndex
             // example : 000...0100 will become 000...011
             long setAllOnesBeforeBitInIndex = bitInIndex - 1;
-            long offset = (longAtIndex & setAllOnesBeforeBitInIndex);
+            long offset = longAtIndex & setAllOnesBeforeBitInIndex;
             return Long.bitCount(offset);
         }
 
         boolean get(int i) {
-            if (i > maxValue || i < 0)
+            if(i > maxValue || i < 0) {
                 return false;
+            }
 
             int index = getIndex(i);
             Bucket currentBucket = buckets.get(index);
-            if (currentBucket == null) return false;
+            if(currentBucket == null) {
+                return false;
+            }
 
             long currentLongAtIndex = currentBucket.idx;
             long[] longs = currentBucket.longs;
@@ -316,8 +326,10 @@ public class HollowSparseIntegerSet implements HollowTypeStateListener {
             long whichLong = i >>> LONG_SHIFT;
             long bitInIndex = 1L << whichLong;// whichLong % 64
 
-            long isLongInitialized = (currentLongAtIndex & bitInIndex);
-            if (isLongInitialized == 0) return false;
+            long isLongInitialized = currentLongAtIndex & bitInIndex;
+            if(isLongInitialized == 0) {
+                return false;
+            }
 
             int offset = getOffset(currentLongAtIndex, bitInIndex);
             long value = longs[offset];
@@ -329,9 +341,12 @@ public class HollowSparseIntegerSet implements HollowTypeStateListener {
         // thread-safe
         void set(int i) {
 
-            if (i > maxValue)
+            if(i > maxValue) {
                 throw new IllegalArgumentException("Max value initialized is " + maxValue + " given value is " + i);
-            if (i < 0) throw new IllegalArgumentException("Cannot index negative numbers");
+            }
+            if(i < 0) {
+                throw new IllegalArgumentException("Cannot index negative numbers");
+            }
 
             // find which bucket
             int index = getIndex(i);
@@ -382,36 +397,44 @@ public class HollowSparseIntegerSet implements HollowTypeStateListener {
                     if (offset >= oldLongsLen) {
                         // append new long at end
                         int it;
-                        for (it = 0; it < oldLongsLen; it++)
+                        for (it = 0;it < oldLongsLen;it++) {
                             newLongs[it] = longs[it];
+                        }
                         newLongs[it] = whichBitInLong;
                     } else {
                         // insert new long in between
                         int it;
-                        for (it = 0; it < offset; it++)
+                        for (it = 0;it < offset;it++) {
                             newLongs[it] = longs[it];
+                        }
                         newLongs[offset] = whichBitInLong;
-                        for (it = offset; it < oldLongsLen; it++)
+                        for (it = offset;it < oldLongsLen;it++) {
                             newLongs[it + 1] = longs[it];
+                        }
                     }
                     longs = newLongs;
                 }
 
                 Bucket newBucket = new Bucket(longAtIndex, longs);
-                if (buckets.compareAndSet(index, currentBucket, newBucket))
+                if(buckets.compareAndSet(index, currentBucket, newBucket)) {
                     break;
+                }
             }
         }
 
         // thread-safe
         void clear(int i) {
-            if (i > maxValue || i < 0) return;
+            if(i > maxValue || i < 0) {
+                return;
+            }
 
             int index = getIndex(i);
 
             while (true) {
                 Bucket currentBucket = buckets.get(index);
-                if (currentBucket == null) return;
+                if(currentBucket == null) {
+                    return;
+                }
                 long longAtIndex = currentBucket.idx;
                 long[] longs = currentBucket.longs.clone();
 
@@ -420,8 +443,10 @@ public class HollowSparseIntegerSet implements HollowTypeStateListener {
                 long bitInIndex = 1L << whichLong;// whichLong % 64
                 long whichBitInLong = 1L << i;// i % 64
 
-                long isLongInitialized = (longAtIndex & bitInIndex);
-                if (isLongInitialized == 0) return;
+                long isLongInitialized = longAtIndex & bitInIndex;
+                if(isLongInitialized == 0) {
+                    return;
+                }
 
                 int offset = getOffset(longAtIndex, bitInIndex);
                 long value = longs[offset];
@@ -447,8 +472,9 @@ public class HollowSparseIntegerSet implements HollowTypeStateListener {
                         long[] newLongs = new long[oldLongsLen - 1];
 
                         int it;
-                        for (it = 0; it < offset; it++)
+                        for (it = 0;it < offset;it++) {
                             newLongs[it] = longs[it];
+                        }
                         it++;
                         while (it < oldLongsLen) {
                             newLongs[it - 1] = longs[it];
@@ -460,9 +486,12 @@ public class HollowSparseIntegerSet implements HollowTypeStateListener {
                     }
                 }
                 Bucket updatedBucket = null;
-                if (!isBucketEmpty) updatedBucket = new Bucket(longAtIndex, longs);
-                if (buckets.compareAndSet(index, currentBucket, updatedBucket))
+                if(!isBucketEmpty) {
+                    updatedBucket = new Bucket(longAtIndex, longs);
+                }
+                if(buckets.compareAndSet(index, currentBucket, updatedBucket)) {
                     break;
+                }
 
             }
         }
@@ -471,12 +500,16 @@ public class HollowSparseIntegerSet implements HollowTypeStateListener {
             // find the last index that is initialized
             int index = buckets.length() - 1;
             while (index >= 0) {
-                if (buckets.get(index) != null) break;
+                if(buckets.get(index) != null) {
+                    break;
+                }
                 index--;
             }
 
             // if no buckets are initialized, then return -1 ( meaning set is empty)
-            if (index < 0) return -1;
+            if(index < 0) {
+                return -1;
+            }
 
             // find the highest bit in indexAtLong to see which is last long init in bucket
             int highestBitSetInIndexAtLong = 63 - Long.numberOfLeadingZeros(Long.highestOneBit(buckets.get(index).idx));
@@ -551,9 +584,11 @@ public class HollowSparseIntegerSet implements HollowTypeStateListener {
         }
 
         private static SparseBitSet copyWithNewLength(SparseBitSet sparseBitSet, int newLength, int lengthToClone, int newMaxValue) {
-            AtomicReferenceArray<Bucket> compactBuckets = new AtomicReferenceArray<Bucket>(newLength);
+            AtomicReferenceArray<Bucket> compactBuckets = new AtomicReferenceArray<>(newLength);
             for (int i = 0; i < lengthToClone; i++) {
-                if (sparseBitSet.buckets.get(i) != null) compactBuckets.set(i, sparseBitSet.buckets.get(i));
+                if(sparseBitSet.buckets.get(i) != null) {
+                    compactBuckets.set(i, sparseBitSet.buckets.get(i));
+                }
             }
             return new SparseBitSet(newMaxValue, compactBuckets);
         }

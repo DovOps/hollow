@@ -34,9 +34,10 @@ public class HollowSetTypePerfAPI extends HollowTypePerfAPI {
         
         int elementTypeIdx = typeAccess == null ? Ref.TYPE_ABSENT : api.types.getIdx(typeAccess.getSchema().getElementType());
         this.elementMaskedTypeIdx = Ref.toTypeMasked(elementTypeIdx);
-        
-        if(typeAccess == null)
+
+        if(typeAccess == null) {
             typeAccess = new HollowSetMissingDataAccess(dataAccess, typeName);
+        }
         this.typeAccess = typeAccess;
     }
     

@@ -97,7 +97,7 @@ final class SelectFieldPathResultExtractor<T> {
                 // It is considered better to be consistent and literal with field path
                 // expressions
                 throw incompatibleSelectType(selectType, fieldPath, schemaFieldType);
-            } else if (typeName.equals("String")) {
+            } else if ("String".equals(typeName)) {
                 if (!HollowObject.class.isAssignableFrom(selectType)) {
                     throw incompatibleSelectType(selectType, fieldPath, typeName);
                 }

@@ -39,8 +39,9 @@ public class HollowCombinerIncludeOrdinalsCopyDirector implements HollowCombiner
     public boolean shouldCopy(HollowTypeReadState typeState, int ordinal) {
         BitSet typeIncludedOrdinals = includedOrdinals.get(typeState.getSchema().getName());
 
-        if(typeIncludedOrdinals == null)
+        if(typeIncludedOrdinals == null) {
             return false;
+        }
 
         return typeIncludedOrdinals.get(ordinal);
     }

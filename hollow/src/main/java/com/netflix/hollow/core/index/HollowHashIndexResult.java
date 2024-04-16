@@ -60,8 +60,9 @@ public class HollowHashIndexResult {
 
         int selectOrdinal = (int) hashIndexState.getSelectHashArray().getElementValue((selectTableStartPointer + bucket) * hashIndexState.getBitsPerSelectHashEntry(), hashIndexState.getBitsPerSelectHashEntry()) - 1;
         while(selectOrdinal != -1) {
-            if(selectOrdinal == value)
+            if(selectOrdinal == value) {
                 return true;
+            }
 
             bucket = (bucket + 1) & selectBucketMask;
             selectOrdinal = (int) hashIndexState.getSelectHashArray().getElementValue((selectTableStartPointer + bucket) * hashIndexState.getBitsPerSelectHashEntry(), hashIndexState.getBitsPerSelectHashEntry()) - 1;
@@ -83,8 +84,9 @@ public class HollowHashIndexResult {
             public int next() {
                 while(currentBucket < endBucket) {
                     int selectOrdinal = (int) hashIndexState.getSelectHashArray().getElementValue((currentBucket++) * hashIndexState.getBitsPerSelectHashEntry(), hashIndexState.getBitsPerSelectHashEntry()) - 1;
-                    if(selectOrdinal != -1)
+                    if(selectOrdinal != -1) {
                         return selectOrdinal;
+                    }
                 }
 
                 return NO_MORE_ORDINALS;

@@ -89,7 +89,7 @@ public class ProducerListenerSupportTest {
         }
 
         class FirstCycleListener extends SecondCycleListener {
-            private SecondCycleListener scl = new SecondCycleListener();
+            private final SecondCycleListener scl = new SecondCycleListener();
 
             @Override public void onCycleStart(long version) {
                 super.onCycleStart(version);
@@ -142,8 +142,8 @@ public class ProducerListenerSupportTest {
             }
         }
 
-        class FirstCycleListener extends SecondCycleListener {
-            private SecondCycleListener scl;
+        final class FirstCycleListener extends SecondCycleListener {
+            private final SecondCycleListener scl;
 
             private FirstCycleListener(SecondCycleListener scl) {
                 this.scl = scl;

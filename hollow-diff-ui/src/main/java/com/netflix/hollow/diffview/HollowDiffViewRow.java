@@ -70,20 +70,23 @@ public class HollowDiffViewRow {
     }
     
     public Action getAvailableAction() {
-        if(getChildren().isEmpty())
+        if(getChildren().isEmpty()) {
             return Action.NONE;
+        }
         
         boolean foundVisibleChild = false;
         boolean foundInvisibleChild = false;
         
         for(HollowDiffViewRow child : children) {
             if(child.isVisible()) {
-                if(foundInvisibleChild)
+                if(foundInvisibleChild) {
                     return Action.PARTIAL_UNCOLLAPSE;
+                }
                 foundVisibleChild = true;
             } else {
-                if(foundVisibleChild)
+                if(foundVisibleChild) {
                     return Action.PARTIAL_UNCOLLAPSE;
+                }
                 foundInvisibleChild = true;
             }
         }
@@ -99,14 +102,16 @@ public class HollowDiffViewRow {
     }
 
     public boolean hasMoreFromRows(int indentation) {
-        if(moreFromRowsBits == -1)
+        if(moreFromRowsBits == -1) {
             buildMoreRowsBits();
+        }
         return (moreFromRowsBits & (1 << indentation)) != 0;
     }
 
     public boolean hasMoreToRows(int indentation) {
-        if(moreToRowsBits == -1)
+        if(moreToRowsBits == -1) {
             buildMoreRowsBits();
+        }
         return (moreToRowsBits & (1 << indentation)) != 0;
     }
     
@@ -116,10 +121,12 @@ public class HollowDiffViewRow {
         moreToRowsBits = 0;
         
         for(int i=rowPath.length;i>=1;i--) {
-            if(moreRows(ancestor, rowPath[i-1], true))
+            if(moreRows(ancestor, rowPath[i - 1], true)) {
                 moreFromRowsBits |= 1 << i;
-            if(moreRows(ancestor, rowPath[i-1], false))
+            }
+            if(moreRows(ancestor, rowPath[i - 1], false)) {
                 moreToRowsBits |= 1 << i;
+            }
             ancestor = ancestor.getParent();
         }
     }
@@ -127,13 +134,14 @@ public class HollowDiffViewRow {
     private boolean moreRows(HollowDiffViewRow parent, int childIdx, boolean from) {
         for(int i=childIdx+1;i<parent.getChildren().size();i++) {
             EffigyFieldPair fieldPair = parent.getChildren().get(i).getFieldPair();
-            if((from && fieldPair.getFrom() != null) || (!from && fieldPair.getTo() != null))
+            if((from && fieldPair.getFrom() != null) || (!from && fieldPair.getTo() != null)) {
                 return true;
+            }
         }
         return false;
     }
-    
-    public static enum Action {
+
+    public enum Action {
         COLLAPSE,
         UNCOLLAPSE,
         PARTIAL_UNCOLLAPSE,

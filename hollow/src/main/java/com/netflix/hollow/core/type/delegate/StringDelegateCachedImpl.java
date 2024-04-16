@@ -40,8 +40,9 @@ public class StringDelegateCachedImpl extends HollowObjectAbstractDelegate imple
 
     @Override
     public boolean isValueEqual(int ordinal, String testValue) {
-        if(testValue == null)
+        if(testValue == null) {
             return value == null;
+        }
         return testValue.equals(value);
     }
 

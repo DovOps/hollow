@@ -86,8 +86,9 @@ public class SimultaneousExecutorTest {
         }
 
         public void run() {
-            if(fail)
+            if(fail) {
                 throw new RuntimeException("FAIL");
+            }
         }
 
     }

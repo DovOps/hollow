@@ -43,7 +43,7 @@ public class HollowMapWriteRecord implements HollowHashableWriteRecord {
     }
     
     public HollowMapWriteRecord(HashBehavior defaultHashBehavior) {
-        this.entryList = new ArrayList<HollowMapEntry>();
+        this.entryList = new ArrayList<>();
         this.defaultHashBehavior = defaultHashBehavior;
     }
 
@@ -79,8 +79,9 @@ public class HollowMapWriteRecord implements HollowHashableWriteRecord {
 
             if(hashBehavior != IGNORED_HASHES) {
                 int hashCode = entry.getHashCode();
-                if(hashBehavior == MIXED_HASHES)
+                if(hashBehavior == MIXED_HASHES) {
                     hashCode = HashCodes.hashInt(hashCode);
+                }
                 int bucketToHashTo = hashCode & bucketMask;
                 VarInt.writeVInt(buf, bucketToHashTo);
             }

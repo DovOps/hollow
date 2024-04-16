@@ -40,8 +40,8 @@ public class HollowHistoryTypeKeyIndex {
     private final int[][] keyFieldIndices;
     private final boolean[] keyFieldIsIndexed;
 
-    private boolean isInitialized = false;
-    private int maxIndexedOrdinal = 0;
+    private boolean isInitialized;
+    private int maxIndexedOrdinal;
 
     private final HollowOrdinalMapper ordinalMapping;
 
@@ -86,7 +86,9 @@ public class HollowHistoryTypeKeyIndex {
     }
 
     public void initializeKeySchema(HollowObjectTypeReadState initialTypeState) {
-        if (isInitialized) return;
+        if(isInitialized) {
+            return;
+        }
         HollowObjectSchema schema = initialTypeState.getSchema();
 
         for (int i= 0; i < keyFieldNames.length; i ++) {
@@ -117,7 +119,9 @@ public class HollowHistoryTypeKeyIndex {
     }
 
     public void update(HollowObjectTypeReadState latestTypeState, boolean isDeltaAndIndexInitialized) {
-        if (latestTypeState == null) return;
+        if(latestTypeState == null) {
+            return;
+        }
 
         if (isDeltaAndIndexInitialized) {
             populateNewCurrentRecordKeysIntoIndex(latestTypeState);
@@ -149,8 +153,9 @@ public class HollowHistoryTypeKeyIndex {
         final int maxLength = Math.max(previousOrdinals.length(), populatedOrdinals.length());
 
         for (int i = 0; i < maxLength; i++) {
-            if (populatedOrdinals.get(i) || previousOrdinals.get(i))
+            if(populatedOrdinals.get(i) || previousOrdinals.get(i)) {
                 writeKeyObject(typeState, i);
+            }
         }
     }
 
@@ -159,8 +164,9 @@ public class HollowHistoryTypeKeyIndex {
         boolean storedUniqueRecord = ordinalMapping.storeNewRecord(typeState, ordinal, assignedOrdinal);
 
         // Identical record already in memory, no need to store fields
-        if(!storedUniqueRecord)
+        if(!storedUniqueRecord) {
             return;
+        }
         maxIndexedOrdinal+=1;
     }
 
@@ -169,8 +175,9 @@ public class HollowHistoryTypeKeyIndex {
         for (int i = 0; i < primaryKey.numFields(); i++) {
             Object valueAtField = ordinalMapping.getFieldObject(keyOrdinal, i, fieldTypes[i]);
             builder.append(valueAtField);
-            if (i < primaryKey.numFields() - 1)
+            if(i < primaryKey.numFields() - 1) {
                 builder.append(MULTI_FIELD_KEY_DELIMITER);
+            }
         }
         return builder.toString();
     }

@@ -18,8 +18,9 @@ public class AwardTypeAPI extends HollowObjectTypeAPI {
     }
 
     public long getId(int ordinal) {
-        if(fieldIndex[0] == -1)
+        if(fieldIndex[0] == -1) {
             return missingDataHandler().handleLong("Award", ordinal, "id");
+        }
         return getTypeDataAccess().readLong(ordinal, fieldIndex[0]);
     }
 
@@ -31,16 +32,18 @@ public class AwardTypeAPI extends HollowObjectTypeAPI {
             boxedFieldAccessSampler.recordFieldAccess(fieldIndex[0]);
             l = getTypeDataAccess().readLong(ordinal, fieldIndex[0]);
         }
-        if(l == Long.MIN_VALUE)
+        if(l == Long.MIN_VALUE) {
             return null;
+        }
         return Long.valueOf(l);
     }
 
 
 
     public int getWinnerOrdinal(int ordinal) {
-        if(fieldIndex[1] == -1)
+        if(fieldIndex[1] == -1) {
             return missingDataHandler().handleReferencedOrdinal("Award", ordinal, "winner");
+        }
         return getTypeDataAccess().readOrdinal(ordinal, fieldIndex[1]);
     }
 
@@ -49,8 +52,9 @@ public class AwardTypeAPI extends HollowObjectTypeAPI {
     }
 
     public int getNomineesOrdinal(int ordinal) {
-        if(fieldIndex[2] == -1)
+        if(fieldIndex[2] == -1) {
             return missingDataHandler().handleReferencedOrdinal("Award", ordinal, "nominees");
+        }
         return getTypeDataAccess().readOrdinal(ordinal, fieldIndex[2]);
     }
 

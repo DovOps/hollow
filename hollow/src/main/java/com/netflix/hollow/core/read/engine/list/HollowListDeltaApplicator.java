@@ -31,13 +31,13 @@ class HollowListDeltaApplicator {
     private final HollowListTypeDataElements delta;
     private final HollowListTypeDataElements target;
 
-    private long currentFromStateCopyStartBit = 0;
-    private long currentDeltaCopyStartBit = 0;
-    private long currentWriteStartBit = 0;
+    private long currentFromStateCopyStartBit;
+    private long currentDeltaCopyStartBit;
+    private long currentWriteStartBit;
 
-    private long currentFromStateStartElement = 0;
-    private long currentDeltaStartElement = 0;
-    private long currentWriteStartElement = 0;
+    private long currentFromStateStartElement;
+    private long currentDeltaStartElement;
+    private long currentWriteStartElement;
 
     private GapEncodedVariableLengthIntegerReader removalsReader;
     private GapEncodedVariableLengthIntegerReader additionsReader;
@@ -65,10 +65,11 @@ class HollowListDeltaApplicator {
         target.elementData = new FixedLengthElementArray(target.memoryRecycler, target.totalNumberOfElements * target.bitsPerElement);
 
         if(target.bitsPerListPointer == from.bitsPerListPointer
-                && target.bitsPerElement == from.bitsPerElement)
-                    fastDelta();
-        else
+        && target.bitsPerElement == from.bitsPerElement) {
+            fastDelta();
+        } else {
             slowDelta();
+        }
 
         from.encodedRemovals = null;
         removalsReader.destroy();
@@ -91,8 +92,9 @@ class HollowListDeltaApplicator {
                 mergeOrdinal(i++);
             } else {
                 int recordsToCopy = nextElementDiff - i;
-                if(nextElementDiff > bulkCopyEndOrdinal)
+                if(nextElementDiff > bulkCopyEndOrdinal) {
                     recordsToCopy = bulkCopyEndOrdinal - i + 1;
+                }
 
                 fastCopyRecords(recordsToCopy);
 

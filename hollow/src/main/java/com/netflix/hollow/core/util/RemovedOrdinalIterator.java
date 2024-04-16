@@ -58,8 +58,9 @@ public class RemovedOrdinalIterator {
     public int next() {
         while(ordinal < previousOrdinalsLength) {
             ordinal = populatedOrdinals.nextClearBit(ordinal + 1);
-            if(previousOrdinals.get(ordinal))
+            if(previousOrdinals.get(ordinal)) {
                 return ordinal;
+            }
         }
 
         return ORDINAL_NONE;
@@ -75,8 +76,9 @@ public class RemovedOrdinalIterator {
         reset();
 
         int count = 0;
-        while(next() != ORDINAL_NONE)
+        while (next() != ORDINAL_NONE) {
             count++;
+        }
 
         ordinal = bookmark;
 

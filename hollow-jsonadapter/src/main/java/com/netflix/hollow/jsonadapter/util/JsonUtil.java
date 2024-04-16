@@ -43,7 +43,9 @@ public class JsonUtil {
     }
 
     private static void print(JsonParser parser, JsonToken token, int index, PrintStream out) throws Exception {
-        if (index == 0) System.out.println("\n\n -----");
+        if(index == 0) {
+            System.out.println("\n\n -----");
+        }
         try {
             while (token != null && token != JsonToken.END_OBJECT) {
                 switch (token) {

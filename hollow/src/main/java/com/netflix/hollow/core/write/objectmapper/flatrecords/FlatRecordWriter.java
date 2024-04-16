@@ -61,10 +61,11 @@ public class FlatRecordWriter {
 
         int recStart = (int) buf.length();
         VarInt.writeVInt(buf, schemaOrdinal);
-        if (rec instanceof HollowHashableWriteRecord)
-            ((HollowHashableWriteRecord) rec).writeDataTo(buf, HashBehavior.IGNORED_HASHES);
-        else
+        if(rec instanceof HollowHashableWriteRecord) {
+            ((HollowHashableWriteRecord)rec).writeDataTo(buf, HashBehavior.IGNORED_HASHES);
+        } else {
             rec.writeDataTo(buf);
+        }
         int recLen = (int) (buf.length() - recStart);
 
         Integer recordHashCode = HashCodes.hashCode(buf.getUnderlyingArray(), recStart, recLen);
@@ -73,7 +74,7 @@ public class FlatRecordWriter {
 
         if (existingRecLocs == null) {
             RecordLocation newRecordLocation = new RecordLocation(nextRecordOrdinal, recStart, recLen);
-            existingRecLocs = Collections.<RecordLocation>singletonList(newRecordLocation);
+            existingRecLocs = Collections.singletonList(newRecordLocation);
             recordLocationsByHashCode.put(recordHashCode, existingRecLocs);
             recordLocationsByOrdinal.add(recStart);
 
@@ -115,8 +116,9 @@ public class FlatRecordWriter {
     }
 
     public void writeTo(OutputStream os) throws IOException {
-        if (recordLocationsByOrdinal.size() == 0)
+        if(recordLocationsByOrdinal.size() == 0) {
             throw new IOException("No data to write!");
+        }
 
         int locationOfTopRecord = recordLocationsByOrdinal.get(recordLocationsByOrdinal.size() - 1);
         int schemaIdOfTopRecord = VarInt.readVInt(buf.getUnderlyingArray(), locationOfTopRecord);
@@ -124,7 +126,7 @@ public class FlatRecordWriter {
 
         VarInt.writeVInt(os, locationOfTopRecord);
 
-        int pkFieldValueLocations[] = null;
+        int[] pkFieldValueLocations = null;
         if (schemaOfTopRecord.getSchemaType() == SchemaType.OBJECT) {
             PrimaryKey primaryKey = ((HollowObjectSchema) schemaOfTopRecord).getPrimaryKey();
             if (primaryKey != null) {
@@ -156,8 +158,9 @@ public class FlatRecordWriter {
 
         int fieldOffset = navigateToField(recordSchema, fieldPathIndex[idx], locationOfCurrentRecord);
 
-        if (idx == fieldPathIndex.length - 1)
+        if(idx == fieldPathIndex.length - 1) {
             return fieldOffset;
+        }
 
         int ordinalOfNextRecord = VarInt.readVInt(buf.getUnderlyingArray(), fieldOffset);
         int offsetOfNextRecord = recordLocationsByOrdinal.get(ordinalOfNextRecord);

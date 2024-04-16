@@ -50,12 +50,13 @@ public class HistoryStatePage extends HistoryPage {
         long nextStateVersion = getNextStateVersion(historicalState);
         long prevStateVersion = getPreviousStateVersion(historicalState);
 
-        List<HistoryStateTypeChangeSummary> typeChanges = new ArrayList<HistoryStateTypeChangeSummary>();
+        List<HistoryStateTypeChangeSummary> typeChanges = new ArrayList<>();
 
         for(Map.Entry<String, HollowHistoricalStateTypeKeyOrdinalMapping>entry : historicalState.getKeyOrdinalMapping().getTypeMappings().entrySet()) {
             HistoryStateTypeChangeSummary typeChange = new HistoryStateTypeChangeSummary(historicalState.getVersion(), entry.getKey(), entry.getValue());
-            if(!typeChange.isEmpty())
+            if(!typeChange.isEmpty()) {
                 typeChanges.add(typeChange);
+            }
         }
 
         ctx.put("typeChanges", typeChanges);
@@ -68,30 +69,31 @@ public class HistoryStatePage extends HistoryPage {
     public void sendJson(HttpServletRequest req, HttpServletResponse resp) {
     	HollowHistoricalState historicalState = ui.getHistory().getHistoricalState(Long.parseLong(req.getParameter("version")));
     	
-    	List<HistoryStateTypeChangeSummary> typeChanges = new ArrayList<HistoryStateTypeChangeSummary>();
+    	List<HistoryStateTypeChangeSummary> typeChanges = new ArrayList<>();
     	
     	for(Map.Entry<String, HollowHistoricalStateTypeKeyOrdinalMapping> entry : historicalState.getKeyOrdinalMapping().getTypeMappings().entrySet()) {
     		HistoryStateTypeChangeSummary typeChange = new HistoryStateTypeChangeSummary(historicalState.getVersion(), entry.getKey(), entry.getValue());
-    		if(!typeChange.isEmpty())
-    			typeChanges.add(typeChange);
+            if(!typeChange.isEmpty()) {
+                typeChanges.add(typeChange);
+            }
     	}
     	
     	List<HollowHeaderEntry> headerEntries = getHeaderEntries(historicalState);
     	
-    	Map<String, String> params = new HashMap<String, String>();
+    	Map<String, String> params = new HashMap<>();
     	for(HollowHeaderEntry headerEntry : headerEntries) {
     		String key = headerEntry.getKey();
-    		if(key.equals("VIP")) {
+    		if("VIP".equals(key)) {
     			params.put("fromVip", headerEntry.getFromValue());
     			params.put("toVip", headerEntry.getToValue());
     		}
-    		if(key.equals("dataVersion")) {
+    		if("dataVersion".equals(key)) {
     			params.put("fromVersion", headerEntry.getFromValue());
     			params.put("toVersion", headerEntry.getToValue());
     		}
     	}
     	
-    	Map<String, Object> data = new HashMap<String, Object>();
+    	Map<String, Object> data = new HashMap<>();
     	data.put("params", params);
     	data.put("objectTypes", typeChanges);
     	
@@ -108,8 +110,9 @@ public class HistoryStatePage extends HistoryPage {
     }
     
     private long getNextStateVersion(HollowHistoricalState currentHistoricalState) {
-        if(currentHistoricalState.getNextState() != null)
+        if(currentHistoricalState.getNextState() != null) {
             return currentHistoricalState.getNextState().getVersion();
+        }
         return -1;
     }
 

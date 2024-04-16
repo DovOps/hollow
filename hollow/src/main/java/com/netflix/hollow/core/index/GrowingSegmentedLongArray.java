@@ -63,8 +63,9 @@ public class GrowingSegmentedLongArray {
     public long get(long index) {
         int segmentIndex = (int)(index >> log2OfSegmentSize);
 
-        if(segmentIndex >= segments.length || segments[segmentIndex] == null)
+        if(segmentIndex >= segments.length || segments[segmentIndex] == null) {
             return 0;
+        }
         
         int longInSegment = (int)(index & bitmask);
         return segments[segmentIndex][longInSegment];
@@ -73,8 +74,9 @@ public class GrowingSegmentedLongArray {
     
     public void destroy() {
         for(int i=0;i<segments.length;i++) {
-            if(segments[i] != null)
+            if(segments[i] != null) {
                 memoryRecycler.recycleLongArray(segments[i]);
+            }
         }
     }
 

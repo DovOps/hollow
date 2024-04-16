@@ -31,7 +31,7 @@ public abstract class AbstractHollowHashIndex<API> {
     protected final HollowConsumer consumer;
     protected final String queryType;
     protected final String selectFieldPath;
-    protected final String matchFieldPaths[];
+    protected final String[] matchFieldPaths;
 
     protected HollowHashIndex idx;
     protected API api;
@@ -80,7 +80,9 @@ public abstract class AbstractHollowHashIndex<API> {
     }
 
     public void listenToDataRefresh() {
-        if (isListenToDataRefresh) return;
+        if(isListenToDataRefresh) {
+            return;
+        }
 
         isListenToDataRefresh = true;
         idx.listenForDeltaUpdates();

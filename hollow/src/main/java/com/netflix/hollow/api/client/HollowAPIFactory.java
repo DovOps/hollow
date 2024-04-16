@@ -67,7 +67,7 @@ public interface HollowAPIFactory {
         
         public ForGeneratedAPI(Class<T> generatedAPIClass, String... cachedTypes) {
             this.generatedAPIClass = generatedAPIClass;
-            this.cachedTypes = new HashSet<String>(Arrays.asList(cachedTypes));
+            this.cachedTypes = new HashSet<>(Arrays.asList(cachedTypes));
         }
 
         

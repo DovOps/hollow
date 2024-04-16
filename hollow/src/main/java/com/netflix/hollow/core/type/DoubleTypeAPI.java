@@ -33,8 +33,9 @@ public class DoubleTypeAPI extends HollowObjectTypeAPI {
     }
 
     public double getValue(int ordinal) {
-        if(fieldIndex[0] == -1)
+        if(fieldIndex[0] == -1) {
             return missingDataHandler().handleDouble("Double", ordinal, "value");
+        }
         return getTypeDataAccess().readDouble(ordinal, fieldIndex[0]);
     }
 

@@ -38,8 +38,9 @@ public class FixedLengthElementArrayTest {
 
         for(int j=0;j<100;j++) {
             for(int i=0;i<1000000;i++) {
-                if(testValue != arr.getElementValue(i*numBitsPerElement, numBitsPerElement, bitMask))
+                if(testValue != arr.getElementValue(i * numBitsPerElement, numBitsPerElement, bitMask)) {
                     Assert.fail();
+                }
             }
         }
     }
@@ -51,7 +52,7 @@ public class FixedLengthElementArrayTest {
      */
     @Test
     public void testGetOverflow() {
-        long testValue = 288_230_376_151_711_744l; // smallest 59 bit number
+        long testValue = 288_230_376_151_711_744L; // smallest 59 bit number
         int numBitsPerElement = 59;
 
         // Populate ordinals 0-7
@@ -61,26 +62,26 @@ public class FixedLengthElementArrayTest {
         }
 
         // Validate address of ordinal 2 is unaligned by 6 bits
-        long offset_ord2 = 2 * numBitsPerElement;
-        if(offset_ord2 % 8 != 6) {
+        long offsetOrd2 = 2 * numBitsPerElement;
+        if(offsetOrd2 % 8 != 6) {
             Assert.fail();
         }
 
         // Validate address of ordinal 5 is unaligned by 7 bits
-        long offset_ord5 = 5 * numBitsPerElement;
-        if(offset_ord5 % 8 != 7) {
+        long offsetOrd5 = 5 * numBitsPerElement;
+        if(offsetOrd5 % 8 != 7) {
             Assert.fail();
         }
 
         // Show value is incorrect when reading ordinal 2
-        long value_ord2 = arr.getElementValue(offset_ord2, numBitsPerElement);
-        if(value_ord2 == testValue) {
+        long valueOrd2 = arr.getElementValue(offsetOrd2, numBitsPerElement);
+        if(valueOrd2 == testValue) {
             Assert.fail();
         }
 
         // Show value is incorrect when reading ordinal 5
-        long value_ord5 = arr.getElementValue(offset_ord2, numBitsPerElement);
-        if(value_ord5 == testValue) {
+        long valueOrd5 = arr.getElementValue(offsetOrd2, numBitsPerElement);
+        if(valueOrd5 == testValue) {
             Assert.fail();
         }
 
@@ -102,7 +103,7 @@ public class FixedLengthElementArrayTest {
      */
     @Test
     public void testMultiGetOverflow() {
-        long testValue = 268_435_456l; // smallest 29 bit number
+        long testValue = 268_435_456L; // smallest 29 bit number
         int numBitsPerElement = 29;
 
         // Populate ordinals 0-5
@@ -146,7 +147,7 @@ public class FixedLengthElementArrayTest {
      */
     @Test
     public void testMultiGetNoOverflow() {
-        long testValue = 134_217_727l; // largest 27 bit number
+        long testValue = 134_217_727L; // largest 27 bit number
         int numBitsPerElement = 27;
 
         // Populate ordinals 0-7
@@ -191,8 +192,9 @@ public class FixedLengthElementArrayTest {
 
         for(int j=0;j<100;j++) {
             for(int i=0;i<10000;i++) {
-                if(testValue != arr.getLargeElementValue(i*numBitsPerElement, numBitsPerElement))
+                if(testValue != arr.getLargeElementValue(i * numBitsPerElement, numBitsPerElement)) {
                     Assert.fail();
+                }
             }
         }
     }
@@ -200,8 +202,9 @@ public class FixedLengthElementArrayTest {
     @Test
     public void testCopyBitRange() {
         for(int iteration = 0;iteration < 100;iteration++) {
-            if(iteration % 1024 == 1023)
+            if(iteration % 1024 == 1023) {
                 System.out.println(iteration);
+            }
 
             Random rand = new Random();
 
@@ -213,7 +216,7 @@ public class FixedLengthElementArrayTest {
             FixedLengthElementArray source = new FixedLengthElementArray(WastefulRecycler.SMALL_ARRAY_RECYCLER, totalBitsInArray + 64);
             FixedLengthElementArray dest = new FixedLengthElementArray(WastefulRecycler.DEFAULT_INSTANCE, totalBitsInArray + copyToRangeStartBit);
 
-            int numLongs = (totalBitsInArray >>> 6);
+            int numLongs = totalBitsInArray >>> 6;
 
             for(int i=0;i<=numLongs;i++) {
                 source.set(i, rand.nextLong());
@@ -231,8 +234,9 @@ public class FixedLengthElementArrayTest {
                 long fromLong = source.getElementValue(compareBitStart, bitsToCompare);
                 long toLong = dest.getElementValue(compareBitStart + copyToRangeOffset, bitsToCompare);
 
-                if(fromLong != toLong)
+                if(fromLong != toLong) {
                     Assert.fail();
+                }
 
                 numBitsLeftToCompare -= bitsToCompare;
                 compareBitStart += bitsToCompare;

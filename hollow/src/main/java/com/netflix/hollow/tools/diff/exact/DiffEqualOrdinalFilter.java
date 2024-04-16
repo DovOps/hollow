@@ -31,9 +31,9 @@ public class DiffEqualOrdinalFilter {
     private final IntList unmatchedFromOrdinals;
     private final IntList unmatchedToOrdinals;
 
-    private int hashedIdentityOrdinals[];
-    private int hashedIdentityOrdinalsCounts[];
-    private int matchedOrdinalsCounts[];
+    private int[] hashedIdentityOrdinals;
+    private int[] hashedIdentityOrdinalsCounts;
+    private int[] matchedOrdinalsCounts;
 
     public DiffEqualOrdinalFilter(DiffEqualOrdinalMap equalityMapping) {
         this.equalOrdinalMap = equalityMapping;

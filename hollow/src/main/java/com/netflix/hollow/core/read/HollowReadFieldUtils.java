@@ -130,8 +130,10 @@ public class HollowReadFieldUtils {
                 String s1 = typeAccess1.readString(ordinal1, fieldPosition1);
                 return typeAccess2.isStringFieldEqual(ordinal2, fieldPosition2, s1);
             case REFERENCE:
-                if(typeAccess1 == typeAccess2 && fieldPosition1 == fieldPosition2)
+                if(typeAccess1 == typeAccess2 && fieldPosition1 == fieldPosition2) {
                     return typeAccess1.readOrdinal(ordinal1, fieldPosition1) == typeAccess2.readOrdinal(ordinal2, fieldPosition2);
+                }
+                break;
             default:
         }
 
@@ -195,18 +197,21 @@ public class HollowReadFieldUtils {
                 return Float.isNaN(f) ? null : Float.valueOf(f);
             case INT:
                 int i = typeAccess.readInt(ordinal, fieldPosition);
-                if(i == Integer.MIN_VALUE)
+                if(i == Integer.MIN_VALUE) {
                     return null;
+                }
                 return Integer.valueOf(i);
             case LONG:
                 long l = typeAccess.readLong(ordinal, fieldPosition);
-                if(l == Long.MIN_VALUE)
+                if(l == Long.MIN_VALUE) {
                     return null;
+                }
                 return Long.valueOf(l);
             case REFERENCE:
                 int refOrdinal = typeAccess.readOrdinal(ordinal, fieldPosition);
-                if(refOrdinal < 0)
+                if(refOrdinal < 0) {
                     return null;
+                }
                 return Integer.valueOf(refOrdinal);
             default:
         }
@@ -226,36 +231,44 @@ public class HollowReadFieldUtils {
 
         switch(schema.getFieldType(fieldPosition)) {
             case BOOLEAN:
-                if(testObject instanceof Boolean)
+                if(testObject instanceof Boolean) {
                     return testObject.equals(typeAccess.readBoolean(ordinal, fieldPosition));
+                }
                 return testObject == null && typeAccess.readBoolean(ordinal, fieldPosition) == null;
             case BYTES:
-                if(testObject instanceof byte[])
+                if(testObject instanceof byte[]) {
                     return Arrays.equals(typeAccess.readBytes(ordinal, fieldPosition), (byte[])testObject);
+                }
                 return testObject == null && typeAccess.readBytes(ordinal, fieldPosition) == null;
             case STRING:
-                if(testObject instanceof String)
+                if(testObject instanceof String) {
                     return testObject.equals(typeAccess.readString(ordinal, fieldPosition));
+                }
                 return testObject == null && typeAccess.readString(ordinal, fieldPosition) == null;
             case DOUBLE:
-                if(testObject instanceof Double)
+                if(testObject instanceof Double) {
                     return testObject.equals(typeAccess.readDouble(ordinal, fieldPosition));
+                }
                 return testObject == null && !Double.isNaN(typeAccess.readDouble(ordinal, fieldPosition));
             case FLOAT:
-                if(testObject instanceof Float)
+                if(testObject instanceof Float) {
                     return testObject.equals(typeAccess.readFloat(ordinal, fieldPosition));
+                }
                 return testObject == null && !Float.isNaN(typeAccess.readFloat(ordinal, fieldPosition));
             case INT:
-                if(testObject instanceof Integer)
+                if(testObject instanceof Integer) {
                     return testObject.equals(typeAccess.readInt(ordinal, fieldPosition));
+                }
                 return testObject == null && typeAccess.readInt(ordinal, fieldPosition) == Integer.MIN_VALUE;
             case LONG:
-                if(testObject instanceof Long)
+                if(testObject instanceof Long) {
                     return testObject.equals(typeAccess.readLong(ordinal, fieldPosition));
+                }
                 return testObject == null && typeAccess.readLong(ordinal, fieldPosition) == Long.MIN_VALUE;
             case REFERENCE:
-                if(testObject instanceof Integer)
+                if(testObject instanceof Integer) {
                     return testObject.equals(typeAccess.readOrdinal(ordinal, fieldPosition));
+                }
                 return testObject == null && typeAccess.readOrdinal(ordinal, fieldPosition) < 0;
             default:
         }

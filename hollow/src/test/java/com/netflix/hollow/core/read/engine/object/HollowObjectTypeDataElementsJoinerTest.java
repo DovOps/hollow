@@ -154,7 +154,7 @@ public class HollowObjectTypeDataElementsJoinerTest extends AbstractHollowObject
         assertEquals(v8, c.getCurrentVersionId());
     }
 
-    private long oneRunCycle(HollowProducer p, int recordIds[]) {
+    private long oneRunCycle(HollowProducer p, int[] recordIds) {
         return p.runCycle(state -> {
             HollowObjectWriteRecord rec = new HollowObjectWriteRecord(schema);
             for(int recordId : recordIds) {

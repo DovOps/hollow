@@ -23,7 +23,7 @@ import java.util.Arrays;
  */
 public class LongList {
 
-    private long values[];
+    private long[] values;
     private int size;
 
     public LongList() {
@@ -39,8 +39,9 @@ public class LongList {
     }
 
     public void add(long value) {
-        if(values.length == size)
+        if(values.length == size) {
             values = Arrays.copyOf(values, (values.length * 3) / 2);
+        }
         values[size++] = value;
     }
 
@@ -62,8 +63,9 @@ public class LongList {
             LongList that = (LongList)other;
             if(this.size() == that.size()) {
                 for(int i=0;i<size;i++) {
-                    if(this.get(i) != that.get(i))
+                    if(this.get(i) != that.get(i)) {
                         return false;
+                    }
                 }
                 return true;
             }

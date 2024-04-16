@@ -46,7 +46,7 @@ public class FakeHollowSchemaIdentifierMapper implements HollowSchemaIdentifierM
             PrimaryKey primaryKey = ((HollowObjectSchema) schema).getPrimaryKey();
 
             if (primaryKey != null) {
-                FieldType fieldTypes[] = new FieldType[primaryKey.numFields()];
+                FieldType[] fieldTypes = new FieldType[primaryKey.numFields()];
 
                 for (int i = 0; i < fieldTypes.length; i++) {
                     fieldTypes[i] = primaryKey.getFieldType(dataset, i);

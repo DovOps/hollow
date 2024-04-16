@@ -21,7 +21,7 @@ import org.junit.Test;
 
 public class ObjectIdentityOrdinalMapTest {
 
-    Object obj[] = new Object[10000];
+    Object[] obj = new Object[10000];
 
     @Test
     public void test() {

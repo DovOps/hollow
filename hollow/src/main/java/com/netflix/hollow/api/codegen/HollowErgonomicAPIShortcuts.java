@@ -37,7 +37,7 @@ public class HollowErgonomicAPIShortcuts {
     }
     
     HollowErgonomicAPIShortcuts(HollowDataset dataset) {
-        this.shortcutFieldPaths = new HashMap<String, Shortcut>();
+        this.shortcutFieldPaths = new HashMap<>();
         populatePaths(dataset);
     }
     
@@ -100,7 +100,7 @@ public class HollowErgonomicAPIShortcuts {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         for(Map.Entry<String, Shortcut> entry : shortcutFieldPaths.entrySet()) {
-            builder.append(entry.getKey() + ": " + entry.getValue()).append("\n");
+            builder.append(entry.getKey() + ": ").append(entry.getValue()).append("\n");
         }
         return builder.toString();
     }

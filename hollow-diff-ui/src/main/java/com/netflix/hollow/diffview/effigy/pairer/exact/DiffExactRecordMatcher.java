@@ -31,16 +31,18 @@ public class DiffExactRecordMatcher implements ExactRecordMatcher {
 
     @Override
     public boolean isExactMatch(HollowTypeDataAccess fromType, int fromOrdinal, HollowTypeDataAccess toType, int toOrdinal) {
-        if(fromType == null || toType == null)
+        if(fromType == null || toType == null) {
             return false;
+        }
         
         DiffEqualOrdinalMap typeMap = equalityMapping.getEqualOrdinalMap(fromType.getSchema().getName());
         if(typeMap != null) {
             MatchIterator matchingToOrdinals = typeMap.getEqualOrdinals(fromOrdinal);
             
             while(matchingToOrdinals.hasNext()) {
-                if(toOrdinal == matchingToOrdinals.next())
+                if(toOrdinal == matchingToOrdinals.next()) {
                     return true;
+                }
             }
         }
         

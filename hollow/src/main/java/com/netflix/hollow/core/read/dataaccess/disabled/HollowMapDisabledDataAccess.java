@@ -25,7 +25,7 @@ import com.netflix.hollow.core.read.filter.HollowFilterConfig;
 import com.netflix.hollow.core.read.iterator.HollowMapEntryOrdinalIterator;
 import com.netflix.hollow.core.schema.HollowMapSchema;
 
-public class HollowMapDisabledDataAccess implements HollowMapTypeDataAccess {
+public final class HollowMapDisabledDataAccess implements HollowMapTypeDataAccess {
 
     public static final HollowMapDisabledDataAccess INSTANCE = new HollowMapDisabledDataAccess();
 

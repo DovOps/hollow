@@ -189,8 +189,9 @@ public class HollowCombiner {
         for (HollowSchema schema : output.getSchemas()) {
             if (schema.getSchemaType() == SchemaType.OBJECT && !ignoredTypes.contains(schema.getName())) {
                 PrimaryKey pk = ((HollowObjectSchema) schema).getPrimaryKey();
-                if (pk != null)
+                if(pk != null) {
                     keys.add(pk);
+                }
             }
         }
         
@@ -206,8 +207,9 @@ public class HollowCombiner {
 
             private int schemaDependencyIdx(PrimaryKey key) {
                 for (int i = 0; i < dependencyOrderedSchemas.size(); i++) {
-                    if (dependencyOrderedSchemas.get(i).getName().equals(key.getType()))
+                    if(dependencyOrderedSchemas.get(i).getName().equals(key.getType())) {
                         return i;
+                    }
                 }
                 throw new IllegalArgumentException("Primary key defined for non-existent type: " + key.getType());
             }
@@ -263,8 +265,9 @@ public class HollowCombiner {
                             if(pk.getType().equals(schema.getName())) {
                                 HollowPrimaryKeyIndex[] indexes = new HollowPrimaryKeyIndex[inputs.length];
                                 for(int i=0;i<indexes.length;i++) {
-                                    if(inputs[i].getTypeState(pk.getType()) != null)
+                                    if(inputs[i].getTypeState(pk.getType()) != null) {
                                         indexes[i] = new HollowPrimaryKeyIndex(inputs[i], pk);
+                                    }
                                 }
 
                                 for(int i=0;i<indexes.length;i++) {
@@ -296,8 +299,9 @@ public class HollowCombiner {
                 }
             }
 
-            if(typesToProcessThisIteration.isEmpty())
+            if(typesToProcessThisIteration.isEmpty()) {
                 break;
+            }
 
             for(int i=0;i<numThreads;i++) {
                 final int threadNumber = i;
@@ -364,16 +368,18 @@ public class HollowCombiner {
 
     private boolean isAnySelectedPrimaryKeyADependencyOf(String type, Set<PrimaryKey> selectedPrimaryKeys) {
         for(PrimaryKey selectedKey : selectedPrimaryKeys) {
-            if(HollowSchemaSorter.typeIsTransitivelyDependent(output, type, selectedKey.getType()))
+            if(HollowSchemaSorter.typeIsTransitivelyDependent(output, type, selectedKey.getType())) {
                 return true;
+            }
         }
         return false;
     }
 
     private boolean isAnySelectedPrimaryKeyDependentOn(String type, Set<PrimaryKey> selectedPrimaryKeys) {
         for(PrimaryKey selectedKey : selectedPrimaryKeys) {
-            if(HollowSchemaSorter.typeIsTransitivelyDependent(output, selectedKey.getType(), type))
+            if(HollowSchemaSorter.typeIsTransitivelyDependent(output, selectedKey.getType(), type)) {
                 return true;
+            }
         }
         return false;
     }
@@ -394,8 +400,9 @@ public class HollowCombiner {
             HollowTypeReadState readTypeState = copier.getReadTypeState();
 
             if(currentOrdinal <= readTypeState.maxOrdinal()) {
-                if(copyDirector.shouldCopy(readTypeState, currentOrdinal))
+                if(copyDirector.shouldCopy(readTypeState, currentOrdinal)) {
                     copier.copy(currentOrdinal);
+                }
             } else {
                 iter.remove();
             }
@@ -410,8 +417,9 @@ public class HollowCombiner {
     }
 
     private OrdinalRemapper[] createOrdinalRemappers() {
-        for(int i=0;i<ordinalRemappers.length;i++)
+        for (int i = 0;i < ordinalRemappers.length;i++) {
             ordinalRemappers[i] = new HollowCombinerOrdinalRemapper(this, inputs[i]);
+        }
 
         return ordinalRemappers;
     }
@@ -425,10 +433,12 @@ public class HollowCombiner {
     }
 
     private boolean isDefinedHashCode(HollowSchema schema) {
-        if(schema instanceof HollowSetSchema)
+        if(schema instanceof HollowSetSchema) {
             return typeNamesWithDefinedHashCodes.contains(((HollowSetSchema)schema).getElementType());
-        if(schema instanceof HollowMapSchema)
+        }
+        if(schema instanceof HollowMapSchema) {
             return typeNamesWithDefinedHashCodes.contains(((HollowMapSchema)schema).getKeyType());
+        }
         return false;
     }
 
@@ -462,13 +472,15 @@ public class HollowCombiner {
                         scratch.reset();
                         ((HollowHashableWriteRecord)rec).writeDataTo(scratch, HashBehavior.IGNORED_HASHES);
                         int outputOrdinal = hashOrderIndependentOrdinalMap.get(scratch);
-                        if(outputOrdinal != -1)
+                        if(outputOrdinal != -1) {
                             return outputOrdinal;
+                        }
 
                         synchronized(hashOrderIndependentOrdinalMap) {
                             outputOrdinal = hashOrderIndependentOrdinalMap.get(scratch);
-                            if(outputOrdinal != -1)
+                            if(outputOrdinal != -1) {
                                 return outputOrdinal;
+                            }
 
                             outputOrdinal = writeState.add(rec);
                             ordinalRemapper.remapOrdinal(getType(), ordinal, outputOrdinal);

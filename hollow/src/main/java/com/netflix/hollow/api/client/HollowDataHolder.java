@@ -156,8 +156,9 @@ class HollowDataHolder {
             initializeAPI(apiInitCallback);
 
             for (HollowConsumer.RefreshListener refreshListener : refreshListeners) {
-                if (refreshListener instanceof TransitionAwareRefreshListener)
+                if(refreshListener instanceof TransitionAwareRefreshListener) {
                     ((TransitionAwareRefreshListener)refreshListener).snapshotApplied(currentAPI, stateEngine, snapshotBlob.getToVersion());
+                }
             }
         } catch (Throwable t) {
             failedTransitionTracker.markFailedTransition(snapshotBlob);
@@ -222,25 +223,30 @@ class HollowDataHolder {
                 newDataAccess.setDataAccess(stateEngine);
                 currentAPI = apiFactory.createAPI(newDataAccess, currentAPI);
 
-                if(previousDataAccess instanceof HollowProxyDataAccess)
+                if(previousDataAccess instanceof HollowProxyDataAccess) {
                     ((HollowProxyDataAccess)previousDataAccess).setDataAccess(priorState);
+                }
 
                 wireHistoricalStateChain(priorState);
             } else {
-                if(currentAPI.getDataAccess() != stateEngine)
+                if(currentAPI.getDataAccess() != stateEngine) {
                     currentAPI = apiFactory.createAPI(stateEngine);
+                }
 
                 priorHistoricalDataAccess = null;
             }
 
-            if(!staleReferenceDetector.isKnownAPIHandle(currentAPI))
+            if(!staleReferenceDetector.isKnownAPIHandle(currentAPI)) {
                 staleReferenceDetector.newAPIHandle(currentAPI);
+            }
 
             for(HollowConsumer.RefreshListener refreshListener : refreshListeners) {
-                if(!isSnapshotPlan)
+                if(!isSnapshotPlan) {
                     refreshListener.deltaUpdateOccurred(currentAPI, stateEngine, blob.getToVersion());
-                if (refreshListener instanceof TransitionAwareRefreshListener)
+                }
+                if(refreshListener instanceof TransitionAwareRefreshListener) {
                     ((TransitionAwareRefreshListener)refreshListener).deltaApplied(currentAPI, stateEngine, blob.getToVersion());
+                }
             }
 
         } catch(Throwable t) {
@@ -257,7 +263,7 @@ class HollowDataHolder {
             }
         }
 
-        priorHistoricalDataAccess = new WeakReference<HollowHistoricalStateDataAccess>(nextPriorState);
+        priorHistoricalDataAccess = new WeakReference<>(nextPriorState);
     }
 
     private void setVersion(long version) {

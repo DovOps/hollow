@@ -9,9 +9,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class VarIntTest {
-    private final static byte[] BYTES_EMPTY = new byte[]{};
-    private final static byte[] BYTES_TRUNCATED = new byte[]{(byte) 0x81};
-    private final static byte[] BYTES_VALUE_129 = new byte[]{(byte) 0x81, (byte) 0x01};
+    private static final byte[] BYTES_EMPTY = new byte[]{};
+    private static final byte[] BYTES_TRUNCATED = new byte[]{(byte) 0x81};
+    private static final byte[] BYTES_VALUE_129 = new byte[]{(byte) 0x81, (byte) 0x01};
 
     @Test
     public void testReadVLongInputStream() throws IOException {

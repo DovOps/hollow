@@ -64,7 +64,7 @@ public class HollowSetCollectionTest {
         GenericHollowSet s = new GenericHollowSet(rse, "SetOfInteger", 0);
 
         List<Integer> keys = s.stream()
-                .map(r -> (GenericHollowObject) r)
+                .map(GenericHollowObject.class::cast)
                 .map(o -> o.getInt("value"))
                 .sorted()
                 .collect(toList());

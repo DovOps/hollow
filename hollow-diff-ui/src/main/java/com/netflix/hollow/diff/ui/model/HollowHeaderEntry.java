@@ -35,8 +35,9 @@ public class HollowHeaderEntry {
     }
 
     public String getBgColor() {
-        if(isSame())
+        if(isSame()) {
             return "";
+        }
         return "#FFCC99";
     }
 

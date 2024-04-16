@@ -409,7 +409,9 @@ final class Resolver {
                         .flatMap(i -> {
                             String field = os.getFieldName(i);
                             Action fa = rule.apply(type, field);
-                            if (fa == next) return Stream.empty();
+                    if(fa == next) {
+                        return Stream.empty();
+                    }
                             TypeActions child = newTypeActions(type, field, fa);
                             Action descendantAction = fa.recursive ? fa : action;
                             if (descendantAction.recursive && os.getFieldType(i) == REFERENCE) {
@@ -461,7 +463,7 @@ final class Resolver {
 }
 
 @com.netflix.hollow.Internal
-class TypeActions {
+final class TypeActions {
     private static final String ALL = new String("*"); // avoid interning
     static TypeActions newTypeActions(String type, Action action) {
         return new TypeActions(type, singletonMap(ALL, action));

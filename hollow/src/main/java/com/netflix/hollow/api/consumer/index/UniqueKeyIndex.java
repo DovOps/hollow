@@ -169,16 +169,17 @@ public class UniqueKeyIndex<T extends HollowObject, Q>
         }
 
         int ordinal = -1;
-        if (keyArrayLogicalSize <= 0)
+        if(keyArrayLogicalSize <= 0) {
             return null;
-        else if (keyArrayLogicalSize == 1)
+        } else if(keyArrayLogicalSize == 1) {
             ordinal = hpki.getMatchingOrdinal(keyArray[0]);
-        else if (keyArrayLogicalSize == 2)
+        } else if(keyArrayLogicalSize == 2) {
             ordinal = hpki.getMatchingOrdinal(keyArray[0], keyArray[1]);
-        else if (keyArrayLogicalSize == 3)
+        } else if(keyArrayLogicalSize == 3) {
             ordinal = hpki.getMatchingOrdinal(keyArray[0], keyArray[1], keyArray[2]);
-        else
+        } else {
             ordinal = hpki.getMatchingOrdinal(keyArray);
+        }
 
         if (ordinal == HollowConstants.ORDINAL_NONE) {
             return null;

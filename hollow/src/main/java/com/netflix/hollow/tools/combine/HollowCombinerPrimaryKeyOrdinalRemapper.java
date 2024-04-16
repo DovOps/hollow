@@ -28,7 +28,7 @@ import java.util.Map;
 class HollowCombinerPrimaryKeyOrdinalRemapper implements OrdinalRemapper {
     
     private final Map<String, HollowPrimaryKeyIndex[]> primaryKeyIndexes;
-    private final OrdinalRemapper baseRemappers[];
+    private final OrdinalRemapper[] baseRemappers;
     private final int stateEngineIdx;
     
     public HollowCombinerPrimaryKeyOrdinalRemapper(OrdinalRemapper[] baseRemappers, Map<String, HollowPrimaryKeyIndex[]> primaryKeyIndexes, int stateEngineIdx) {
@@ -48,7 +48,7 @@ class HollowCombinerPrimaryKeyOrdinalRemapper implements OrdinalRemapper {
         
         HollowPrimaryKeyIndex[] typeKeyIndexes = this.primaryKeyIndexes.get(type);
         if(typeKeyIndexes != null) {
-            Object primaryKey[] = typeKeyIndexes[stateEngineIdx].getRecordKey(originalOrdinal);
+            Object[] primaryKey = typeKeyIndexes[stateEngineIdx].getRecordKey(originalOrdinal);
             
             for(int i=0;i<baseRemappers.length;i++) {
                 if(i != stateEngineIdx) {

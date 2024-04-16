@@ -39,16 +39,16 @@ public class HollowObjectTypeWriteState extends HollowTypeWriteState {
 
     /// data required for writing snapshot or delta
     private int maxOrdinal;
-    private int maxShardOrdinal[];
-    private int revMaxShardOrdinal[];
+    private int[] maxShardOrdinal;
+    private int[] revMaxShardOrdinal;
 
-    private FixedLengthElementArray fixedLengthLongArray[];
-    private ByteDataArray varLengthByteArrays[][];
-    private long recordBitOffset[];
+    private FixedLengthElementArray[] fixedLengthLongArray;
+    private ByteDataArray[][] varLengthByteArrays;
+    private long[] recordBitOffset;
 
     /// additional data required for writing delta
-    private ByteDataArray deltaAddedOrdinals[];
-    private ByteDataArray deltaRemovedOrdinals[];
+    private ByteDataArray[] deltaAddedOrdinals;
+    private ByteDataArray[] deltaRemovedOrdinals;
 
     public HollowObjectTypeWriteState(HollowObjectSchema schema) {
         this(schema, -1);
@@ -127,8 +127,9 @@ public class HollowObjectTypeWriteState extends HollowTypeWriteState {
         projectedSizeOfType += fieldStats.getTotalSizeOfAllVarLengthData();
 
         int targetNumShards = 1;
-        while(stateEngine.getTargetMaxTypeShardSize() * targetNumShards < projectedSizeOfType)
+        while (stateEngine.getTargetMaxTypeShardSize() * targetNumShards < projectedSizeOfType) {
             targetNumShards *= 2;
+        }
 
         return targetNumShards;
     }
@@ -150,8 +151,9 @@ public class HollowObjectTypeWriteState extends HollowTypeWriteState {
     int[] calcMaxShardOrdinal(int maxOrdinal, int numShards) {
         int[] maxShardOrdinal = new int[numShards];
         int minRecordLocationsPerShard = (maxOrdinal + 1) / numShards;
-        for(int i=0;i<numShards;i++)
-            maxShardOrdinal[i] = (i < ((maxOrdinal + 1) & (numShards - 1))) ? minRecordLocationsPerShard : minRecordLocationsPerShard - 1;
+        for (int i = 0;i < numShards;i++) {
+            maxShardOrdinal[i] = i < ((maxOrdinal + 1) & (numShards - 1)) ? minRecordLocationsPerShard : minRecordLocationsPerShard - 1;
+        }
         return maxShardOrdinal;
     }
 
@@ -329,7 +331,7 @@ public class HollowObjectTypeWriteState extends HollowTypeWriteState {
         deltaRemovedOrdinals = new ByteDataArray[numShards];
         varLengthByteArrays = new ByteDataArray[numShards][];
         recordBitOffset = new long[numShards];
-        int numAddedRecordsInShard[] = new int[numShards];
+        int[] numAddedRecordsInShard = new int[numShards];
         
         int shardMask = numShards - 1;
         
@@ -346,8 +348,8 @@ public class HollowObjectTypeWriteState extends HollowTypeWriteState {
             varLengthByteArrays[i] = new ByteDataArray[getSchema().numFields()];
         }
 
-        int previousRemovedOrdinal[] = new int[numShards];
-        int previousAddedOrdinal[] = new int[numShards];
+        int[] previousRemovedOrdinal = new int[numShards];
+        int[] previousAddedOrdinal = new int[numShards];
 
         for(int i=0;i<=maxOrdinal;i++) {
             int shardNumber = i & shardMask;
@@ -418,7 +420,7 @@ public class HollowObjectTypeWriteState extends HollowTypeWriteState {
     }
 
     /// here we need to add the offsets for the variable-length field endings, as they will be read as the start position for the following record.
-    private void addNullRecord(int ordinal, long recordBitOffset, FixedLengthElementArray fixedLengthLongArray, ByteDataArray varLengthByteArrays[]) {
+    private void addNullRecord(int ordinal, long recordBitOffset, FixedLengthElementArray fixedLengthLongArray, ByteDataArray[] varLengthByteArrays) {
         for(int fieldIndex=0; fieldIndex < getSchema().numFields(); fieldIndex++) {
             if(getSchema().getFieldType(fieldIndex) == FieldType.STRING || getSchema().getFieldType(fieldIndex) == FieldType.BYTES) {
                 long fieldBitOffset = recordBitOffset + fieldStats.getFieldBitOffset(fieldIndex);
@@ -429,7 +431,7 @@ public class HollowObjectTypeWriteState extends HollowTypeWriteState {
         }
     }
 
-    private void addRecord(int ordinal, long recordBitOffset, FixedLengthElementArray fixedLengthLongArray, ByteDataArray varLengthByteArrays[]) {
+    private void addRecord(int ordinal, long recordBitOffset, FixedLengthElementArray fixedLengthLongArray, ByteDataArray[] varLengthByteArrays) {
         long pointer = ordinalMap.getPointerForData(ordinal);
 
         for(int fieldIndex=0; fieldIndex < getSchema().numFields(); fieldIndex++) {
@@ -437,7 +439,7 @@ public class HollowObjectTypeWriteState extends HollowTypeWriteState {
         }
     }
 
-    private long addRecordField(long readPointer, long recordBitOffset, int fieldIndex, FixedLengthElementArray fixedLengthLongArray, ByteDataArray varLengthByteArrays[]) {
+    private long addRecordField(long readPointer, long recordBitOffset, int fieldIndex, FixedLengthElementArray fixedLengthLongArray, ByteDataArray[] varLengthByteArrays) {
         FieldType fieldType = getSchema().getFieldType(fieldIndex);
         long fieldBitOffset = recordBitOffset + fieldStats.getFieldBitOffset(fieldIndex);
         int bitsPerElement = fieldStats.getMaxBitsForField(fieldIndex);
@@ -498,7 +500,7 @@ public class HollowObjectTypeWriteState extends HollowTypeWriteState {
         return readPointer;
     }
 
-    private ByteDataArray getByteArray(ByteDataArray buffers[], int index) {
+    private ByteDataArray getByteArray(ByteDataArray[] buffers, int index) {
         if(buffers[index] == null) {
             buffers[index] = new ByteDataArray(WastefulRecycler.DEFAULT_INSTANCE);
         }

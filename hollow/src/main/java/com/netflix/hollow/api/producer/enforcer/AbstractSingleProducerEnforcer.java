@@ -24,9 +24,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class AbstractSingleProducerEnforcer extends AbstractHollowProducerListener implements SingleProducerEnforcer {
-    private boolean hasCycleStarted = false;
-    private boolean doStopUponCycleComplete = false;
-    private boolean wasPrimary = false;
+    private boolean hasCycleStarted;
+    private boolean doStopUponCycleComplete;
+    private boolean wasPrimary;
     private final Logger logger = Logger.getLogger(AbstractSingleProducerEnforcer.class.getName());
 
     private final Lock lock = new ReentrantLock();

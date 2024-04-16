@@ -60,10 +60,12 @@ public class MissingListTest extends AbstractStateEngineTest {
     private class FakeMissingDataHandler extends DefaultMissingDataHandler {
         @Override
         public HollowSchema handleSchema(String type) {
-            if("MissingList".equals(type))
+            if("MissingList".equals(type)) {
                 return new HollowListSchema("MissingList", "MissingObject");
-            if("MissingObject".equals(type))
+            }
+            if("MissingObject".equals(type)) {
                 return new HollowObjectSchema("MissingObject", 0);
+            }
             return null;
         }
 
@@ -80,13 +82,14 @@ public class MissingListTest extends AbstractStateEngineTest {
         @Override
         public HollowOrdinalIterator handleListIterator(String type, int ordinal) {
             return new HollowOrdinalIterator() {
-                private final int ordinals[] = {2, 3};
+                private final int[] ordinals = {2, 3};
                 private int currentOrdinal = 0;
 
                 @Override
                 public int next() {
-                    if(currentOrdinal >= ordinals.length)
+                    if(currentOrdinal >= ordinals.length) {
                         return NO_MORE_ORDINALS;
+                    }
                     return ordinals[currentOrdinal++];
                 }
             };

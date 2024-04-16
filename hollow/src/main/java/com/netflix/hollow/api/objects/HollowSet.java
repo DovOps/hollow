@@ -138,10 +138,11 @@ public abstract class HollowSet<T> extends AbstractSet<T> implements HollowRecor
         private void positionNext() {
             int currentOrdinal = ordinalIterator.next();
 
-            if(currentOrdinal != HollowOrdinalIterator.NO_MORE_ORDINALS)
+            if(currentOrdinal != HollowOrdinalIterator.NO_MORE_ORDINALS) {
                 next = instantiateElement(currentOrdinal);
-            else
+            } else {
                 next = null;
+            }
         }
     }
 }

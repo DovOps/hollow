@@ -76,8 +76,9 @@ public class EncodedLongBuffer implements FixedLengthData {
 
     private void loadFrom(HollowBlobInput in, long numLongs) throws IOException {
         BlobByteBuffer buffer = in.getBuffer();
-        if(numLongs == 0)
+        if(numLongs == 0) {
             return;
+        }
 
         this.maxByteIndex = (numLongs * Long.BYTES) - 1;
         buffer.position(in.getFilePointer());

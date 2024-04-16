@@ -50,8 +50,9 @@ public class HollowDiffRecordFieldExtractor {
                 HollowObjectTypeDataAccess objectAccess = (HollowObjectTypeDataAccess)typeDataAccess;
                 int fieldIdx = objectAccess.getSchema().getPosition(fieldIdentifier.getParents().get(level+1).getViaFieldName());
                 childDataAccess = typeDataAccess.getDataAccess().getTypeDataAccess(objectAccess.getSchema().getReferencedType(fieldIdx));
-                for(int i=0;i<ordinals.size();i++)
+                for (int i = 0;i < ordinals.size();i++) {
                     childOrdinals.add(objectAccess.readOrdinal(ordinals.get(i), fieldIdx));
+                }
             } else if(typeDataAccess instanceof HollowCollectionTypeDataAccess) {
                 HollowCollectionTypeDataAccess collectionAccess = (HollowCollectionTypeDataAccess)typeDataAccess;
                 childDataAccess = typeDataAccess.getDataAccess().getTypeDataAccess(collectionAccess.getSchema().getElementType());
@@ -65,7 +66,7 @@ public class HollowDiffRecordFieldExtractor {
                 }
             } else if(typeDataAccess instanceof HollowMapTypeDataAccess) {
                 HollowMapTypeDataAccess mapAccess = (HollowMapTypeDataAccess)typeDataAccess;
-                boolean isValue = fieldIdentifier.getParents().get(level + 1).getViaFieldName().equals("value");
+                boolean isValue = "value".equals(fieldIdentifier.getParents().get(level + 1).getViaFieldName());
                 String childType = isValue ? mapAccess.getSchema().getValueType() : mapAccess.getSchema().getKeyType();
                 childDataAccess = typeDataAccess.getDataAccess().getTypeDataAccess(childType);
                 for(int i=0;i<ordinals.size();i++) {
@@ -81,7 +82,7 @@ public class HollowDiffRecordFieldExtractor {
     }
 
     private List<Object> extractValues(HollowTypeDataAccess typeDataAccess, IntList ordinals, HollowDiffNodeIdentifier fieldIdentifier) {
-        List<Object> values = new ArrayList<Object>();
+        List<Object> values = new ArrayList<>();
 
         HollowObjectTypeDataAccess objectAccess = (HollowObjectTypeDataAccess)typeDataAccess;
         int fieldIdx = objectAccess.getSchema().getPosition(fieldIdentifier.getViaFieldName());

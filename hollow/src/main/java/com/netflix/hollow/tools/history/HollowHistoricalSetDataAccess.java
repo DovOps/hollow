@@ -45,8 +45,9 @@ public class HollowHistoricalSetDataAccess extends HollowHistoricalTypeDataAcces
         sampler().recordSize();
         recordStackTrace();
 
-        if(!ordinalIsPresent(ordinal))
+        if(!ordinalIsPresent(ordinal)) {
             return ((HollowSetTypeDataAccess)dataAccess.getTypeDataAccess(getSchema().getName(), ordinal)).size(ordinal);
+        }
         return removedRecords().size(getMappedOrdinal(ordinal));
     }
     
@@ -55,8 +56,9 @@ public class HollowHistoricalSetDataAccess extends HollowHistoricalTypeDataAcces
         sampler().recordGet();
         recordStackTrace();
 
-        if(!ordinalIsPresent(ordinal))
+        if(!ordinalIsPresent(ordinal)) {
             return ((HollowSetTypeDataAccess)dataAccess.getTypeDataAccess(getSchema().getName(), ordinal)).contains(ordinal, value);
+        }
         return removedRecords().contains(getMappedOrdinal(ordinal), value);
     }
     
@@ -64,12 +66,14 @@ public class HollowHistoricalSetDataAccess extends HollowHistoricalTypeDataAcces
     public int findElement(int ordinal, Object... hashKey) {
         sampler().recordGet();
         recordStackTrace();
-        
-        if(keyMatcher == null)
+
+        if(keyMatcher == null) {
             return -1;
-        
-        if(!ordinalIsPresent(ordinal))
+        }
+
+        if(!ordinalIsPresent(ordinal)) {
             return ((HollowSetTypeDataAccess)dataAccess.getTypeDataAccess(getSchema().getName(), ordinal)).findElement(ordinal, hashKey);
+        }
         
         ordinal = ordinalRemap.get(ordinal);
         
@@ -81,11 +85,12 @@ public class HollowHistoricalSetDataAccess extends HollowHistoricalTypeDataAcces
         int bucket = hash & (hashTableSize - 1);
         int bucketOrdinal = removedRecords.relativeBucketValue(ordinal, bucket);
         while(bucketOrdinal != -1) {
-            if(keyMatcher.keyMatches(bucketOrdinal, hashKey))
+            if(keyMatcher.keyMatches(bucketOrdinal, hashKey)) {
                 return bucketOrdinal;
+            }
          
             bucket++;
-            bucket &= (hashTableSize - 1);
+            bucket &= hashTableSize - 1;
             bucketOrdinal = removedRecords.relativeBucketValue(ordinal, bucket);
         }
         
@@ -97,8 +102,9 @@ public class HollowHistoricalSetDataAccess extends HollowHistoricalTypeDataAcces
         sampler().recordGet();
         recordStackTrace();
 
-        if(!ordinalIsPresent(ordinal))
+        if(!ordinalIsPresent(ordinal)) {
             return ((HollowSetTypeDataAccess)dataAccess.getTypeDataAccess(getSchema().getName(), ordinal)).contains(ordinal, value, hashCode);
+        }
         return removedRecords().contains(getMappedOrdinal(ordinal), value, hashCode);
     }
 
@@ -106,8 +112,9 @@ public class HollowHistoricalSetDataAccess extends HollowHistoricalTypeDataAcces
     public int relativeBucketValue(int ordinal, int bucketIndex) {
         recordStackTrace();
 
-        if(!ordinalIsPresent(ordinal))
+        if(!ordinalIsPresent(ordinal)) {
             return ((HollowSetTypeDataAccess)dataAccess.getTypeDataAccess(getSchema().getName(), ordinal)).relativeBucketValue(ordinal, bucketIndex);
+        }
         return removedRecords().relativeBucketValue(getMappedOrdinal(ordinal), bucketIndex);
     }
 
@@ -116,8 +123,9 @@ public class HollowHistoricalSetDataAccess extends HollowHistoricalTypeDataAcces
         sampler().recordIterator();
         recordStackTrace();
 
-        if(!ordinalIsPresent(ordinal))
+        if(!ordinalIsPresent(ordinal)) {
             return ((HollowSetTypeDataAccess)dataAccess.getTypeDataAccess(getSchema().getName(), ordinal)).potentialMatchOrdinalIterator(ordinal, hashCode);
+        }
         return removedRecords().potentialMatchOrdinalIterator(getMappedOrdinal(ordinal), hashCode);
     }
 
@@ -126,8 +134,9 @@ public class HollowHistoricalSetDataAccess extends HollowHistoricalTypeDataAcces
         sampler().recordIterator();
         recordStackTrace();
 
-        if(!ordinalIsPresent(ordinal))
+        if(!ordinalIsPresent(ordinal)) {
             return ((HollowSetTypeDataAccess)dataAccess.getTypeDataAccess(getSchema().getName(), ordinal)).ordinalIterator(ordinal);
+        }
         return removedRecords().ordinalIterator(getMappedOrdinal(ordinal));
     }
 
@@ -141,8 +150,9 @@ public class HollowHistoricalSetDataAccess extends HollowHistoricalTypeDataAcces
     
     void buildKeyMatcher() {
         PrimaryKey hashKey = getSchema().getHashKey();
-        if(hashKey != null)
+        if(hashKey != null) {
             this.keyMatcher = new HistoricalPrimaryKeyMatcher(getDataAccess(), hashKey);
+        }
     }
 
 }

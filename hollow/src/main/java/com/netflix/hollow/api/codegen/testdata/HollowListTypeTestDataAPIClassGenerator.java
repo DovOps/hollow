@@ -42,21 +42,21 @@ class HollowListTypeTestDataAPIClassGenerator {
     public String generate() {
         StringBuilder builder = new StringBuilder();
         
-        builder.append("package " + packageName + ";\n\n");
+        builder.append("package ").append(packageName).append(";\n\n");
         
         builder.append("import com.netflix.hollow.api.testdata.HollowTestListRecord;\n" + 
                        "import com.netflix.hollow.core.schema.HollowListSchema;\n\n");
         
-        builder.append("public class " + className + "<T> extends HollowTestListRecord<T> {\n\n");
+        builder.append("public class ").append(className).append("<T> extends HollowTestListRecord<T> {\n\n");
 
-        builder.append("    " + className + "(T parent) {\n");
+        builder.append("    ").append(className).append("(T parent) {\n");
         builder.append("        super(parent);\n");
         builder.append("    }\n\n");
         
         String elementReturnType = elementClassName + "<" + className + "<T>>";
         
-        builder.append("    public " + elementReturnType + " " + schema.getElementType() + "() {\n");
-        builder.append("        " + elementReturnType + " __e = new " + elementReturnType + "(this);\n");
+        builder.append("    public ").append(elementReturnType).append(" ").append(schema.getElementType()).append("() {\n");
+        builder.append("        ").append(elementReturnType).append(" __e = new ").append(elementReturnType).append("(this);\n");
         builder.append("        super.addElement(__e);\n");
         builder.append("        return __e;\n");
         builder.append("    }\n\n");
@@ -67,44 +67,44 @@ class HollowListTypeTestDataAPIClassGenerator {
             if(elementObjSchema.numFields() == 1 && elementObjSchema.getFieldType(0) != FieldType.REFERENCE) {
                 switch(elementObjSchema.getFieldType(0)) {
                 case INT:
-                    builder.append("    public " + className + "<T> " + schema.getElementType() + "(Integer value) {\n");
-                    builder.append("        " + schema.getElementType() + "()." + elementObjSchema.getFieldName(0) + "(value);\n");
+                    builder.append("    public ").append(className).append("<T> ").append(schema.getElementType()).append("(Integer value) {\n");
+                    builder.append("        ").append(schema.getElementType()).append("().").append(elementObjSchema.getFieldName(0)).append("(value);\n");
                     builder.append("        return this;\n");
                     builder.append("    }\n\n");
                     break;
                 case LONG:
-                    builder.append("    public " + className + "<T> " + schema.getElementType() + "(Long value) {\n");
-                    builder.append("        " + schema.getElementType() + "()." + elementObjSchema.getFieldName(0) + "(value);\n");
+                    builder.append("    public ").append(className).append("<T> ").append(schema.getElementType()).append("(Long value) {\n");
+                    builder.append("        ").append(schema.getElementType()).append("().").append(elementObjSchema.getFieldName(0)).append("(value);\n");
                     builder.append("        return this;\n");
                     builder.append("    }\n\n");
                     break;
                 case FLOAT:
-                    builder.append("    public " + className + "<T> " + schema.getElementType() + "(Float value) {\n");
-                    builder.append("        " + schema.getElementType() + "()." + elementObjSchema.getFieldName(0) + "(value);\n");
+                    builder.append("    public ").append(className).append("<T> ").append(schema.getElementType()).append("(Float value) {\n");
+                    builder.append("        ").append(schema.getElementType()).append("().").append(elementObjSchema.getFieldName(0)).append("(value);\n");
                     builder.append("        return this;\n");
                     builder.append("    }\n\n");
                     break;
                 case DOUBLE:
-                    builder.append("    public " + className + "<T> " + schema.getElementType() + "(Double value) {\n");
-                    builder.append("        " + schema.getElementType() + "()." + elementObjSchema.getFieldName(0) + "(value);\n");
+                    builder.append("    public ").append(className).append("<T> ").append(schema.getElementType()).append("(Double value) {\n");
+                    builder.append("        ").append(schema.getElementType()).append("().").append(elementObjSchema.getFieldName(0)).append("(value);\n");
                     builder.append("        return this;\n");
                     builder.append("    }\n\n");
                     break;
                 case BOOLEAN:
-                    builder.append("    public " + className + "<T> " + schema.getElementType() + "(Boolean value) {\n");
-                    builder.append("        " + schema.getElementType() + "()." + elementObjSchema.getFieldName(0) + "(value);\n");
+                    builder.append("    public ").append(className).append("<T> ").append(schema.getElementType()).append("(Boolean value) {\n");
+                    builder.append("        ").append(schema.getElementType()).append("().").append(elementObjSchema.getFieldName(0)).append("(value);\n");
                     builder.append("        return this;\n");
                     builder.append("    }\n\n");
                     break;
                 case BYTES:
-                    builder.append("    public " + className + "<T> " + schema.getElementType() + "(byte[] value) {\n");
-                    builder.append("        " + schema.getElementType() + "()." + elementObjSchema.getFieldName(0) + "(value);\n");
+                    builder.append("    public ").append(className).append("<T> ").append(schema.getElementType()).append("(byte[] value) {\n");
+                    builder.append("        ").append(schema.getElementType()).append("().").append(elementObjSchema.getFieldName(0)).append("(value);\n");
                     builder.append("        return this;\n");
                     builder.append("    }\n\n");
                     break;
                 case STRING:
-                    builder.append("    public " + className + "<T> " + schema.getElementType() + "(String value) {\n");
-                    builder.append("        " + schema.getElementType() + "()." + elementObjSchema.getFieldName(0) + "(value);\n");
+                    builder.append("    public ").append(className).append("<T> ").append(schema.getElementType()).append("(String value) {\n");
+                    builder.append("        ").append(schema.getElementType()).append("().").append(elementObjSchema.getFieldName(0)).append("(value);\n");
                     builder.append("        return this;\n");
                     builder.append("    }\n\n");
                     break;

@@ -88,17 +88,23 @@ public class HollowDiffMapCountingNode extends HollowDiffCountingNode {
         
         int score = 0;
 
-        if(keyFilter.getUnmatchedFromOrdinals().size() != 0 || keyFilter.getUnmatchedToOrdinals().size() != 0)
+        if(keyFilter.getUnmatchedFromOrdinals().size() != 0 || keyFilter.getUnmatchedToOrdinals().size() != 0) {
             score += keyNode.traverseDiffs(keyFilter.getUnmatchedFromOrdinals(), keyFilter.getUnmatchedToOrdinals());
-        if(keyRequiresTraversalForMissingFields)
-            if(keyFilter.getMatchedFromOrdinals().size() != 0 || keyFilter.getMatchedToOrdinals().size() != 0)
+        }
+        if(keyRequiresTraversalForMissingFields) {
+            if(keyFilter.getMatchedFromOrdinals().size() != 0 || keyFilter.getMatchedToOrdinals().size() != 0) {
                 score += keyNode.traverseMissingFields(keyFilter.getMatchedFromOrdinals(), keyFilter.getMatchedToOrdinals());
+            }
+        }
 
-        if(valueFilter.getUnmatchedFromOrdinals().size() != 0 || valueFilter.getUnmatchedToOrdinals().size() != 0)
+        if(valueFilter.getUnmatchedFromOrdinals().size() != 0 || valueFilter.getUnmatchedToOrdinals().size() != 0) {
             score += valueNode.traverseDiffs(valueFilter.getUnmatchedFromOrdinals(), valueFilter.getUnmatchedToOrdinals());
-        if(valueRequiresTraversalForMissingFields)
-            if(valueFilter.getMatchedFromOrdinals().size() != 0 || valueFilter.getMatchedToOrdinals().size() != 0)
+        }
+        if(valueRequiresTraversalForMissingFields) {
+            if(valueFilter.getMatchedFromOrdinals().size() != 0 || valueFilter.getMatchedToOrdinals().size() != 0) {
                 score += valueNode.traverseMissingFields(valueFilter.getMatchedFromOrdinals(), valueFilter.getMatchedToOrdinals());
+            }
+        }
         
         return score;
     }
@@ -117,7 +123,7 @@ public class HollowDiffMapCountingNode extends HollowDiffCountingNode {
 
     @Override
     public List<HollowFieldDiff> getFieldDiffs() {
-        List<HollowFieldDiff> list = new ArrayList<HollowFieldDiff>();
+        List<HollowFieldDiff> list = new ArrayList<>();
 
         list.addAll(keyNode.getFieldDiffs());
         list.addAll(valueNode.getFieldDiffs());

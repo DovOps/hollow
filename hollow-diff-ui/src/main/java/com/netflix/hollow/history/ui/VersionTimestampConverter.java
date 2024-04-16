@@ -27,10 +27,10 @@ public class VersionTimestampConverter {
 
     private static final TimeZone UTC_TIMEZONE = TimeZone.getTimeZone("UTC");
 
-    private static long ADD_MILLIS_TO_TIMESTAMP = 0;
+    private static long addMillisToTimestamp;
     
     public static void addMillisToTimestamps(long millis) {
-        ADD_MILLIS_TO_TIMESTAMP = millis;
+        addMillisToTimestamp = millis;
     }
 
     public static String getTimestamp(long versionLong, TimeZone timeZone) {
@@ -41,7 +41,7 @@ public class VersionTimestampConverter {
         try {
             Date date = utcFormat.parse(version);
 
-            Date adjustedDate = new Date(date.getTime() + ADD_MILLIS_TO_TIMESTAMP);
+            Date adjustedDate = new Date(date.getTime() + addMillisToTimestamp);
 
             SimpleDateFormat sdf = new SimpleDateFormat("[MM/dd HH:mm z] ");
             sdf.setTimeZone(timeZone);

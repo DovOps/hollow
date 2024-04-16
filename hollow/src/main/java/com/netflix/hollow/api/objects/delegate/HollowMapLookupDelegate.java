@@ -64,8 +64,9 @@ public class HollowMapLookupDelegate<K, V> implements HollowMapDelegate<K, V> {
         }
         
         while(iter.next()) {
-            if(map.equalsKey(iter.getKey(), key))
+            if(map.equalsKey(iter.getKey(), key)) {
                 return map.instantiateValue(iter.getValue());
+            }
         }
         return null;
     }
@@ -82,8 +83,9 @@ public class HollowMapLookupDelegate<K, V> implements HollowMapDelegate<K, V> {
         }
 
         while(iter.next()) {
-            if(map.equalsKey(iter.getKey(), key))
+            if(map.equalsKey(iter.getKey(), key)) {
                 return true;
+            }
         }
         return false;
     }
@@ -92,8 +94,9 @@ public class HollowMapLookupDelegate<K, V> implements HollowMapDelegate<K, V> {
     public boolean containsValue(HollowMap<K, V> map, int ordinal, Object value) {
         HollowMapEntryOrdinalIterator iter = iterator(ordinal);
         while(iter.next()) {
-            if(map.equalsValue(iter.getValue(), value))
+            if(map.equalsValue(iter.getValue(), value)) {
                 return true;
+            }
         }
         return false;
     }
@@ -101,23 +104,25 @@ public class HollowMapLookupDelegate<K, V> implements HollowMapDelegate<K, V> {
     @Override
     public K findKey(HollowMap<K, V> map, int ordinal, Object... hashKey) {
         int keyOrdinal = dataAccess.findKey(ordinal, hashKey);
-        if(keyOrdinal != -1)
+        if(keyOrdinal != -1) {
             return map.instantiateKey(keyOrdinal);
+        }
         return null;
     }
 
     @Override
     public V findValue(HollowMap<K, V> map, int ordinal, Object... hashKey) {
         int valueOrdinal = dataAccess.findValue(ordinal, hashKey);
-        if(valueOrdinal != -1)
+        if(valueOrdinal != -1) {
             return map.instantiateValue(valueOrdinal);
+        }
         return null;
     }
 
     @Override
     public Entry<K, V> findEntry(final HollowMap<K, V> map, int ordinal, Object... hashKey) {
         final long entryOrdinals = dataAccess.findEntry(ordinal, hashKey);
-        if(entryOrdinals != -1L)
+        if(entryOrdinals != -1L) {
             return new Map.Entry<K, V>() {
                 @Override
                 public K getKey() {
@@ -134,6 +139,7 @@ public class HollowMapLookupDelegate<K, V> implements HollowMapDelegate<K, V> {
                     throw new UnsupportedOperationException();
                 }
             };
+        }
         
         return null;
     }

@@ -31,7 +31,7 @@ import java.util.Vector;
  */
 public class HollowChecksum {
 
-    private int currentChecksum = 0;
+    private int currentChecksum;
 
     public HollowChecksum() { }
 
@@ -51,8 +51,9 @@ public class HollowChecksum {
 
     @Override
     public boolean equals(Object other) {
-        if(other instanceof HollowChecksum)
-            return ((HollowChecksum) other).currentChecksum == currentChecksum;
+        if(other instanceof HollowChecksum) {
+            return ((HollowChecksum)other).currentChecksum == currentChecksum;
+        }
         return false;
     }
 
@@ -70,7 +71,7 @@ public class HollowChecksum {
     }
     
     public static HollowChecksum forStateEngineWithCommonSchemas(HollowReadStateEngine stateEngine, HollowReadStateEngine commonSchemasWithState) {
-        final Vector<TypeChecksum> typeChecksums = new Vector<TypeChecksum>();
+        final Vector<TypeChecksum> typeChecksums = new Vector<>();
         SimultaneousExecutor executor = new SimultaneousExecutor(HollowChecksum.class, "checksum-common-schemas");
 
         for(final HollowTypeReadState typeState : stateEngine.getTypeStates()) {

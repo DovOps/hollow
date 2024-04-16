@@ -29,7 +29,7 @@ public class HollowEffigyDiffRecord {
     private int runId;
 
     public HollowEffigyDiffRecord(HollowEffigy basedOn) {
-        this.map = new HashMap<HollowEffigy.Field, FieldDiffCount>();
+        this.map = new HashMap<>();
 
         traverseOriginalFields(basedOn);
     }
@@ -54,8 +54,9 @@ public class HollowEffigyDiffRecord {
         runId++;
         simDiffCount.reset();
         traverseComparisonFields(comparison, maxDiff);
-        if(simDiffCount.diffCount >= maxDiff)
+        if(simDiffCount.diffCount >= maxDiff) {
             return HollowEffigyCollectionPairer.MAX_MATRIX_ELEMENT_FIELD_VALUE;
+        }
         return score();
     }
 
@@ -73,15 +74,17 @@ public class HollowEffigyDiffRecord {
                 }
 
                 if(fieldCount.incrementComparisonCount(runId)) {
-                    if(++simDiffCount.diffCount >= maxDiff)
+                    if(++simDiffCount.diffCount >= maxDiff) {
                         return;
+                    }
                 } else {
                     simDiffCount.simCount++;
                 }
             } else {
                 traverseComparisonFields((HollowEffigy) field.getValue(), maxDiff);
-                if(simDiffCount.diffCount >= maxDiff)
+                if(simDiffCount.diffCount >= maxDiff) {
                     return;
+                }
             }
         }
     }
@@ -89,8 +92,9 @@ public class HollowEffigyDiffRecord {
     private int score() {
         int totalDiff = (totalOriginalFieldCount - simDiffCount.simCount) + simDiffCount.diffCount;
 
-        if(simDiffCount.simCount == 0 && totalDiff != 0)
+        if(simDiffCount.simCount == 0 && totalDiff != 0) {
             return HollowEffigyCollectionPairer.MAX_MATRIX_ELEMENT_FIELD_VALUE;
+        }
 
         return totalDiff;
     }

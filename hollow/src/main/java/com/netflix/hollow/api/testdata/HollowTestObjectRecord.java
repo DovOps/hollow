@@ -41,10 +41,11 @@ public abstract class HollowTestObjectRecord<T> extends HollowTestRecord<T> {
     }
     
     protected void addField(Field field) {
-        if(field.value == null)
+        if(field.value == null) {
             this.fields.remove(field.name);
-        else
+        } else {
             this.fields.put(field.name, field);
+        }
     }
     
     protected Field getField(String name) {

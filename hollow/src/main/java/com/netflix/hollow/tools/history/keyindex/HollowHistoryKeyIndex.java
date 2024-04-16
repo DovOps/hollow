@@ -125,10 +125,14 @@ public class HollowHistoryKeyIndex {
         for(Map.Entry<String, HollowHistoryTypeKeyIndex> entry : typeKeyIndexes.entrySet()) {
             String type = entry.getKey();
             HollowHistoryTypeKeyIndex index = entry.getValue();
-            if (index.isInitialized()) continue;
+            if(index.isInitialized()) {
+                continue;
+            }
 
             HollowObjectTypeReadState typeState = (HollowObjectTypeReadState) latestStateEngine.getTypeState(type);
-            if (typeState == null) continue;
+            if(typeState == null) {
+                continue;
+            }
 
             index.initializeKeySchema(typeState);
         }

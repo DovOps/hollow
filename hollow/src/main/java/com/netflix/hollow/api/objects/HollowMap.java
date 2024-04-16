@@ -174,7 +174,7 @@ public abstract class HollowMap<K, V> extends AbstractMap<K, V> implements Hollo
         }
     }
 
-    private final static class OrdinalEntry<K, V> implements Map.Entry<K, V> {
+    private static final class OrdinalEntry<K, V> implements Map.Entry<K, V> {
         private final HollowMap<K, V> map;
         private final int keyOrdinal;
         private final int valueOrdinal;

@@ -19,15 +19,17 @@ public class Award extends HollowObject {
 
     public Movie getWinner() {
         int refOrdinal = delegate().getWinnerOrdinal(ordinal);
-        if(refOrdinal == -1)
+        if(refOrdinal == -1) {
             return null;
+        }
         return  api().getMovie(refOrdinal);
     }
 
     public SetOfMovie getNominees() {
         int refOrdinal = delegate().getNomineesOrdinal(ordinal);
-        if(refOrdinal == -1)
+        if(refOrdinal == -1) {
             return null;
+        }
         return  api().getSetOfMovie(refOrdinal);
     }
 

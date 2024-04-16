@@ -57,11 +57,13 @@ public abstract class HistoryPage {
             throw e;
         }
 
-        if(includeHeaderAndFooter())
+        if(includeHeaderAndFooter()) {
             headerTemplate.merge(ctx, writer);
+        }
         template.merge(ctx, writer);
-        if(includeHeaderAndFooter())
+        if(includeHeaderAndFooter()) {
             footerTemplate.merge(ctx, writer);
+        }
     }
 
     protected abstract void setUpContext(HttpServletRequest req, HollowUISession session, VelocityContext ctx);
@@ -73,11 +75,11 @@ public abstract class HistoryPage {
             toTags = state.getNextState().getHeaderEntries();
         }
 
-        Set<String> allKeys = new HashSet<String>();
+        Set<String> allKeys = new HashSet<>();
         allKeys.addAll(fromTags.keySet());
         allKeys.addAll(toTags.keySet());
 
-        List<HollowHeaderEntry> entries = new ArrayList<HollowHeaderEntry>();
+        List<HollowHeaderEntry> entries = new ArrayList<>();
 
         int i=0;
 

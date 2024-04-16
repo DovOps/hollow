@@ -41,7 +41,9 @@ public class SparseBitSetTest {
         Set<Integer> intIndexed = new HashSet<>();
         for (int i = 0; i < 100000; i++) {
             int r = random.nextInt(maxValue);
-            while (intIndexed.contains(r)) r = random.nextInt(maxValue);
+            while (intIndexed.contains(r)) {
+                r = random.nextInt(maxValue);
+            }
             sparseBitSet.set(r);
             intIndexed.add(r);
         }
@@ -50,9 +52,11 @@ public class SparseBitSetTest {
         Assert.assertTrue(sparseBitSet.estimateBitsUsed() > 0);
 
         for (int i = 0; i < maxValue; i++) {
-            if (intIndexed.contains(i))
+            if(intIndexed.contains(i)) {
                 Assert.assertTrue("Expected in set, but not found the int " + i, sparseBitSet.get(i));
-            else Assert.assertFalse("Not expected in set, but found the int " + i, sparseBitSet.get(i));
+            } else {
+                Assert.assertFalse("Not expected in set, but found the int " + i, sparseBitSet.get(i));
+            }
         }
     }
 
@@ -67,7 +71,9 @@ public class SparseBitSetTest {
             for (int i = 0; i < parallelism; i++) {
                 int from = i * taskSize;
                 int to = (from + taskSize) - 1;
-                if (i == (parallelism - 1)) to = maxValue;
+                if(i == (parallelism - 1)) {
+                    to = maxValue;
+                }
                 executor.submit(new Task(sparseBitSet, from, to));
             }
             executor.awaitUninterruptibly();
@@ -91,8 +97,9 @@ public class SparseBitSetTest {
         @Override
         public void run() {
             for (int i = from; i <= to; i++) {
-                if ((i % 2) == 0)
+                if((i % 2) == 0) {
                     set.set(i);
+                }
             }
         }
     }
@@ -256,8 +263,9 @@ public class SparseBitSetTest {
             addedValueGreaterThanMax = false;
         }
 
-        if (addedValueGreaterThanMax)
+        if(addedValueGreaterThanMax) {
             Assert.fail("Should not be ale to set a value greater than max value in compacted bit set.");
+        }
 
     }
 
@@ -285,8 +293,9 @@ public class SparseBitSetTest {
             addedValueGreaterThanMax = false;
         }
 
-        if (addedValueGreaterThanMax)
+        if(addedValueGreaterThanMax) {
             Assert.fail("Should not be ale to set a value greater than max value in compacted bit set.");
+        }
 
         HollowSparseIntegerSet.SparseBitSet resizedSparsedBitSet = HollowSparseIntegerSet.SparseBitSet.resize(compactSparseBitSet, 8192);
         resizedSparsedBitSet.set(4096);

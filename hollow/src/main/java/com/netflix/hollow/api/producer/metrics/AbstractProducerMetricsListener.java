@@ -79,7 +79,7 @@ public abstract class AbstractProducerMetricsListener extends AbstractHollowProd
     @Override
     public void onAnnouncementComplete(com.netflix.hollow.api.producer.Status status, HollowProducer.ReadState readState, long version, Duration elapsed) {
         boolean isAnnouncementSuccess = false;
-        long dataSizeBytes = 0l;
+        long dataSizeBytes = 0L;
 
         if (status.getType() == com.netflix.hollow.api.producer.Status.StatusType.SUCCESS) {
             isAnnouncementSuccess = true;

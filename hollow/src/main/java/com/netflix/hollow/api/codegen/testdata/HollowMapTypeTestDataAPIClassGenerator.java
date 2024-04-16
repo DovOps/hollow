@@ -44,14 +44,14 @@ class HollowMapTypeTestDataAPIClassGenerator {
     public String generate() {
         StringBuilder builder = new StringBuilder();
         
-        builder.append("package " + packageName + ";\n\n");
+        builder.append("package ").append(packageName).append(";\n\n");
         
         builder.append("import com.netflix.hollow.api.testdata.HollowTestMapRecord;\n" +
                        "import com.netflix.hollow.core.schema.HollowMapSchema;\n\n");
         
-        builder.append("public class " + className + "<T> extends HollowTestMapRecord<T> {\n\n");
+        builder.append("public class ").append(className).append("<T> extends HollowTestMapRecord<T> {\n\n");
         
-        builder.append("    " + className + "(T parent) {\n");
+        builder.append("    ").append(className).append("(T parent) {\n");
         builder.append("        super(parent);\n");
         builder.append("    }\n\n");
         
@@ -65,7 +65,7 @@ class HollowMapTypeTestDataAPIClassGenerator {
             String keyType = getErgonomicShortcutType(schema.getKeyType());
             String valueType = getErgonomicShortcutType(schema.getValueType());
             
-            builder.append("    public " + className + "<T> entry(" + keyType + " key, " + valueType + " value) {\n");
+            builder.append("    public ").append(className).append("<T> entry(").append(keyType).append(" key, ").append(valueType).append(" value) {\n");
             builder.append("        entry().key(key).value(value);\n");
             builder.append("        return this;\n");
             builder.append("    }\n\n");
@@ -74,10 +74,10 @@ class HollowMapTypeTestDataAPIClassGenerator {
             // TODO
         }
 
-        builder.append("    private static final HollowMapSchema SCHEMA = new HollowMapSchema(\"" + schema.getName() + "\", \"" + schema.getKeyType() + "\", \"" + schema.getValueType() + "\"");
+        builder.append("    private static final HollowMapSchema SCHEMA = new HollowMapSchema(\"").append(schema.getName()).append("\", \"").append(schema.getKeyType()).append("\", \"").append(schema.getValueType()).append("\"");
         if(schema.getHashKey() != null) {
             for(String fieldPath : schema.getHashKey().getFieldPaths()) {
-                builder.append(", \"" + fieldPath + "\"");
+                builder.append(", \"").append(fieldPath).append("\"");
             }
         }
         builder.append(");\n\n");
@@ -85,20 +85,20 @@ class HollowMapTypeTestDataAPIClassGenerator {
         builder.append("    @Override public HollowMapSchema getSchema() { return SCHEMA; }\n\n");
         
         
-        builder.append("    public class Entry extends HollowTestMapRecord.Entry<" + className + "<T>> {\n\n");
+        builder.append("    public class Entry extends HollowTestMapRecord.Entry<").append(className).append("<T>> {\n\n");
         
         builder.append("        public Entry() {\n");
-        builder.append("            super(" + className + ".this);\n");
+        builder.append("            super(").append(className).append(".this);\n");
         builder.append("        }\n\n");
         
-        builder.append("        public " + keyClassName + "<Entry> key() {\n");
-        builder.append("            " + keyClassName + "<Entry> __k = new " + keyClassName + "<>(this);\n");
+        builder.append("        public ").append(keyClassName).append("<Entry> key() {\n");
+        builder.append("            ").append(keyClassName).append("<Entry> __k = new ").append(keyClassName).append("<>(this);\n");
         builder.append("            setKey(__k);\n");
         builder.append("            return __k;\n");
         builder.append("        }\n\n");
         
-        builder.append("        public " + valueClassName + "<Entry> value() {\n");
-        builder.append("            " + valueClassName + "<Entry> __v = new " + valueClassName + "<>(this);\n");
+        builder.append("        public ").append(valueClassName).append("<Entry> value() {\n");
+        builder.append("            ").append(valueClassName).append("<Entry> __v = new ").append(valueClassName).append("<>(this);\n");
         builder.append("            setValue(__v);\n");
         builder.append("            return __v;\n");
         builder.append("        }\n\n");
@@ -107,8 +107,8 @@ class HollowMapTypeTestDataAPIClassGenerator {
             String keyType = getErgonomicShortcutType(schema.getKeyType());
             String keyFieldName = getErgonomicFieldName(schema.getKeyType());
             
-            builder.append("        public Entry key(" + keyType + " key) {\n");
-            builder.append("            key()." + keyFieldName + "(key);\n");
+            builder.append("        public Entry key(").append(keyType).append(" key) {\n");
+            builder.append("            key().").append(keyFieldName).append("(key);\n");
             builder.append("            return this;\n");
             builder.append("        }\n\n");
         }
@@ -117,8 +117,8 @@ class HollowMapTypeTestDataAPIClassGenerator {
             String valueType = getErgonomicShortcutType(schema.getValueType());
             String valueFieldName = getErgonomicFieldName(schema.getValueType());
             
-            builder.append("        public Entry value(" + valueType + " value) {\n");
-            builder.append("            value()." + valueFieldName + "(value);\n");
+            builder.append("        public Entry value(").append(valueType).append(" value) {\n");
+            builder.append("            value().").append(valueFieldName).append("(value);\n");
             builder.append("            return this;\n");
             builder.append("        }\n\n");
         }
@@ -140,13 +140,15 @@ class HollowMapTypeTestDataAPIClassGenerator {
     }
     
     private boolean canErgonomicShortcut(HollowSchema schema) {
-        if(schema.getSchemaType() != SchemaType.OBJECT)
+        if(schema.getSchemaType() != SchemaType.OBJECT) {
             return false;
+        }
         
         HollowObjectSchema objSchema = (HollowObjectSchema)schema;
-        
-        if(objSchema.numFields() != 1)
+
+        if(objSchema.numFields() != 1) {
             return false;
+        }
         
         return objSchema.getFieldType(0) != FieldType.REFERENCE;
     }

@@ -35,7 +35,7 @@ public class HollowDiscoveredSchema {
         this.schemaName = schemaName;
         this.type = schemaType;
         this.subType = subType;
-        this.fields = schemaType == DiscoveredSchemaType.OBJECT ? new ConcurrentHashMap<String, HollowDiscoveredField>() : Collections.<String, HollowDiscoveredField> emptyMap();
+        this.fields = schemaType == DiscoveredSchemaType.OBJECT ? new ConcurrentHashMap<String, HollowDiscoveredField>() : Collections. emptyMap();
         // System.out.println(String.format("[new] HollowDiscoveredSchema: schemaName=%s, type=%s, subType=%s", schemaName, schemaType, subType));
     }
     
@@ -72,10 +72,12 @@ public class HollowDiscoveredSchema {
     }
 
     private static FieldType mostRelaxed(FieldType ft1, FieldType ft2) {
-        if(ft1 == FieldType.STRING || ft2 == FieldType.STRING)
+        if(ft1 == FieldType.STRING || ft2 == FieldType.STRING) {
             return FieldType.STRING;
-        if(ft1 == FieldType.DOUBLE || ft2 == FieldType.DOUBLE)
+        }
+        if(ft1 == FieldType.DOUBLE || ft2 == FieldType.DOUBLE) {
             return FieldType.DOUBLE;
+        }
         throw new RuntimeException("There is no compatible field type between " + ft1 + " and " + ft2);
     }
 

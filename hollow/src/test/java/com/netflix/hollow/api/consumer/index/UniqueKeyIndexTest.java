@@ -83,7 +83,7 @@ public class UniqueKeyIndexTest {
         api = consumer.getAPI(DataModel.Consumer.Api.class);
     }
 
-    public static abstract class MatchTestParameterized<T extends HollowObject, Q> extends UniqueKeyIndexTest {
+    public abstract static class MatchTestParameterized<T extends HollowObject, Q> extends UniqueKeyIndexTest {
         final String path;
         final Class<Q> type;
         final Q value;

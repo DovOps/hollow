@@ -33,7 +33,7 @@ import java.util.concurrent.Future;
 
 
 public abstract class AbstractHollowJsonAdaptorTask {
-    public static boolean isDebug = false;
+    public static boolean isDebug;
 
     protected final int maxWorkQueue = 2048;
     protected final SimultaneousExecutor executor = new SimultaneousExecutor(getClass(), "json-adaptor");
@@ -49,7 +49,7 @@ public abstract class AbstractHollowJsonAdaptorTask {
     public AbstractHollowJsonAdaptorTask(String typeName, String actionName) {
         this.typeName = typeName;
         this.actionName = actionName;
-        this.fieldProcessors = new HashMap<String, Map<String,FieldProcessor>>();
+        this.fieldProcessors = new HashMap<>();
     }
 
     public String getTypeName() {
@@ -60,7 +60,7 @@ public abstract class AbstractHollowJsonAdaptorTask {
         for (FieldProcessor p : processors) {
             Map<String, FieldProcessor> entityFieldProcessors = fieldProcessors.get(p.getEntityName());
             if(entityFieldProcessors == null) {
-                entityFieldProcessors = new HashMap<String, FieldProcessor>();
+                entityFieldProcessors = new HashMap<>();
                 fieldProcessors.put(p.getEntityName(), entityFieldProcessors);
             }
 
@@ -70,8 +70,9 @@ public abstract class AbstractHollowJsonAdaptorTask {
 
     public FieldProcessor getFieldProcessor(String entityName, String fieldName) {
         Map<String, FieldProcessor> entityFieldProcessors = fieldProcessors.get(entityName);
-        if(entityFieldProcessors == null)
+        if(entityFieldProcessors == null) {
             return null;
+        }
         return entityFieldProcessors.get(fieldName);
     }
 

@@ -50,8 +50,8 @@ public class DiffEqualityMapping {
     private final boolean oneToOne;
     private final boolean listOrderingIsImportant;
 
-    private final Map<String, DiffEqualOrdinalMap> map = new HashMap<String, DiffEqualOrdinalMap>();
-    private final Set<String> typesWhichRequireMissingFieldTraversal = new HashSet<String>();
+    private final Map<String, DiffEqualOrdinalMap> map = new HashMap<>();
+    private final Set<String> typesWhichRequireMissingFieldTraversal = new HashSet<>();
     
     private boolean isPrepared;
 
@@ -72,8 +72,9 @@ public class DiffEqualityMapping {
 
     public DiffEqualOrdinalMap getEqualOrdinalMap(String type) {
         DiffEqualOrdinalMap ordinalMap = map.get(type);
-        if(ordinalMap != null)
+        if(ordinalMap != null) {
             return ordinalMap;
+        }
         return isPrepared ? DiffEqualOrdinalMap.EMPTY_MAP : buildMap(type);
     }
     
@@ -85,8 +86,9 @@ public class DiffEqualityMapping {
         HollowTypeReadState fromTypeState = fromState.getTypeState(type);
         HollowTypeReadState toTypeState = toState.getTypeState(type);
 
-        if(fromTypeState == null || toTypeState == null)
+        if(fromTypeState == null || toTypeState == null) {
             return DiffEqualOrdinalMap.EMPTY_MAP;
+        }
 
         log.info("starting to build equality map for " + type);
         DiffEqualOrdinalMap map = buildMap(fromTypeState, toTypeState);
@@ -98,8 +100,9 @@ public class DiffEqualityMapping {
         String typeName = fromTypeState.getSchema().getName();
         DiffEqualityTypeMapper mapper = getTypeMapper(fromTypeState, toTypeState);
         DiffEqualOrdinalMap equalOrdinalMap = mapper.mapEqualObjects();
-        if(mapper.requiresTraversalForMissingFields())
+        if(mapper.requiresTraversalForMissingFields()) {
             typesWhichRequireMissingFieldTraversal.add(fromTypeState.getSchema().getName());
+        }
 
         equalOrdinalMap.buildToOrdinalIdentityMapping();
 
@@ -108,14 +111,18 @@ public class DiffEqualityMapping {
     }
 
     private DiffEqualityTypeMapper getTypeMapper(HollowTypeReadState fromState, HollowTypeReadState toState) {
-        if(fromState instanceof HollowObjectTypeReadState)
+        if(fromState instanceof HollowObjectTypeReadState) {
             return new DiffEqualityObjectMapper(this, (HollowObjectTypeReadState)fromState, (HollowObjectTypeReadState)toState, oneToOne);
-        if(listOrderingIsImportant && fromState instanceof HollowListTypeReadState)
+        }
+        if(listOrderingIsImportant && fromState instanceof HollowListTypeReadState) {
             return new DiffEqualityOrderedListMapper(this, (HollowListTypeReadState)fromState, (HollowListTypeReadState)toState, oneToOne);
-        if(fromState instanceof HollowCollectionTypeReadState)
+        }
+        if(fromState instanceof HollowCollectionTypeReadState) {
             return new DiffEqualityCollectionMapper(this, (HollowCollectionTypeReadState)fromState, (HollowCollectionTypeReadState)toState, oneToOne);
-        if(fromState instanceof HollowMapTypeReadState)
+        }
+        if(fromState instanceof HollowMapTypeReadState) {
             return new DiffEqualityMapMapper(this, (HollowMapTypeReadState)fromState, (HollowMapTypeReadState)toState, oneToOne);
+        }
 
         throw new IllegalArgumentException("I don't know how to map equality for a " + fromState.getClass().getName());
     }

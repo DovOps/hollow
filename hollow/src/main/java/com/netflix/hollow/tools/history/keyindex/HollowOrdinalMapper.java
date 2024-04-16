@@ -30,7 +30,7 @@ import static com.netflix.hollow.core.HollowConstants.ORDINAL_NONE;
 import java.util.Arrays;
 
 public class HollowOrdinalMapper {
-    private int size = 0;
+    private int size;
     private static final double LOAD_FACTOR = 0.7;
     private static final int STARTING_SIZE = 2069;
 
@@ -78,19 +78,22 @@ public class HollowOrdinalMapper {
     public void addMatches(int hashCode, Object objectToMatch, int field, FieldType type, IntList results) {
         IntList[] fieldHashes = fieldHashToAssignedOrdinal[field];
         int scanIndex = indexFromHash(hashCode, fieldHashes.length);
-        if (fieldHashes[scanIndex] == null)
+        if(fieldHashes[scanIndex] == null) {
             return;
+        }
         for(int i=0;i<fieldHashes[scanIndex].size();i++) {
             int assignedOrdinal = fieldHashes[scanIndex].get(i);
             Object object = getFieldObject(assignedOrdinal, field, type);
-            if(object.equals(objectToMatch))
+            if(object.equals(objectToMatch)) {
                 results.add(assignedOrdinal);
+            }
         }
     }
 
     public void writeKeyFieldHash(Object fieldObject, int assignedOrdinal, int fieldIdx) {
-        if (!keyFieldIsIndexed[fieldIdx])
+        if(!keyFieldIsIndexed[fieldIdx]) {
             return;
+        }
 
         IntList[] fieldHashes = fieldHashToAssignedOrdinal[fieldIdx];
 
@@ -113,8 +116,9 @@ public class HollowOrdinalMapper {
         int scanIndex = indexFromHash(hashedRecord, hashToAssignedOrdinal.length);
 
         while (hashToAssignedOrdinal[scanIndex]!=ORDINAL_NONE) {
-            if(recordsAreEqual(typeState, keyOrdinal, scanIndex))
+            if(recordsAreEqual(typeState, keyOrdinal, scanIndex)) {
                 return hashToAssignedOrdinal[scanIndex];
+            }
 
             scanIndex = (scanIndex + 1) % hashToAssignedOrdinal.length;
         }
@@ -124,8 +128,9 @@ public class HollowOrdinalMapper {
 
     private boolean recordsAreEqual(HollowObjectTypeReadState typeState, int keyOrdinal, int index) {
         for(int fieldIdx=0;fieldIdx<primaryKey.numFields();fieldIdx++) {
-            if(!keyFieldIsIndexed[fieldIdx])
+            if(!keyFieldIsIndexed[fieldIdx]) {
                 continue;
+            }
 
             Object newFieldValue = readValueInState(typeState, keyOrdinal, fieldIdx);
             int existingFieldOrdinalValue = fieldHashToObjectOrdinal[fieldIdx][index];
@@ -175,8 +180,9 @@ public class HollowOrdinalMapper {
 
     private void storeFieldObjects(HollowObjectTypeReadState typeState, int ordinal, int index) {
         for(int i=0;i<primaryKey.numFields();i++) {
-            if(!keyFieldIsIndexed[i])
+            if(!keyFieldIsIndexed[i]) {
                 continue;
+            }
 
             Object objectToStore = readValueInState(typeState, ordinal, i);
             int objectOrdinal = memoizedPool.writeAndGetOrdinal(objectToStore);
@@ -215,8 +221,9 @@ public class HollowOrdinalMapper {
             IntList[] hashToOrdinal = fieldHashToAssignedOrdinal[fieldIdx];
 
             for (IntList ordinalList : hashToOrdinal) {
-                if(ordinalList==null || ordinalList.size()==0)
+                if(ordinalList == null || ordinalList.size() == 0) {
                     continue;
+                }
 
                 // Recompute original hash, based on the fact that all objects in this IntList have the same hash
 
@@ -230,8 +237,9 @@ public class HollowOrdinalMapper {
         }
 
         for(int i=0;i<hashToAssignedOrdinal.length;i++) {
-            if(hashToAssignedOrdinal[i]==ORDINAL_NONE)
+            if(hashToAssignedOrdinal[i] == ORDINAL_NONE) {
                 continue;
+            }
             // Recompute original hash
             int firstHash = hashFromIndex(i);
             int newIndex = rehashExistingRecord(newTable, firstHash, hashToAssignedOrdinal[i]);
@@ -246,9 +254,10 @@ public class HollowOrdinalMapper {
 
         for (int assignedOrdinal=0;assignedOrdinal<assignedOrdinalToIndex.length;assignedOrdinal++) {
             int previousIndex = assignedOrdinalToIndex[assignedOrdinal];
-            if (previousIndex==ORDINAL_NONE)
+            if(previousIndex == ORDINAL_NONE) {
                 //linear, so we can break
                 break;
+            }
             int newIndex = hashToAssignedOrdinal[previousIndex];
 
             assignedOrdinalToIndex[assignedOrdinal]=newIndex;
@@ -261,8 +270,9 @@ public class HollowOrdinalMapper {
 
     private int rehashExistingRecord(int[] newTable, int originalHash, int assignedOrdinal) {
         int newIndex = indexFromHash(originalHash, newTable.length);
-        while (newTable[newIndex]!=ORDINAL_NONE)
+        while (newTable[newIndex] != ORDINAL_NONE) {
             newIndex = (newIndex + 1) % newTable.length;
+        }
 
         newTable[newIndex] = assignedOrdinal;
         return newIndex;

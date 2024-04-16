@@ -33,8 +33,9 @@ public class HollowListOrdinalIterator implements HollowOrdinalIterator {
 
     @Override
     public int next() {
-        if(currentElement == size)
+        if(currentElement == size) {
             return NO_MORE_ORDINALS;
+        }
 
         return dataAccess.getElementOrdinal(listOrdinal, currentElement++);
     }

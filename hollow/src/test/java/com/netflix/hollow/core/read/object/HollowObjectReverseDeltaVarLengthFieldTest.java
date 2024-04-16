@@ -48,14 +48,14 @@ public class HollowObjectReverseDeltaVarLengthFieldTest extends AbstractStateEng
 		
 		mapper.add("one");
 		
-		byte reverseDelta1[] = getReverseDelta();
+		byte[] reverseDelta1 = getReverseDelta();
 
 		roundTripDelta();
 		
 		mapper.add("one");
 		mapper.add("two");
 		
-		byte reverseDelta2[] = getReverseDelta();
+		byte[] reverseDelta2 = getReverseDelta();
 		
 		roundTripDelta();
 

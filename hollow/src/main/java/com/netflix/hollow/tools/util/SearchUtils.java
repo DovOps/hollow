@@ -32,9 +32,9 @@ public class SearchUtils {
          * Split by the number of fields of the primary key. This ensures correct extraction of an empty value for the last field.
          * Escape the delimiter if it is preceded by a backslash.
          */
-        String fields[] = keyString.split("(?<!\\\\)" + MULTI_FIELD_KEY_DELIMITER, primaryKey.numFields());
+        String[] fields = keyString.split("(?<!\\\\)" + MULTI_FIELD_KEY_DELIMITER, primaryKey.numFields());
 
-        Object key[] = new Object[fields.length];
+        Object[] key = new Object[fields.length];
 
         for(int i=0;i<fields.length;i++) {
             switch(primaryKey.getFieldType(readStateEngine, i)) {
@@ -69,7 +69,7 @@ public class SearchUtils {
      */
     public static int[][] getFieldPathIndexes(HollowReadStateEngine readStateEngine, PrimaryKey primaryKey) {
         if(primaryKey != null) {
-            int fieldPathIndexes[][] = new int[primaryKey.numFields()][];
+            int[][] fieldPathIndexes = new int[primaryKey.numFields()][];
             for(int i=0;i<primaryKey.numFields();i++) {
                 fieldPathIndexes[i] = primaryKey.getFieldPathIndex(readStateEngine, i);
             }
@@ -84,13 +84,15 @@ public class SearchUtils {
      */
     public static HollowPrimaryKeyIndex findPrimaryKeyIndex(HollowTypeReadState typeState) {
         PrimaryKey pkey = getPrimaryKey(typeState.getSchema());
-        if(pkey == null)
+        if(pkey == null) {
             return null;
+        }
 
         for(HollowTypeStateListener listener : typeState.getListeners()) {
             if(listener instanceof HollowPrimaryKeyIndex) {
-                if(((HollowPrimaryKeyIndex) listener).getPrimaryKey().equals(pkey))
-                    return (HollowPrimaryKeyIndex) listener;
+                if(((HollowPrimaryKeyIndex)listener).getPrimaryKey().equals(pkey)) {
+                    return (HollowPrimaryKeyIndex)listener;
+                }
             }
         }
 
@@ -101,8 +103,9 @@ public class SearchUtils {
      * Get the primary key for an object schema.
      */
     public static PrimaryKey getPrimaryKey(HollowSchema schema) {
-        if(schema.getSchemaType() == HollowSchema.SchemaType.OBJECT)
+        if(schema.getSchemaType() == HollowSchema.SchemaType.OBJECT) {
             return ((HollowObjectSchema)schema).getPrimaryKey();
+        }
         return null;
     }
 
@@ -151,8 +154,9 @@ public class SearchUtils {
                 curState = (HollowObjectTypeReadState) curState.getSchema().getReferencedTypeState(fieldPathIndexes[i][j]);
             }
 
-            if(!HollowReadFieldUtils.fieldValueEquals(curState, curOrdinal, fieldPathIndexes[i][fieldPathIndexes[i].length - 1], key[i]))
+            if(!HollowReadFieldUtils.fieldValueEquals(curState, curOrdinal, fieldPathIndexes[i][fieldPathIndexes[i].length - 1], key[i])) {
                 return false;
+            }
         }
 
         return true;

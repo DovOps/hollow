@@ -20,17 +20,17 @@ import java.nio.file.Path;
 public class CodeGeneratorConfig {
     private String classPostfix = "";
     private String getterPrefix = "";
-    private boolean useAggressiveSubstitutions = false;
+    private boolean useAggressiveSubstitutions;
 
     // @TODO: Need to default this to be true in next major version of Hollow
-    private boolean usePackageGrouping = false;
-    private boolean useBooleanFieldErgonomics = false;
-    private boolean reservePrimaryKeyIndexForTypeWithPrimaryKey = false;
-    private boolean useHollowPrimitiveTypes = false;
-    private boolean restrictApiToFieldType = false;
-    private boolean useVerboseToString = false;
+    private boolean usePackageGrouping;
+    private boolean useBooleanFieldErgonomics;
+    private boolean reservePrimaryKeyIndexForTypeWithPrimaryKey;
+    private boolean useHollowPrimitiveTypes;
+    private boolean restrictApiToFieldType;
+    private boolean useVerboseToString;
 
-    private boolean useMetaInfo = false;
+    private boolean useMetaInfo;
     private Path metaInfoPath;
 
     public void setMetaInfoPath(Path metaInfoPath) {
@@ -143,8 +143,8 @@ public class CodeGeneratorConfig {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((classPostfix == null) ? 0 : classPostfix.hashCode());
-        result = prime * result + ((getterPrefix == null) ? 0 : getterPrefix.hashCode());
+        result = prime * result + (classPostfix == null ? 0 : classPostfix.hashCode());
+        result = prime * result + (getterPrefix == null ? 0 : getterPrefix.hashCode());
         result = prime * result + (reservePrimaryKeyIndexForTypeWithPrimaryKey ? 1231 : 1237);
         result = prime * result + (restrictApiToFieldType ? 1231 : 1237);
         result = prime * result + (useAggressiveSubstitutions ? 1231 : 1237);
@@ -153,50 +153,67 @@ public class CodeGeneratorConfig {
         result = prime * result + (usePackageGrouping ? 1231 : 1237);
         result = prime * result + (useVerboseToString ? 1231 : 1237);
         result = prime * result + (useMetaInfo ? 1231 : 1237);
-        result = prime * result + ((metaInfoPath == null) ? 0 : metaInfoPath.hashCode());
+        result = prime * result + (metaInfoPath == null ? 0 : metaInfoPath.hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if(this == obj) {
             return true;
-        if (obj == null)
+        }
+        if(obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if(getClass() != obj.getClass()) {
             return false;
+        }
         CodeGeneratorConfig other = (CodeGeneratorConfig) obj;
         if (classPostfix == null) {
-            if (other.classPostfix != null)
+            if(other.classPostfix != null) {
                 return false;
-        } else if (!classPostfix.equals(other.classPostfix))
+            }
+        } else if(!classPostfix.equals(other.classPostfix)) {
             return false;
+        }
         if (getterPrefix == null) {
-            if (other.getterPrefix != null)
+            if(other.getterPrefix != null) {
                 return false;
-        } else if (!getterPrefix.equals(other.getterPrefix))
+            }
+        } else if(!getterPrefix.equals(other.getterPrefix)) {
             return false;
-        if (reservePrimaryKeyIndexForTypeWithPrimaryKey != other.reservePrimaryKeyIndexForTypeWithPrimaryKey)
+        }
+        if(reservePrimaryKeyIndexForTypeWithPrimaryKey != other.reservePrimaryKeyIndexForTypeWithPrimaryKey) {
             return false;
-        if (restrictApiToFieldType != other.restrictApiToFieldType)
+        }
+        if(restrictApiToFieldType != other.restrictApiToFieldType) {
             return false;
-        if (useAggressiveSubstitutions != other.useAggressiveSubstitutions)
+        }
+        if(useAggressiveSubstitutions != other.useAggressiveSubstitutions) {
             return false;
-        if (useBooleanFieldErgonomics != other.useBooleanFieldErgonomics)
+        }
+        if(useBooleanFieldErgonomics != other.useBooleanFieldErgonomics) {
             return false;
-        if (useHollowPrimitiveTypes != other.useHollowPrimitiveTypes)
+        }
+        if(useHollowPrimitiveTypes != other.useHollowPrimitiveTypes) {
             return false;
-        if (usePackageGrouping != other.usePackageGrouping)
+        }
+        if(usePackageGrouping != other.usePackageGrouping) {
             return false;
-        if (useVerboseToString != other.useVerboseToString)
+        }
+        if(useVerboseToString != other.useVerboseToString) {
             return false;
-        if (useMetaInfo != other.useMetaInfo)
+        }
+        if(useMetaInfo != other.useMetaInfo) {
             return false;
+        }
         if (metaInfoPath == null) {
-            if (other.metaInfoPath != null)
+            if(other.metaInfoPath != null) {
                 return false;
-        } else if (!metaInfoPath.equals(other.metaInfoPath))
+            }
+        } else if(!metaInfoPath.equals(other.metaInfoPath)) {
             return false;
+        }
         return true;
     }
 

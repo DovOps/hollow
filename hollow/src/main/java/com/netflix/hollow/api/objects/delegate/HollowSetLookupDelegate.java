@@ -63,8 +63,9 @@ public class HollowSetLookupDelegate<T> implements HollowSetDelegate<T> {
 
         int potentialOrdinal = iter.next();
         while(potentialOrdinal != HollowOrdinalIterator.NO_MORE_ORDINALS) {
-            if(set.equalsElement(potentialOrdinal, o))
+            if(set.equalsElement(potentialOrdinal, o)) {
                 return true;
+            }
             potentialOrdinal = iter.next();
         }
         return false;
@@ -73,8 +74,9 @@ public class HollowSetLookupDelegate<T> implements HollowSetDelegate<T> {
     @Override
     public T findElement(HollowSet<T> set, int ordinal, Object... keys) {
         int elementOrdinal = dataAccess.findElement(ordinal, keys);
-        if(elementOrdinal != -1)
+        if(elementOrdinal != -1) {
             return set.instantiateElement(elementOrdinal);
+        }
         return null;
     }
 

@@ -51,7 +51,7 @@ public class PotentialMatchHollowSetOrdinalIterator implements HollowOrdinalIter
         }
 
         currentBucket++;
-        currentBucket &= (numBuckets - 1);
+        currentBucket &= numBuckets - 1;
 
         return currentBucketValue;
     }

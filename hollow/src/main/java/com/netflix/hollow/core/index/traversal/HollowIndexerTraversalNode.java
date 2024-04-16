@@ -34,17 +34,17 @@ abstract class HollowIndexerTraversalNode {
     protected final Map<String, HollowIndexerTraversalNode> children;
 
     private boolean shouldMultiplyBranchResults;
-    private int childrenRepeatCounts[];
-    private int childrenMatchCounts[];
-    private int fieldChildMap[];
-    private int childFirstFieldMap[];
+    private int[] childrenRepeatCounts;
+    private int[] childrenMatchCounts;
+    private int[] fieldChildMap;
+    private int[] childFirstFieldMap;
 
     private int currentMultiplyFieldMatchListPosition;
 
     public HollowIndexerTraversalNode(HollowTypeDataAccess dataAccess, IntList[] fieldMatches) {
         this.dataAccess = dataAccess;
         this.fieldMatches = fieldMatches;
-        this.children = new HashMap<String, HollowIndexerTraversalNode>();
+        this.children = new HashMap<>();
     }
 
     public void setIndexedFieldPosition(int indexedFieldPosition) {
@@ -70,8 +70,9 @@ abstract class HollowIndexerTraversalNode {
 
         IntList branchFieldPositions = new IntList();
 
-        if(indexedFieldPosition != -1)
+        if(indexedFieldPosition != -1) {
             branchFieldPositions.add(indexedFieldPosition);
+        }
 
         int childCounter = 0;
 
@@ -94,21 +95,24 @@ abstract class HollowIndexerTraversalNode {
     public void traverse(int ordinal) {
         if(childFirstFieldMap.length == 0) {
             doTraversal(ordinal);
-            if(indexedFieldPosition != -1)
+            if(indexedFieldPosition != -1) {
                 fieldMatches[indexedFieldPosition].add(ordinal);
+            }
         } else {
             int childMatchSize = doTraversal(ordinal);
 
             if(indexedFieldPosition != -1) {
-                for(int i=0;i<childMatchSize;i++)
+                for (int i = 0;i < childMatchSize;i++) {
                     fieldMatches[indexedFieldPosition].add(ordinal);
+                }
             }
         }
     }
 
     public void prepareMultiply() {
-        if(childFirstFieldMap.length > 0)
+        if(childFirstFieldMap.length > 0) {
             this.currentMultiplyFieldMatchListPosition = fieldMatches[childFirstFieldMap[0]].size();
+        }
     }
 
     public int doMultiply() {
@@ -145,8 +149,9 @@ abstract class HollowIndexerTraversalNode {
                         }
 
                         currentCopyFromIdx--;
-                        if(currentCopyFromIdx < currentMultiplyFieldMatchListPosition)
+                        if(currentCopyFromIdx < currentMultiplyFieldMatchListPosition) {
                             currentCopyFromIdx = startCopyFromIdx;
+                        }
                     }
                 }
             }
@@ -154,8 +159,9 @@ abstract class HollowIndexerTraversalNode {
             return nextRepeatCount;
         }
 
-        if(childFirstFieldMap.length != 0)
+        if(childFirstFieldMap.length != 0) {
             return fieldMatches[childFirstFieldMap[0]].size() - currentMultiplyFieldMatchListPosition;
+        }
 
         return 1;
     }
@@ -185,8 +191,9 @@ abstract class HollowIndexerTraversalNode {
     private boolean shouldMultiplyBranchResults() {
         if(children.size() > 1) {
             for(Map.Entry<String, HollowIndexerTraversalNode> entry : children.entrySet()) {
-                if(entry.getValue().branchMayProduceMoreThanOneMatch())
+                if(entry.getValue().branchMayProduceMoreThanOneMatch()) {
                     return true;
+                }
             }
         }
 
@@ -194,12 +201,14 @@ abstract class HollowIndexerTraversalNode {
     }
 
     private boolean branchMayProduceMoreThanOneMatch() {
-        if(!children.isEmpty() && followingChildrenMultipliesTraversal())
+        if(!children.isEmpty() && followingChildrenMultipliesTraversal()) {
             return true;
+        }
 
         for(Map.Entry<String, HollowIndexerTraversalNode> entry : children.entrySet()) {
-            if(entry.getValue().branchMayProduceMoreThanOneMatch())
+            if(entry.getValue().branchMayProduceMoreThanOneMatch()) {
                 return true;
+            }
         }
 
         return false;

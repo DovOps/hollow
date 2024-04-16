@@ -181,8 +181,9 @@ public class HollowConsumer {
         this.announcementWatcher = announcementWatcher;
         this.refreshExecutor = refreshExecutor;
         this.refreshLock = new ReentrantReadWriteLock();
-        if (announcementWatcher != null)
+        if(announcementWatcher != null) {
             announcementWatcher.subscribeToUpdates(this);
+        }
         this.memoryMode = memoryMode;
     }
 
@@ -201,14 +202,16 @@ public class HollowConsumer {
                 metrics,
                 builder.metricsCollector);
         updater.setFilter(builder.typeFilter);
-        if(builder.skipTypeShardUpdateWithNoAdditions)
+        if(builder.skipTypeShardUpdateWithNoAdditions) {
             updater.setSkipShardUpdateWithNoAdditions(true);
+        }
         this.announcementWatcher = builder.announcementWatcher;
         this.refreshExecutor = builder.refreshExecutor;
         this.refreshLock = new ReentrantReadWriteLock();
         this.memoryMode = builder.memoryMode;
-        if (announcementWatcher != null)
+        if(announcementWatcher != null) {
             announcementWatcher.subscribeToUpdates(this);
+        }
     }
 
     /**
@@ -262,8 +265,9 @@ public class HollowConsumer {
         refreshExecutor.execute(() -> {
             try {
                 long delay = targetBeginTime - System.currentTimeMillis();
-                if (delay > 0)
+                if(delay > 0) {
                     Thread.sleep(delay);
+                }
             } catch (InterruptedException e) {
                 // Interrupting, such as shutting down the executor pool,
                 // cancels the trigger
@@ -304,8 +308,9 @@ public class HollowConsumer {
      * @param versionInfo version no., metadata, and pined status for the desired version
      */
     public void triggerRefreshTo(VersionInfo versionInfo) {
-        if (announcementWatcher != null)
+        if(announcementWatcher != null) {
             throw new UnsupportedOperationException("Cannot trigger refresh to specified version when a HollowConsumer.AnnouncementWatcher is present");
+        }
 
         try {
             updater.updateTo(versionInfo);
@@ -501,7 +506,7 @@ public class HollowConsumer {
         }
     }
 
-    public static abstract class HeaderBlob implements VersionedBlob{
+    public abstract static class HeaderBlob implements VersionedBlob{
 
         private final long version;
 
@@ -528,7 +533,7 @@ public class HollowConsumer {
      * <dd>Implementations will define how to retrieve the actual blob data for this specific blob from a data store as an InputStream.</dd>
      * </dl>
      */
-    public static abstract class Blob implements VersionedBlob{
+    public abstract static class Blob implements VersionedBlob{
 
         protected final long fromVersion;
         protected final long toVersion;
@@ -553,12 +558,13 @@ public class HollowConsumer {
             this.fromVersion = fromVersion;
             this.toVersion = toVersion;
 
-            if (this.isSnapshot())
+            if(this.isSnapshot()) {
                 this.blobType = BlobType.SNAPSHOT;
-            else if (this.isReverseDelta())
+            } else if(this.isReverseDelta()) {
                 this.blobType = BlobType.REVERSE_DELTA;
-            else
+            } else {
                 this.blobType = BlobType.DELTA;
+            }
         }
 
         /**
@@ -1065,26 +1071,26 @@ public class HollowConsumer {
     @PublicSpi
     public static class Builder<B extends HollowConsumer.Builder<B>> {
 
-        protected HollowConsumer.BlobRetriever blobRetriever = null;
-        protected HollowConsumer.AnnouncementWatcher announcementWatcher = null;
+        protected HollowConsumer.BlobRetriever blobRetriever;
+        protected HollowConsumer.AnnouncementWatcher announcementWatcher;
         /**
          * @deprecated subclasses should use {@code typeFilter}
          */
         @Deprecated
-        protected HollowFilterConfig filterConfig = null; // retained for binary compat
-        protected TypeFilter typeFilter = null;
+        protected HollowFilterConfig filterConfig; // retained for binary compat
+        protected TypeFilter typeFilter;
         protected List<HollowConsumer.RefreshListener> refreshListeners = new ArrayList<>();
         protected HollowAPIFactory apiFactory = HollowAPIFactory.DEFAULT_FACTORY;
         protected HollowObjectHashCodeFinder hashCodeFinder = new DefaultHashCodeFinder();
         protected HollowConsumer.DoubleSnapshotConfig doubleSnapshotConfig = DoubleSnapshotConfig.DEFAULT_CONFIG;
         protected HollowConsumer.ObjectLongevityConfig objectLongevityConfig = ObjectLongevityConfig.DEFAULT_CONFIG;
         protected HollowConsumer.ObjectLongevityDetector objectLongevityDetector = ObjectLongevityDetector.DEFAULT_DETECTOR;
-        protected File localBlobStoreDir = null;
+        protected File localBlobStoreDir;
         protected boolean useExistingStaleSnapshot;
-        protected Executor refreshExecutor = null;
+        protected Executor refreshExecutor;
         protected MemoryMode memoryMode = MemoryMode.ON_HEAP;
         protected HollowMetricsCollector<HollowConsumerMetrics> metricsCollector;
-        protected boolean skipTypeShardUpdateWithNoAdditions = false;
+        protected boolean skipTypeShardUpdateWithNoAdditions;
 
         public B withBlobRetriever(HollowConsumer.BlobRetriever blobRetriever) {
             this.blobRetriever = blobRetriever;
@@ -1193,8 +1199,9 @@ public class HollowConsumer {
         public B withGeneratedAPIClass(Class<? extends HollowAPI> generatedAPIClass,
                                        String cachedType,
                                        String... additionalCachedTypes) {
-            if (HollowAPI.class.equals(generatedAPIClass))
+            if(HollowAPI.class.equals(generatedAPIClass)) {
                 throw new IllegalArgumentException("must provide a code generated API class");
+            }
             generatedAPIClass = Objects.requireNonNull(generatedAPIClass, "API class cannot be null");
             Objects.requireNonNull(additionalCachedTypes, "null detected for varargs parameter additionalCachedTypes");
             String[] cachedTypes = new String[additionalCachedTypes.length + 1];
@@ -1202,11 +1209,13 @@ public class HollowConsumer {
             System.arraycopy(additionalCachedTypes, 0, cachedTypes, 1, additionalCachedTypes.length);
             BitSet nulls = new BitSet(cachedTypes.length);
             for (int i = 0; i < cachedTypes.length; ++i) {
-                if (cachedTypes[i] == null)
+                if(cachedTypes[i] == null) {
                     nulls.set(i);
+                }
             }
-            if (!nulls.isEmpty())
+            if(!nulls.isEmpty()) {
                 throw new NullPointerException("cached types cannot be null; argsWithNull=" + nulls.toString());
+            }
             this.apiFactory = new HollowAPIFactory.ForGeneratedAPI<>(generatedAPIClass, cachedTypes);
             return (B)this;
         }
@@ -1222,8 +1231,9 @@ public class HollowConsumer {
          * @throws IllegalArgumentException if provided API class is {@code HollowAPI} instead of a subclass
          */
         public B withGeneratedAPIClass(Class<? extends HollowAPI> generatedAPIClass) {
-            if (HollowAPI.class.equals(generatedAPIClass))
+            if(HollowAPI.class.equals(generatedAPIClass)) {
                 throw new IllegalArgumentException("must provide a code generated API class");
+            }
             this.apiFactory = new HollowAPIFactory.ForGeneratedAPI<>(generatedAPIClass);
             return (B)this;
         }

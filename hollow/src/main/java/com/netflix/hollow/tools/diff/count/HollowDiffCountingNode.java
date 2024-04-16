@@ -59,15 +59,17 @@ public abstract class HollowDiffCountingNode {
     public abstract List<HollowFieldDiff> getFieldDiffs();
 
     protected HollowDiffCountingNode getHollowDiffCountingNode(HollowTypeReadState refFromState, HollowTypeReadState refToState, String viaFieldName) {
-        if(refFromState == null && refToState == null)
+        if(refFromState == null && refToState == null) {
             return HollowDiffMissingCountingNode.INSTANCE;
+        }
 
         HollowSchema elementSchema = refFromState == null ? refToState.getSchema() : refFromState.getSchema();
 
         HollowDiffNodeIdentifier childNodeId = new HollowDiffNodeIdentifier(this.nodeId, viaFieldName, elementSchema.getName());
 
-        if(topLevelTypeDiff.isShortcutType(elementSchema.getName()))
+        if(topLevelTypeDiff.isShortcutType(elementSchema.getName())) {
             return new HollowDiffShortcutTypeCountingNode(diff, topLevelTypeDiff, childNodeId);
+        }
         
         switch(elementSchema.getSchemaType()) {
         case OBJECT:

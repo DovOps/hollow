@@ -24,8 +24,8 @@ public class MultiLinkedElementArray {
     private final GrowingSegmentedLongArray listPointersAndSizes;
     private final GrowingSegmentedLongArray linkedElements;
 
-    private int nextNewPointer = 0;
-    private long nextLinkedElement = 0;
+    private int nextNewPointer;
+    private long nextLinkedElement;
 
     public MultiLinkedElementArray(ArraySegmentRecycler memoryRecycler) {
         this.listPointersAndSizes = new GrowingSegmentedLongArray(memoryRecycler);
@@ -33,8 +33,9 @@ public class MultiLinkedElementArray {
     }
 
     public HollowOrdinalIterator iterator(int listIdx) {
-        if((listPointersAndSizes.get(listIdx) & Long.MIN_VALUE) != 0)
+        if((listPointersAndSizes.get(listIdx) & Long.MIN_VALUE) != 0) {
             return new PivotedElementIterator(listIdx);
+        }
         return new LinkedElementIterator(listIdx);
     }
 
@@ -84,10 +85,12 @@ public class MultiLinkedElementArray {
 
     public int listSize(int listIdx) {
         long listPtr = listPointersAndSizes.get(listIdx);
-        if(listPtr == 0)
+        if(listPtr == 0) {
             return 0;
-        if((listPtr & Long.MIN_VALUE) != 0)
+        }
+        if((listPtr & Long.MIN_VALUE) != 0) {
             return (listPtr & 0xFFFFFFFFL) == 0 ? 1 : 2;
+        }
         return (int)(listPtr & Integer.MAX_VALUE);
     }
 
@@ -96,7 +99,7 @@ public class MultiLinkedElementArray {
         linkedElements.destroy();
     }
 
-    public class LinkedElementIterator implements HollowOrdinalIterator {
+    public final class LinkedElementIterator implements HollowOrdinalIterator {
 
         private int currentElement;
         private boolean lastElement;
@@ -108,8 +111,9 @@ public class MultiLinkedElementArray {
 
         @Override
         public int next() {
-            if(finished)
+            if(finished) {
                 return NO_MORE_ORDINALS;
+            }
             if(lastElement) {
                 int value = (int)(linkedElements.get(currentElement) >>> 32) & Integer.MAX_VALUE;
                 finished = true;
@@ -127,7 +131,7 @@ public class MultiLinkedElementArray {
         }
     }
 
-    public class PivotedElementIterator implements HollowOrdinalIterator {
+    public final class PivotedElementIterator implements HollowOrdinalIterator {
 
         private int listIdx;
         private int currentElement;
@@ -138,14 +142,16 @@ public class MultiLinkedElementArray {
 
         @Override
         public int next() {
-            if(currentElement > 1)
+            if(currentElement > 1) {
                 return NO_MORE_ORDINALS;
+            }
 
             long element = listPointersAndSizes.get(listIdx);
 
             if(currentElement++ == 0) {
-                if((element & 0xFFFFFFFFL) != 0)
+                if((element & 0xFFFFFFFFL) != 0) {
                     return (int)element & Integer.MAX_VALUE;
+                }
             }
 
             currentElement++;

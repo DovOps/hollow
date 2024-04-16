@@ -91,8 +91,9 @@ public class GapEncodedVariableLengthIntegerReader {
     }
 
     public void destroy() {
-        if(data != null)
+        if(data != null) {
             data.destroy();
+        }
     }
     
     public void writeTo(OutputStream os) throws IOException {
@@ -153,7 +154,7 @@ public class GapEncodedVariableLengthIntegerReader {
      * @return an array of {@code GapEncodedVariableLengthIntegerReader} instances populated with the results of the split.
      */
     public GapEncodedVariableLengthIntegerReader[] split(int numSplits) {
-        if (numSplits<=0 || !((numSplits&(numSplits-1))==0)) {
+        if (numSplits<=0 || (numSplits&(numSplits-1))!=0) {
             throw new IllegalStateException("Split should only be called with powers of 2, it was called with " + numSplits);
         }
         final int toMask = numSplits - 1;
@@ -168,7 +169,7 @@ public class GapEncodedVariableLengthIntegerReader {
         }
 
         ByteDataArray[] splitOrdinals = new ByteDataArray[numSplits];
-        int previousSplitOrdinal[] = new int[numSplits];
+        int[] previousSplitOrdinal = new int[numSplits];
         for (int ordinal : ordinals) {
             int toIndex = ordinal & toMask;
             int toOrdinal = ordinal >> toOrdinalShift;
@@ -200,7 +201,7 @@ public class GapEncodedVariableLengthIntegerReader {
         if (from==null) {
             throw new IllegalStateException("Join invoked on a null input array");
         }
-        if (from.length<=0 || !((from.length&(from.length-1))==0)) {
+        if (from.length<=0 || (from.length&(from.length-1))!=0) {
             throw new IllegalStateException("Join should only be called with powers of 2, it was called with " + from.length);
         }
 

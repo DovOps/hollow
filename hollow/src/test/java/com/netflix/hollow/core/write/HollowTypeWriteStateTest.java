@@ -70,7 +70,7 @@ public class HollowTypeWriteStateTest {
         assertEquals(numShardsMap, consumer.getStateEngine().getTypeState("MapOfStringToLong").numShards());
     }
 
-    private class HasAllTypes {
+    private final class HasAllTypes {
         CustomReferenceType customReferenceType;
         Set<String> setOfStrings;
         List<Integer> listOfInt;
@@ -84,7 +84,7 @@ public class HollowTypeWriteStateTest {
         }
     }
 
-    private class CustomReferenceType {
+    private final class CustomReferenceType {
         long id;
         private CustomReferenceType(long id) {
             this.id = id;

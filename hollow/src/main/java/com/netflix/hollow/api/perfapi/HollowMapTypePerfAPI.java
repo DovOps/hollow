@@ -38,9 +38,10 @@ public class HollowMapTypePerfAPI extends HollowTypePerfAPI {
         
         this.keyMaskedTypeIdx = Ref.toTypeMasked(keyTypeIdx);
         this.valueMaskedTypeIdx = Ref.toTypeMasked(valueTypeIdx);
-        
-        if(typeAccess == null)
+
+        if(typeAccess == null) {
             typeAccess = new HollowMapMissingDataAccess(dataAccess, typeName);
+        }
         this.typeAccess = typeAccess;
     }
     
@@ -69,7 +70,7 @@ public class HollowMapTypePerfAPI extends HollowTypePerfAPI {
     }
 
     public <K,V> Map<K,V> backedMap(long ref, POJOInstantiator<K> keyInstantiator, POJOInstantiator<V> valueInstantiator, HashKeyExtractor hashKeyExtractor) {
-        return new HollowPerfBackedMap<K,V>(this, ordinal(ref), keyInstantiator, valueInstantiator, hashKeyExtractor);
+        return new HollowPerfBackedMap<>(this, ordinal(ref), keyInstantiator, valueInstantiator, hashKeyExtractor);
     }
 
     public HollowMapTypeDataAccess typeAccess() {

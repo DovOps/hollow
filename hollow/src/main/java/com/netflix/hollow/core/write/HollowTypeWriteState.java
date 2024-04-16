@@ -58,7 +58,7 @@ public abstract class HollowTypeWriteState {
 
     protected HollowWriteStateEngine stateEngine;
 
-    private boolean wroteData = false;
+    private boolean wroteData;
 
     private boolean isNumShardsPinned;  // if numShards is pinned using numShards annotation in data model
 
@@ -69,15 +69,16 @@ public abstract class HollowTypeWriteState {
     public HollowTypeWriteState(HollowSchema schema, int numShards, boolean isNumShardsPinned) {
         this.schema = schema;
         this.ordinalMap = new ByteArrayOrdinalMap();
-        this.serializedScratchSpace = new ThreadLocal<ByteDataArray>();
+        this.serializedScratchSpace = new ThreadLocal<>();
         this.currentCyclePopulated = new ThreadSafeBitSet();
         this.previousCyclePopulated = new ThreadSafeBitSet();
         this.numShards = numShards;
         this.isNumShardsPinned = isNumShardsPinned;
         this.resetToLastNumShards = numShards;
 
-        if(numShards != -1 && ((numShards & (numShards - 1)) != 0 || numShards <= 0))
+        if(numShards != -1 && ((numShards & (numShards - 1)) != 0 || numShards <= 0)) {
             throw new IllegalArgumentException("Number of shards must be a power of 2!  Check configuration for type " + schema.getName());
+        }
     }
     
     /**
@@ -87,8 +88,9 @@ public abstract class HollowTypeWriteState {
      * @return the ordinal of the added record
      */
     public int add(HollowWriteRecord rec) {
-        if(!ordinalMap.isReadyForAddingObjects())
+        if(!ordinalMap.isReadyForAddingObjects()) {
             throw new RuntimeException("The HollowWriteStateEngine is not ready to add more Objects.  Did you remember to call stateEngine.prepareForNextCycle()?");
+        }
 
         int ordinal;
 
@@ -161,32 +163,37 @@ public abstract class HollowTypeWriteState {
     }
 
     public void addAllObjectsFromPreviousCycle() {
-        if(!ordinalMap.isReadyForAddingObjects())
+        if(!ordinalMap.isReadyForAddingObjects()) {
             throw new RuntimeException("The HollowWriteStateEngine is not ready to add more Objects.  Did you remember to call stateEngine.prepareForNextCycle()?");
+        }
 
         currentCyclePopulated = ThreadSafeBitSet.orAll(previousCyclePopulated, currentCyclePopulated);
     }
     
     public void addOrdinalFromPreviousCycle(int ordinal) {
-        if(!ordinalMap.isReadyForAddingObjects())
+        if(!ordinalMap.isReadyForAddingObjects()) {
             throw new RuntimeException("The HollowWriteStateEngine is not ready to add more Objects.  Did you remember to call stateEngine.prepareForNextCycle()?");
+        }
 
-        if(!previousCyclePopulated.get(ordinal))
+        if(!previousCyclePopulated.get(ordinal)) {
             throw new IllegalArgumentException("Ordinal " + ordinal + " was not present in the previous cycle");
+        }
         
         currentCyclePopulated.set(ordinal);
     }
 
     public void removeOrdinalFromThisCycle(int ordinalToRemove) {
-        if(!ordinalMap.isReadyForAddingObjects())
+        if(!ordinalMap.isReadyForAddingObjects()) {
             throw new RuntimeException("The HollowWriteStateEngine is not ready to add more Objects.  Did you remember to call stateEngine.prepareForNextCycle()?");
+        }
 
         currentCyclePopulated.clear(ordinalToRemove);
     }
     
     public void removeAllOrdinalsFromThisCycle() {
-        if(!ordinalMap.isReadyForAddingObjects())
+        if(!ordinalMap.isReadyForAddingObjects()) {
             throw new RuntimeException("The HollowWriteStateEngine is not ready to add more Objects.  Did you remember to call stateEngine.prepareForNextCycle()?");
+        }
 
         currentCyclePopulated.clearAll();
     }
@@ -207,16 +214,19 @@ public abstract class HollowTypeWriteState {
      * @param markCurrentCycle true if the current populated cycle should be updated
      */
     public void mapOrdinal(HollowWriteRecord rec, int newOrdinal, boolean markPreviousCycle, boolean markCurrentCycle) {
-        if(!ordinalMap.isReadyForAddingObjects())
+        if(!ordinalMap.isReadyForAddingObjects()) {
             throw new RuntimeException("The HollowWriteStateEngine is not ready to add more Objects.  Did you remember to call stateEngine.prepareForNextCycle()?");
+        }
 
         ByteDataArray scratch = scratch();
         rec.writeDataTo(scratch);
         ordinalMap.put(scratch, newOrdinal);
-        if(markPreviousCycle)
+        if(markPreviousCycle) {
             previousCyclePopulated.set(newOrdinal);
-        if(markCurrentCycle)
+        }
+        if(markCurrentCycle) {
             currentCyclePopulated.set(newOrdinal);
+        }
         scratch.reset();
     }
     
@@ -326,17 +336,19 @@ public abstract class HollowTypeWriteState {
     public abstract void writeReverseDelta(DataOutputStream dos) throws IOException;
     
     protected void restoreFrom(HollowTypeReadState readState) {
-        if(previousCyclePopulated.cardinality() != 0 || currentCyclePopulated.cardinality() != 0)
+        if(previousCyclePopulated.cardinality() != 0 || currentCyclePopulated.cardinality() != 0) {
             throw new IllegalStateException("Attempting to restore into a non-empty state (type " + schema.getName() + ")");
+        }
         
         PopulatedOrdinalListener listener = readState.getListener(PopulatedOrdinalListener.class);
         BitSet populatedOrdinals = listener.getPopulatedOrdinals();
 
         restoredReadState = readState;
-        if(schema instanceof HollowObjectSchema)
+        if(schema instanceof HollowObjectSchema) {
             restoredSchema = ((HollowObjectSchema)schema).findCommonSchema((HollowObjectSchema)readState.getSchema());
-        else
+        } else {
             restoredSchema = readState.getSchema();
+        }
         HollowRecordCopier copier = HollowRecordCopier.createCopier(restoredReadState, restoredSchema);
 
         // Size the restore ordinal map to avoid resizing when adding ordinals
@@ -358,10 +370,11 @@ public abstract class HollowTypeWriteState {
         HollowWriteRecord rec = copier.copy(ordinal);
 
         ByteDataArray scratch = scratch();
-        if(rec instanceof HollowHashableWriteRecord)
+        if(rec instanceof HollowHashableWriteRecord) {
             ((HollowHashableWriteRecord)rec).writeDataTo(scratch, hashBehavior);
-        else
+        } else {
             rec.writeDataTo(scratch);
+        }
 
         destinationMap.put(scratch, ordinal);
         scratch.reset();

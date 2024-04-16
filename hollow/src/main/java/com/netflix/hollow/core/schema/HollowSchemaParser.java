@@ -44,7 +44,7 @@ public class HollowSchemaParser {
     public static List<HollowSchema> parseCollectionOfSchemas(Reader reader) throws IOException {
         StreamTokenizer tokenizer = new StreamTokenizer(reader);
         configureTokenizer(tokenizer);
-        List<HollowSchema> schemaList = new ArrayList<HollowSchema>();
+        List<HollowSchema> schemaList = new ArrayList<>();
 
         HollowSchema schema = parseSchema(tokenizer);
         while (schema != null) {
@@ -82,8 +82,9 @@ public class HollowSchemaParser {
     private static HollowSchema parseSchema(StreamTokenizer tokenizer) throws IOException {
         int tok = tokenizer.nextToken();
         while(tok != StreamTokenizer.TT_WORD) {
-            if(tok == StreamTokenizer.TT_EOF)
+            if(tok == StreamTokenizer.TT_EOF) {
                 return null;
+            }
             tok = tokenizer.nextToken();
         }
 
@@ -106,29 +107,32 @@ public class HollowSchemaParser {
     }
 
     private static HollowObjectSchema parseObjectSchema(String typeName, StreamTokenizer tokenizer) throws IOException {
-        String keyFieldPaths[] = parsePrimaryKey(tokenizer);
+        String[] keyFieldPaths = parsePrimaryKey(tokenizer);
         if (tokenizer.ttype != '{') {
             throw new IOException("Invalid syntax: expecting '{' for '" + typeName + "'");
         }
 
         int tok = tokenizer.nextToken();
-        List<String> tokens = new ArrayList<String>();
+        List<String> tokens = new ArrayList<>();
         while(tokenizer.ttype != '}') {
-            if(tok != StreamTokenizer.TT_WORD)
+            if(tok != StreamTokenizer.TT_WORD) {
                 throw new IOException("Invalid syntax, expected field type: " + typeName);
+            }
 
             tokens.add(tokenizer.sval);
             tokenizer.nextToken();
 
-            if(tok != StreamTokenizer.TT_WORD)
+            if(tok != StreamTokenizer.TT_WORD) {
                 throw new IOException("Invalid syntax, expected field name: " + typeName);
+            }
 
             String fieldName = tokenizer.sval;
             tokens.add(fieldName);
             tokenizer.nextToken();
 
-            if(tokenizer.ttype != ';')
+            if(tokenizer.ttype != ';') {
                 throw new IOException("Invalid syntax, expected semicolon: " + typeName + "." + fieldName);
+            }
 
             tokenizer.nextToken();
         }
@@ -162,8 +166,9 @@ public class HollowSchemaParser {
     private static HollowListSchema parseListSchema(String typeName, StreamTokenizer tokenizer) throws IOException {
         int tok = tokenizer.nextToken();
 
-        if(tokenizer.ttype != '<')
+        if(tokenizer.ttype != '<') {
             throw new IOException("Invalid Syntax: Expected '<' after 'List' for type " + typeName);
+        }
 
         tok = tokenizer.nextToken();
         if(tok != StreamTokenizer.TT_WORD) {
@@ -173,12 +178,14 @@ public class HollowSchemaParser {
         String elementType = tokenizer.sval;
 
         tok = tokenizer.nextToken();
-        if(tokenizer.ttype != '>')
+        if(tokenizer.ttype != '>') {
             throw new IOException("Invalid Syntax: Expected '>' element type declaration: " + typeName);
+        }
 
         tok = tokenizer.nextToken();
-        if(tokenizer.ttype != ';')
+        if(tokenizer.ttype != ';') {
             throw new IOException("Invalid Syntax: Expected semicolon after List schema declaration: " + typeName);
+        }
 
         return new HollowListSchema(typeName, elementType);
     }
@@ -186,8 +193,9 @@ public class HollowSchemaParser {
     private static HollowSetSchema parseSetSchema(String typeName, StreamTokenizer tokenizer) throws IOException {
         int tok = tokenizer.nextToken();
 
-        if(tokenizer.ttype != '<')
+        if(tokenizer.ttype != '<') {
             throw new IOException("Invalid Syntax: Expected '<' after 'Set' for type " + typeName);
+        }
 
         tok = tokenizer.nextToken();
         if(tok != StreamTokenizer.TT_WORD) {
@@ -197,14 +205,16 @@ public class HollowSchemaParser {
         String elementType = tokenizer.sval;
 
         tok = tokenizer.nextToken();
-        if(tokenizer.ttype != '>')
+        if(tokenizer.ttype != '>') {
             throw new IOException("Invalid Syntax: Expected '>' element type declaration: " + typeName);
+        }
 
         tok = tokenizer.nextToken();
-        String hashKeyPaths[] = parseHashKey(tokenizer);
+        String[] hashKeyPaths = parseHashKey(tokenizer);
 
-        if(tokenizer.ttype != ';')
+        if(tokenizer.ttype != ';') {
             throw new IOException("Invalid Syntax: Expected semicolon after Set schema declaration: " + typeName);
+        }
 
         return new HollowSetSchema(typeName, elementType, hashKeyPaths);
     }
@@ -212,8 +222,9 @@ public class HollowSchemaParser {
     private static HollowMapSchema parseMapSchema(String typeName, StreamTokenizer tokenizer) throws IOException {
         int tok = tokenizer.nextToken();
 
-        if(tokenizer.ttype != '<')
+        if(tokenizer.ttype != '<') {
             throw new IOException("Invalid Syntax: Expected '<' after 'Map' for type " + typeName);
+        }
 
         tok = tokenizer.nextToken();
         if(tok != StreamTokenizer.TT_WORD) {
@@ -223,8 +234,9 @@ public class HollowSchemaParser {
         String keyType = tokenizer.sval;
 
         tok = tokenizer.nextToken();
-        if(tokenizer.ttype != ',')
+        if(tokenizer.ttype != ',') {
             throw new IOException("Invalid Syntax: Expected ',' after key type declaration: " + typeName);
+        }
 
         tok = tokenizer.nextToken();
         if(tok != StreamTokenizer.TT_WORD) {
@@ -234,14 +246,16 @@ public class HollowSchemaParser {
         String valueType = tokenizer.sval;
 
         tok = tokenizer.nextToken();
-        if(tokenizer.ttype != '>')
+        if(tokenizer.ttype != '>') {
             throw new IOException("Invalid Syntax: Expected '>' after value type declaration: " + typeName);
+        }
 
         tok = tokenizer.nextToken();
-        String hashKeyPaths[] = parseHashKey(tokenizer);
+        String[] hashKeyPaths = parseHashKey(tokenizer);
 
-        if(tokenizer.ttype != ';')
+        if(tokenizer.ttype != ';') {
             throw new IOException("Invalid Syntax: Expected semicolon after Map schema declaration: " + typeName);
+        }
 
         return new HollowMapSchema(typeName, keyType, valueType, hashKeyPaths);
     }
@@ -255,10 +269,11 @@ public class HollowSchemaParser {
     }
 
     private static String[] parseKeyFieldPaths(StreamTokenizer tokenizer, String annotationName) throws IOException {
-        if(tokenizer.ttype != '@')
+        if(tokenizer.ttype != '@') {
             return new String[0];
+        }
 
-        List<String> fieldPaths = new ArrayList<String>();
+        List<String> fieldPaths = new ArrayList<>();
 
         int tok = tokenizer.nextToken();
         if(tok != StreamTokenizer.TT_WORD || !annotationName.equals(tokenizer.sval)) {
@@ -266,13 +281,15 @@ public class HollowSchemaParser {
         }
 
         tok = tokenizer.nextToken();
-        if(tokenizer.ttype != '(')
+        if(tokenizer.ttype != '(') {
             throw new IOException("Expected open parenthesis '(' after @" + annotationName + " declaration");
+        }
 
         tok = tokenizer.nextToken();
         while(tokenizer.ttype != ')') {
-            if(tok != StreamTokenizer.TT_WORD)
+            if(tok != StreamTokenizer.TT_WORD) {
                 throw new IOException("Invalid field declaration inside @" + annotationName + "spec");
+            }
 
             fieldPaths.add(tokenizer.sval);
 

@@ -58,7 +58,7 @@ public final class FieldPaths {
 
         // Erasure trick to avoid copying when it is known the list only contains
         // instances of ObjectFieldSegment
-        assert fp.segments.stream().allMatch(o -> o instanceof ObjectFieldSegment);
+        assert fp.segments.stream().allMatch(FieldPaths.ObjectFieldSegment.class::isInstance);
         @SuppressWarnings( {"unchecked", "raw"})
         FieldPath<ObjectFieldSegment> result = (FieldPath<ObjectFieldSegment>) (FieldPath) fp;
         return result;
@@ -150,7 +150,7 @@ public final class FieldPaths {
                     || schemaType == HollowSchema.SchemaType.LIST)) {
                 HollowCollectionSchema collectionSchema = (HollowCollectionSchema) schema;
 
-                if (!segment.equals("element")) {
+                if (!"element".equals(segment)) {
                     throw new FieldPathException(FieldPathException.ErrorKind.NOT_FOUND, dataset, type, segments,
                             fieldSegments, schema, i);
                 }
@@ -160,9 +160,9 @@ public final class FieldPaths {
             } else if (traverseSequences && schemaType == HollowSchema.SchemaType.MAP) {
                 HollowMapSchema mapSchema = (HollowMapSchema) schema;
 
-                if (segment.equals("key")) {
+                if ("key".equals(segment)) {
                     segmentType = mapSchema.getKeyType();
-                } else if (segment.equals("value")) {
+                } else if ("value".equals(segment)) {
                     segmentType = mapSchema.getValueType();
                 } else {
                     throw new FieldPathException(FieldPathException.ErrorKind.NOT_FOUND, dataset, type, segments,
@@ -239,7 +239,7 @@ public final class FieldPaths {
             NOT_FULL,
             NOT_TRAVERSABLE,
             NOT_EXPANDABLE,
-            ;
+            
         }
 
         final ErrorKind error;
@@ -363,7 +363,7 @@ public final class FieldPaths {
      *
      * @param <T> the field segment type
      */
-    public final static class FieldPath<T extends FieldSegment> {
+    public static final class FieldPath<T extends FieldSegment> {
         final String rootType;
         final List<T> segments;
         final boolean noAutoExpand;
@@ -483,7 +483,7 @@ public final class FieldPaths {
     /**
      * A structured representation of field segment corresponding to a field in an object schema.
      */
-    public final static class ObjectFieldSegment extends FieldSegment {
+    public static final class ObjectFieldSegment extends FieldSegment {
         final int index;
         final HollowObjectSchema.FieldType type;
 

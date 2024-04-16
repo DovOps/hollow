@@ -53,20 +53,22 @@ public class DiffViewOutputGenerator {
         HollowUISession session = HollowUISession.getSession(req, resp);
         HollowObjectView objectView = viewProvider.getObjectView(req, session);
 
-        int rowPath[] = getRowPath(req.getParameter("row"));
+        int[] rowPath = getRowPath(req.getParameter("row"));
         HollowDiffViewRow row = objectView.getRootRow();
-        for(int i=0;i<rowPath.length;i++)
+        for (int i = 0;i < rowPath.length;i++) {
             row = row.getChildren().get(rowPath[i]);
+        }
         return row;
     }
     
     private int[] getRowPath(String rowPathStr) {
-        String rowPathElementStrings[] = rowPathStr.split("\\.");
+        String[] rowPathElementStrings = rowPathStr.split("\\.");
         
-        int rowPath[] = new int[rowPathElementStrings.length];
-        
-        for(int i=0;i<rowPathElementStrings.length;i++)
+        int[] rowPath = new int[rowPathElementStrings.length];
+
+        for (int i = 0;i < rowPathElementStrings.length;i++) {
             rowPath[i] = Integer.parseInt(rowPathElementStrings[i]);
+        }
 
         return rowPath;
     }
@@ -101,64 +103,78 @@ public class DiffViewOutputGenerator {
     
     private static void writeRowPathString(HollowDiffViewRow row, Writer writer) throws IOException {
         for(int i=0;i<row.getRowPath().length;i++) {
-            if(i > 0)
+            if(i > 0) {
                 writer.write('.');
+            }
             writer.write(String.valueOf(row.getRowPath()[i]));
         }
     }
 
     private static String marginIdx(int idx) {
-        if(idx == -1)
+        if(idx == -1) {
             return "";
+        }
         return String.valueOf(idx);
     }
 
     private static String fromCellClassname(HollowDiffViewRow currentRow) {
-        if(currentRow.getFieldPair().getTo() == null)
+        if(currentRow.getFieldPair().getTo() == null) {
             return "delete";
-        else if(currentRow.getFieldPair().getFrom() == null)
+        } else if(currentRow.getFieldPair().getFrom() == null) {
             return "empty";
+        }
 
-        if(currentRow.getFieldPair().getFrom().getValue() == null && currentRow.getFieldPair().getTo().getValue() != null)
+        if(currentRow.getFieldPair().getFrom().getValue() == null && currentRow.getFieldPair().getTo().getValue() != null) {
             return "replace";
-        if(currentRow.getFieldPair().getFrom().getValue() != null && currentRow.getFieldPair().getTo().getValue() == null)
+        }
+        if(currentRow.getFieldPair().getFrom().getValue() != null && currentRow.getFieldPair().getTo().getValue() == null) {
             return "replace";
-        if(currentRow.getFieldPair().getFrom().getValue() == null && currentRow.getFieldPair().getTo().getValue() == null)
+        }
+        if(currentRow.getFieldPair().getFrom().getValue() == null && currentRow.getFieldPair().getTo().getValue() == null) {
             return "equal";
+        }
 
-        if(currentRow.getFieldPair().isLeafNode() && !currentRow.getFieldPair().getFrom().getValue().equals(currentRow.getFieldPair().getTo().getValue()))
+        if(currentRow.getFieldPair().isLeafNode() && !currentRow.getFieldPair().getFrom().getValue().equals(currentRow.getFieldPair().getTo().getValue())) {
             return "replace";
+        }
 
 
         return "equal";
     }
 
     private static String toCellClassname(HollowDiffViewRow currentRow) {
-        if(currentRow.getFieldPair().getFrom() == null)
+        if(currentRow.getFieldPair().getFrom() == null) {
             return "insert";
-        else if(currentRow.getFieldPair().getTo() == null)
+        } else if(currentRow.getFieldPair().getTo() == null) {
             return "empty";
+        }
 
-        if(currentRow.getFieldPair().getFrom().getValue() == null && currentRow.getFieldPair().getTo().getValue() != null)
+        if(currentRow.getFieldPair().getFrom().getValue() == null && currentRow.getFieldPair().getTo().getValue() != null) {
             return "replace";
-        if(currentRow.getFieldPair().getFrom().getValue() != null && currentRow.getFieldPair().getTo().getValue() == null)
+        }
+        if(currentRow.getFieldPair().getFrom().getValue() != null && currentRow.getFieldPair().getTo().getValue() == null) {
             return "replace";
-        if(currentRow.getFieldPair().getFrom().getValue() == null && currentRow.getFieldPair().getTo().getValue() == null)
+        }
+        if(currentRow.getFieldPair().getFrom().getValue() == null && currentRow.getFieldPair().getTo().getValue() == null) {
             return "equal";
+        }
 
-        if(currentRow.getFieldPair().isLeafNode() && !currentRow.getFieldPair().getFrom().getValue().equals(currentRow.getFieldPair().getTo().getValue()))
+        if(currentRow.getFieldPair().isLeafNode() && !currentRow.getFieldPair().getFrom().getValue().equals(currentRow.getFieldPair().getTo().getValue())) {
             return "replace";
+        }
 
         return "equal";
     }
 
     private static String fromContent(HollowDiffViewRow row) {
-        boolean moreRows[] = new boolean[row.getIndentation() + 1];
-        for(int i=0;i<=row.getIndentation();i++)
+        boolean[] moreRows = new boolean[row.getIndentation() + 1];
+        for (int i = 0;i <= row.getIndentation();i++) {
             moreRows[i] = row.hasMoreFromRows(i);
+        }
 
-        if(row.getFieldPair().getFrom() == null)
+        if(row.getFieldPair().getFrom() == null) {
             return unpopulatedContent(moreRows);
+        }
 
         String fieldName = row.getFieldPair().getFrom().getFieldName();
         return populatedContent(moreRows, row.getIndentation(),
@@ -166,12 +182,14 @@ public class DiffViewOutputGenerator {
     }
 
     private static String toContent(HollowDiffViewRow row) {
-        boolean moreRows[] = new boolean[row.getIndentation() + 1];
-        for(int i=0;i<=row.getIndentation();i++)
+        boolean[] moreRows = new boolean[row.getIndentation() + 1];
+        for (int i = 0;i <= row.getIndentation();i++) {
             moreRows[i] = row.hasMoreToRows(i);
+        }
 
-        if(row.getFieldPair().getTo() == null)
+        if(row.getFieldPair().getTo() == null) {
             return unpopulatedContent(moreRows);
+        }
 
         String fieldName = row.getFieldPair().getTo().getFieldName();
         return populatedContent(moreRows, row.getIndentation(), row.getFieldPair().isLeafNode(), fieldName,
@@ -194,7 +212,7 @@ public class DiffViewOutputGenerator {
         }
     }
 
-    private static String unpopulatedContent(boolean moreRows[]) {
+    private static String unpopulatedContent(boolean[] moreRows) {
         StringBuilder builder = new StringBuilder();
         for(int i=0;i<moreRows.length;i++) {
             if(moreRows[i]) {
@@ -206,7 +224,7 @@ public class DiffViewOutputGenerator {
         return builder.toString();
     }
 
-    private static String populatedContent(boolean moreRows[], int indentation, boolean leafNode, String fieldName, String value) {
+    private static String populatedContent(boolean[] moreRows, int indentation, boolean leafNode, String fieldName, String value) {
         StringBuilder builder = new StringBuilder();
         for(int i=0;i<indentation;i++) {
             if(moreRows[i]) {
@@ -217,19 +235,22 @@ public class DiffViewOutputGenerator {
         }
 
         if(!leafNode) {
-            if(moreRows[indentation])
+            if(moreRows[indentation]) {
                 builder.append(".&#x251D;&#x2501;&#x252F;&#x2501;&gt;");
-            else
+            } else {
                 builder.append(".&#x2515;&#x2501;&#x252F;&#x2501;&gt;");
+            }
         } else {
-            if(moreRows[indentation])
+            if(moreRows[indentation]) {
                 builder.append(".&#x251C;&#x2500;&#x2500;&#x2500;&gt;");
-            else
+            } else {
                 builder.append(".&#x2514;&#x2500;&#x2500;&#x2500;&gt;");
+            }
         }
 
-        if(fieldName != null)
+        if(fieldName != null) {
             builder.append(fieldName).append(": ");
+        }
         builder.append(value);
 
         return builder.toString();

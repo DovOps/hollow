@@ -62,12 +62,12 @@ public class HistoryOverviewPage extends HistoryPage {
     }
     
     private List<HistoryOverviewRow> getHistoryOverview() {
-    	List<HistoryOverviewRow> rows = new ArrayList<HistoryOverviewRow>();
+    	List<HistoryOverviewRow> rows = new ArrayList<>();
     	
         for(HollowHistoricalState state : ui.getHistory().getHistoricalStates()) {
             ChangeBreakdown totalBreakdown = new ChangeBreakdown();
 
-            Map<String, ChangeBreakdown> topLevelChangesByType = new HashMap<String, ChangeBreakdown>();
+            Map<String, ChangeBreakdown> topLevelChangesByType = new HashMap<>();
 
             for(Map.Entry<String, HollowHistoricalStateTypeKeyOrdinalMapping> entry : state.getKeyOrdinalMapping().getTypeMappings().entrySet()) {
                 topLevelChangesByType.put(entry.getKey(), new ChangeBreakdown(entry.getValue()));
@@ -85,7 +85,7 @@ public class HistoryOverviewPage extends HistoryPage {
     
 
     private String[] getOverviewDisplayHeaderValues(HollowHistoricalState state, String[] overviewDisplayHeaders) {
-        String values[] = new String[overviewDisplayHeaders.length];
+        String[] values = new String[overviewDisplayHeaders.length];
         
         Map<String, String> nextStateHeaders = getNextStateHeaderTags(state);
         

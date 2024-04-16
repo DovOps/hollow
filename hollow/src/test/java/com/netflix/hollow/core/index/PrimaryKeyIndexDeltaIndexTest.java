@@ -37,12 +37,11 @@ public class PrimaryKeyIndexDeltaIndexTest {
         // Add all ordinals for first cycle
         // Size appropriately so the addition and removal keep within the same hash code table size
         int upper = (1 << 11) + 512;
-        long version = p.runCycle(ws -> {
+        long version = p.runCycle(ws ->
             IntStream.range(0, upper).parallel().
                     forEach(i -> {
                         ws.add(new X(i));
-                    });
-        });
+                    }));
 
         HollowConsumer consumer = HollowConsumer.withBlobRetriever(blobStore).build();
         consumer.triggerRefreshTo(version);
@@ -57,12 +56,11 @@ public class PrimaryKeyIndexDeltaIndexTest {
             // Remove 8% of ordinals, selected randomly, to keep within the threshold for a delta update
             int lower = upper * 92 / 100;
             int[] ordinalsToKeep = indexes.stream().limit(lower).mapToInt(i -> i).toArray();
-            version = p.runCycle(ws -> {
+            version = p.runCycle(ws ->
                 IntStream.of(ordinalsToKeep).parallel().
                         forEach(i -> {
                             ws.add(new X(i));
-                        });
-            });
+                        }));
             consumer.triggerRefreshTo(version);
 
             int[] matches = IntStream.range(0, upper)
@@ -76,12 +74,11 @@ public class PrimaryKeyIndexDeltaIndexTest {
 
 
             // Add all ordinals back
-            version = p.runCycle(ws -> {
+            version = p.runCycle(ws ->
                 IntStream.range(0, upper).parallel().
                         forEach(i -> {
                             ws.add(new X(i));
-                        });
-            });
+                        }));
             consumer.triggerRefreshTo(version);
 
             matches = IntStream.range(0, upper)

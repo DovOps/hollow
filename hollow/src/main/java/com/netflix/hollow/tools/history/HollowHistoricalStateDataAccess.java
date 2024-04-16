@@ -64,7 +64,7 @@ public class HollowHistoricalStateDataAccess implements HollowDataAccess {
         this.removedCopyOrdinalMapping = removedCopyOrdinalMappings;
         this.schemaChanges = schemaChanges;
 
-        Map<String, HollowHistoricalTypeDataAccess> typeDataAccessMap = new HashMap<String, HollowHistoricalTypeDataAccess>();
+        Map<String, HollowHistoricalTypeDataAccess> typeDataAccessMap = new HashMap<>();
 
         for(HollowTypeReadState typeState : typeStates) {
             String typeName = typeState.getSchema().getName();
@@ -134,14 +134,16 @@ public class HollowHistoricalStateDataAccess implements HollowDataAccess {
         HollowDataAccess state = this;
 
         HollowTypeDataAccess typeDataAccess = typeDataAccessMap.get(typeName);
-        if(typeDataAccess != null)
+        if(typeDataAccess != null) {
             return typeDataAccess;
+        }
 
         while(state instanceof HollowHistoricalStateDataAccess) {
             HollowHistoricalStateDataAccess historicalState = (HollowHistoricalStateDataAccess)state;
             typeDataAccess = historicalState.typeDataAccessMap.get(typeName);
-            if(typeDataAccess != null)
+            if(typeDataAccess != null) {
                 return typeDataAccess;
+            }
             state = historicalState.getNextState();
         }
 
@@ -159,8 +161,9 @@ public class HollowHistoricalStateDataAccess implements HollowDataAccess {
 
         while(state instanceof HollowHistoricalStateDataAccess) {
             HollowHistoricalStateDataAccess historicalState = (HollowHistoricalStateDataAccess)state;
-            if(historicalState.getOrdinalMapping().ordinalIsMapped(typeName, ordinal))
+            if(historicalState.getOrdinalMapping().ordinalIsMapped(typeName, ordinal)) {
                 return state.getTypeDataAccess(typeName);
+            }
             state = historicalState.getNextState();
         }
 
@@ -186,8 +189,9 @@ public class HollowHistoricalStateDataAccess implements HollowDataAccess {
     @Override
     public boolean hasSampleResults() {
         for(Map.Entry<String, HollowHistoricalTypeDataAccess> entry : typeDataAccessMap.entrySet())
-            if(entry.getValue().getSampler().hasSampleResults())
+            if(entry.getValue().getSampler().hasSampleResults()) {
                 return true;
+            }
         return false;
     }
 
@@ -200,7 +204,7 @@ public class HollowHistoricalStateDataAccess implements HollowDataAccess {
     }
 
     public List<HollowSchema> getSchemas() {
-        List<HollowSchema> schemas = new ArrayList<HollowSchema>(typeDataAccessMap.size());
+        List<HollowSchema> schemas = new ArrayList<>(typeDataAccessMap.size());
         for(Map.Entry<String, HollowHistoricalTypeDataAccess> entry : typeDataAccessMap.entrySet())
             schemas.add(entry.getValue().getSchema());
         return schemas;

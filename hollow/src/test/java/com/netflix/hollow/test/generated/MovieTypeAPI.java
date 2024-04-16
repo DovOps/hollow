@@ -19,8 +19,9 @@ public class MovieTypeAPI extends HollowObjectTypeAPI {
     }
 
     public long getId(int ordinal) {
-        if(fieldIndex[0] == -1)
+        if(fieldIndex[0] == -1) {
             return missingDataHandler().handleLong("Movie", ordinal, "id");
+        }
         return getTypeDataAccess().readLong(ordinal, fieldIndex[0]);
     }
 
@@ -32,16 +33,18 @@ public class MovieTypeAPI extends HollowObjectTypeAPI {
             boxedFieldAccessSampler.recordFieldAccess(fieldIndex[0]);
             l = getTypeDataAccess().readLong(ordinal, fieldIndex[0]);
         }
-        if(l == Long.MIN_VALUE)
+        if(l == Long.MIN_VALUE) {
             return null;
+        }
         return Long.valueOf(l);
     }
 
 
 
     public int getTitleOrdinal(int ordinal) {
-        if(fieldIndex[1] == -1)
+        if(fieldIndex[1] == -1) {
             return missingDataHandler().handleReferencedOrdinal("Movie", ordinal, "title");
+        }
         return getTypeDataAccess().readOrdinal(ordinal, fieldIndex[1]);
     }
 
@@ -50,8 +53,9 @@ public class MovieTypeAPI extends HollowObjectTypeAPI {
     }
 
     public int getYear(int ordinal) {
-        if(fieldIndex[2] == -1)
+        if(fieldIndex[2] == -1) {
             return missingDataHandler().handleInt("Movie", ordinal, "year");
+        }
         return getTypeDataAccess().readInt(ordinal, fieldIndex[2]);
     }
 
@@ -63,8 +67,9 @@ public class MovieTypeAPI extends HollowObjectTypeAPI {
             boxedFieldAccessSampler.recordFieldAccess(fieldIndex[2]);
             i = getTypeDataAccess().readInt(ordinal, fieldIndex[2]);
         }
-        if(i == Integer.MIN_VALUE)
+        if(i == Integer.MIN_VALUE) {
             return null;
+        }
         return Integer.valueOf(i);
     }
 

@@ -58,7 +58,7 @@ public class HollowReadStateEngine implements HollowStateEngine, HollowDataAcces
     private boolean skipTypeShardUpdateWithNoAdditions;
     private ArraySegmentRecycler memoryRecycler;
     private Map<String,String> headerTags;
-    private Set<String> typesWithDefinedHashCodes = new HashSet<String>();
+    private Set<String> typesWithDefinedHashCodes = new HashSet<>();
 
     private long currentRandomizedTag;
     private long originRandomizedTag;
@@ -88,8 +88,8 @@ public class HollowReadStateEngine implements HollowStateEngine, HollowDataAcces
 
     @Deprecated
     public HollowReadStateEngine(HollowObjectHashCodeFinder hashCodeFinder, boolean listenToAllPopulatedOrdinals, ArraySegmentRecycler recycler) {
-        this.typeStates = new HashMap<String, HollowTypeReadState>();
-        this.listeners = new HashMap<String, List<HollowTypeStateListener>>();
+        this.typeStates = new HashMap<>();
+        this.listeners = new HashMap<>();
         this.hashCodeFinder = hashCodeFinder;
         this.memoryRecycler = recycler;
         this.listenToAllPopulatedOrdinals = listenToAllPopulatedOrdinals;
@@ -123,15 +123,16 @@ public class HollowReadStateEngine implements HollowStateEngine, HollowDataAcces
     public void addTypeListener(String typeName, HollowTypeStateListener listener) {
         List<HollowTypeStateListener> list = listeners.get(typeName);
         if(list == null) {
-            list = new ArrayList<HollowTypeStateListener>();
+            list = new ArrayList<>();
             listeners.put(typeName, list);
         }
 
         list.add(listener);
 
         HollowTypeReadState typeState = typeStates.get(typeName);
-        if(typeState != null)
+        if(typeState != null) {
             typeState.addListener(listener);
+        }
     }
 
     void wireTypeStatesToSchemas() {
@@ -140,8 +141,9 @@ public class HollowReadStateEngine implements HollowStateEngine, HollowDataAcces
             case OBJECT:
                 HollowObjectSchema objSchema = (HollowObjectSchema)state.getSchema();
                 for(int i=0;i<objSchema.numFields();i++) {
-                    if(objSchema.getReferencedType(i) != null)
+                    if(objSchema.getReferencedType(i) != null) {
                         objSchema.setReferencedTypeState(i, typeStates.get(objSchema.getReferencedType(i)));
+                    }
                 }
                 break;
             case LIST:
@@ -244,7 +246,7 @@ public class HollowReadStateEngine implements HollowStateEngine, HollowDataAcces
 
     @Override
     public List<HollowSchema> getSchemas() {
-        List<HollowSchema> schemas = new ArrayList<HollowSchema>();
+        List<HollowSchema> schemas = new ArrayList<>();
 
         for(Map.Entry<String, HollowTypeReadState> entry : typeStates.entrySet()) {
             schemas.add(entry.getValue().getSchema());
@@ -312,15 +314,17 @@ public class HollowReadStateEngine implements HollowStateEngine, HollowDataAcces
     @Override
     public boolean hasSampleResults() {
         for(Map.Entry<String, HollowTypeReadState> entry : typeStates.entrySet())
-            if(entry.getValue().getSampler().hasSampleResults())
+            if(entry.getValue().getSampler().hasSampleResults()) {
                 return true;
+            }
         return false;
     }
 
     public boolean updatedLastCycle() {
         for(Map.Entry<String, HollowTypeReadState> entry : typeStates.entrySet()) {
-            if(entry.getValue().getListener(PopulatedOrdinalListener.class).updatedLastCycle())
+            if(entry.getValue().getListener(PopulatedOrdinalListener.class).updatedLastCycle()) {
                 return true;
+            }
         }
         return false;
     }
@@ -348,9 +352,9 @@ public class HollowReadStateEngine implements HollowStateEngine, HollowDataAcces
     private void populatedDefinedHashCodesTypesIfHeaderTagIsPresent() {
         String definedHashCodesTag = headerTags.get(HollowObjectHashCodeFinder.DEFINED_HASH_CODES_HEADER_NAME);
         if(definedHashCodesTag == null || "".equals(definedHashCodesTag)) {
-            this.typesWithDefinedHashCodes = Collections.<String>emptySet();
+            this.typesWithDefinedHashCodes = Collections.emptySet();
         } else {
-            Set<String>definedHashCodeTypes = new HashSet<String>();
+            Set<String>definedHashCodeTypes = new HashSet<>();
             for(String type : definedHashCodesTag.split(","))
                 definedHashCodeTypes.add(type);
             this.typesWithDefinedHashCodes = definedHashCodeTypes;

@@ -56,8 +56,9 @@ public abstract class HollowObjectView {
     }
     
     private int resetViewForDiff(HollowDiffViewRow row, int runningVisibilityCount) {
-        if(rowIsExactMatch(row))
+        if(rowIsExactMatch(row)) {
             return 0;
+        }
         
         int branchVisibilityCount = 0;
         
@@ -83,8 +84,9 @@ public abstract class HollowObjectView {
     }
     
     private int makeAllChildrenVisible(HollowDiffViewRow row, int runningVisibilityCount) {
-        if(totalVisibilityCount > MAX_INITIAL_VISIBLE_ROWS_BEFORE_COLLAPSING_DIFFS)
+        if(totalVisibilityCount > MAX_INITIAL_VISIBLE_ROWS_BEFORE_COLLAPSING_DIFFS) {
             return 0;
+        }
 
         int branchVisibilityCount = 0;
         
@@ -112,8 +114,9 @@ public abstract class HollowObjectView {
     }
 
     private int resetViewForOrderingChanges(HollowDiffViewRow row, int runningVisibilityCount) {
-        if(rowIsExactMatch(row))
+        if(rowIsExactMatch(row)) {
             return 0;
+        }
         
         int branchVisibilityCount = 0;
 
@@ -157,14 +160,16 @@ public abstract class HollowObjectView {
     
     private boolean rowIsExactMatch(HollowDiffViewRow row) {
         EffigyFieldPair fieldPair = row.getFieldPair();
-        if(fieldPair.getFrom() == null || fieldPair.getTo() == null || fieldPair.isLeafNode())
+        if(fieldPair.getFrom() == null || fieldPair.getTo() == null || fieldPair.isLeafNode()) {
             return false;
+        }
         
         HollowEffigy fromEffigy = (HollowEffigy)fieldPair.getFrom().getValue();
         HollowEffigy toEffigy = (HollowEffigy)fieldPair.getTo().getValue();
 
-        if(fromEffigy == null || toEffigy == null)
+        if(fromEffigy == null || toEffigy == null) {
             return false;
+        }
 
         return exactRecordMatcher.isExactMatch(fromEffigy.getDataAccess(), fromEffigy.getOrdinal(), toEffigy.getDataAccess(), toEffigy.getOrdinal());
     }

@@ -70,7 +70,7 @@ import javax.servlet.http.HttpUtils;
 
 public class HttpHandlerWithServletSupport implements HttpHandler {
 
-    private HttpServlet servlet;
+    private final HttpServlet servlet;
 
     private final class RequestWrapper extends HttpServletRequestWrapper {
         private final HttpExchange ex;
@@ -332,8 +332,9 @@ public class HttpHandlerWithServletSupport implements HttpHandler {
         byte[] buffer = new byte[1024];
         while (true) {
             int r = in.read(buffer);
-            if (r == -1)
+            if(r == -1) {
                 break;
+            }
             out.write(buffer, 0, r);
         }
         return out.toByteArray();

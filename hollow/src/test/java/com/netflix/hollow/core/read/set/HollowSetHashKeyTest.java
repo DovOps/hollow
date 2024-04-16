@@ -94,9 +94,9 @@ public class HollowSetHashKeyTest {
         
         public TestTopLevelObject(int id, Obj... elements) {
             this.id = id;
-            this.setById = new HashSet<Obj>();
-            this.setByIdCountry = new HashSet<Obj>();
-            this.intSet = new HashSet<Integer>();
+            this.setById = new HashSet<>();
+            this.setByIdCountry = new HashSet<>();
+            this.intSet = new HashSet<>();
             
             for(int i=0;i<elements.length;i++) {
                 setById.add(elements[i]);

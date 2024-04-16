@@ -18,7 +18,7 @@ package com.netflix.hollow.diffview.effigy.pairer.exact;
 
 import com.netflix.hollow.core.read.dataaccess.HollowTypeDataAccess;
 
-public class HistoryExactRecordMatcher implements ExactRecordMatcher {
+public final class HistoryExactRecordMatcher implements ExactRecordMatcher {
 
     public static HistoryExactRecordMatcher INSTANCE = new HistoryExactRecordMatcher();
     

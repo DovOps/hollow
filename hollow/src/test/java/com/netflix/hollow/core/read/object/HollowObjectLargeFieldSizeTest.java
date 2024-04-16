@@ -35,15 +35,15 @@ public class HollowObjectLargeFieldSizeTest {
                                                 .build();
         
         long v1 = producer.runCycle(state -> {
-            state.add(new Long(1L));
-            state.add(new Long(0L));
-            state.add(new Long(2L));
-            state.add(new Long(-1L));
-            state.add(new Long(3L));
-            state.add(new Long(Long.MIN_VALUE));
-            state.add(new Long(4L));
-            state.add(new Long(Long.MAX_VALUE));
-            state.add(new Long(5L));
+            state.add(Long.valueOf(1L));
+            state.add(Long.valueOf(0L));
+            state.add(Long.valueOf(2L));
+            state.add(Long.valueOf(-1L));
+            state.add(Long.valueOf(3L));
+            state.add(Long.valueOf(Long.MIN_VALUE));
+            state.add(Long.valueOf(4L));
+            state.add(Long.valueOf(Long.MAX_VALUE));
+            state.add(Long.valueOf(5L));
         });
         
         HollowConsumer consumer = HollowConsumer.withBlobRetriever(blobStore).build();
@@ -62,13 +62,13 @@ public class HollowObjectLargeFieldSizeTest {
                                                 .build();
         
         long v1 = producer.runCycle(state -> {
-            state.add(new Long(1L));
-            state.add(new Long(0L));
-            state.add(new Long(2L));
-            state.add(new Long(-1L));
-            state.add(new Long(3L));
-            state.add(new Long(4L));
-            state.add(new Long(5L));
+            state.add(Long.valueOf(1L));
+            state.add(Long.valueOf(0L));
+            state.add(Long.valueOf(2L));
+            state.add(Long.valueOf(-1L));
+            state.add(Long.valueOf(3L));
+            state.add(Long.valueOf(4L));
+            state.add(Long.valueOf(5L));
         });
         
         HollowConsumer consumer = HollowConsumer.withBlobRetriever(blobStore).build();
@@ -77,15 +77,15 @@ public class HollowObjectLargeFieldSizeTest {
         assertValues(consumer, 1L, 0L, 2L, -1L, 3L, 4L, 5L);
 
         long v2 = producer.runCycle(state -> {
-            state.add(new Long(1L));
-            state.add(new Long(0L));
-            state.add(new Long(2L));
-            state.add(new Long(-1L));
-            state.add(new Long(3L));
-            state.add(new Long(4L));
-            state.add(new Long(5L));
-            state.add(new Long(Long.MIN_VALUE));
-            state.add(new Long(Long.MAX_VALUE));
+            state.add(Long.valueOf(1L));
+            state.add(Long.valueOf(0L));
+            state.add(Long.valueOf(2L));
+            state.add(Long.valueOf(-1L));
+            state.add(Long.valueOf(3L));
+            state.add(Long.valueOf(4L));
+            state.add(Long.valueOf(5L));
+            state.add(Long.valueOf(Long.MIN_VALUE));
+            state.add(Long.valueOf(Long.MAX_VALUE));
         });
     
         consumer.triggerRefreshTo(v2);

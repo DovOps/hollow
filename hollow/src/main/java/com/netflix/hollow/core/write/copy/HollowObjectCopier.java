@@ -24,7 +24,7 @@ import com.netflix.hollow.tools.combine.OrdinalRemapper;
 
 public class HollowObjectCopier extends HollowRecordCopier {
     
-    private final int fieldIndexMapping[];
+    private final int[] fieldIndexMapping;
 
     public HollowObjectCopier(HollowObjectTypeReadState readTypeState, HollowObjectSchema destinationSchema, OrdinalRemapper ordinalRemapper) {
         super(readTypeState, new HollowObjectWriteRecord(destinationSchema), ordinalRemapper, false);
@@ -50,38 +50,45 @@ public class HollowObjectCopier extends HollowRecordCopier {
                 switch(rec().getSchema().getFieldType(i)) {
                 case BOOLEAN:
                     Boolean bool = objectReadState.readBoolean(ordinal, readFieldIndex);
-                    if(bool != null)
+                    if(bool != null) {
                         rec.setBoolean(fieldName, bool.booleanValue());
+                    }
                     break;
                 case BYTES:
                     byte[] bytes = objectReadState.readBytes(ordinal, readFieldIndex);
-                    if(bytes != null)
+                    if(bytes != null) {
                         rec.setBytes(fieldName, bytes);
+                    }
                     break;
                 case STRING:
                     String str = objectReadState.readString(ordinal, readFieldIndex);
-                    if(str != null)
+                    if(str != null) {
                         rec.setString(fieldName, str);
+                    }
                     break;
                 case DOUBLE:
                     double doubleVal = objectReadState.readDouble(ordinal, readFieldIndex);
-                    if(!Double.isNaN(doubleVal))
+                    if(!Double.isNaN(doubleVal)) {
                         rec.setDouble(fieldName, doubleVal);
+                    }
                     break;
                 case FLOAT:
                     float floatVal = (float)objectReadState.readFloat(ordinal, readFieldIndex);
-                    if(!Float.isNaN(floatVal))
+                    if(!Float.isNaN(floatVal)) {
                         rec.setFloat(fieldName, floatVal);
+                    }
                     break;
                 case INT:
                     int intVal = objectReadState.readInt(ordinal, readFieldIndex);
-                    if(intVal != Integer.MIN_VALUE)
+                    if(intVal != Integer.MIN_VALUE) {
                         rec.setInt(fieldName, intVal);
+                    }
                     break;
                 case LONG:
                     long longVal = objectReadState.readLong(ordinal, readFieldIndex);
-                    if(longVal != Long.MIN_VALUE)
+                    if(longVal != Long.MIN_VALUE) {
                         rec.setLong(fieldName, longVal);
+                    }
                     break;
                 case REFERENCE:
                     int ordinalVal = objectReadState.readOrdinal(ordinal, readFieldIndex);

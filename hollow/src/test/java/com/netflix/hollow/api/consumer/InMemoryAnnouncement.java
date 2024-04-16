@@ -31,13 +31,14 @@ public class InMemoryAnnouncement implements Announcer, AnnouncementWatcher {
         
     
     public InMemoryAnnouncement() {
-        this.subscribedConsumers = new ArrayList<HollowConsumer>();
+        this.subscribedConsumers = new ArrayList<>();
     }
             
     @Override
     public long getLatestVersion() {
-        if(pinnedVersion != NO_ANNOUNCEMENT_AVAILABLE)
+        if(pinnedVersion != NO_ANNOUNCEMENT_AVAILABLE) {
             return pinnedVersion;
+        }
         return latestAnnouncedVersion;
     }
 

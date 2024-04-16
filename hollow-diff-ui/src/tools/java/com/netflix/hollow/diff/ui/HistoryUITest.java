@@ -77,7 +77,7 @@ import org.junit.Test;
 public class HistoryUITest {
 
     private static final String CUSTOM_VERSION_TAG = "myVersion";
-    private final int MAX_STATES = 10;
+    private static final int MAX_STATES = 10;
     private HollowObjectSchema schema;
 
     @Test
@@ -116,9 +116,9 @@ public class HistoryUITest {
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 15, 150 });
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 16, 160 });
             stateEngine.prepareForWrite();
-            ByteArrayOutputStream baos_v0 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV0 = new ByteArrayOutputStream();
             HollowBlobWriter writer = new HollowBlobWriter(stateEngine);
-            writer.writeSnapshot(baos_v0);
+            writer.writeSnapshot(baosV0);
             stateEngine.prepareForNextCycle();
 
             // v1
@@ -130,13 +130,13 @@ public class HistoryUITest {
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 5, 5 });
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 6, 6 });
             stateEngine.prepareForWrite();
-            ByteArrayOutputStream baos_v1 = new ByteArrayOutputStream();
-            ByteArrayOutputStream baos_v0_to_v1 = new ByteArrayOutputStream();
-            ByteArrayOutputStream baos_v1_to_v0 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV1 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV0ToV1 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV1ToV0 = new ByteArrayOutputStream();
             writer = new HollowBlobWriter(stateEngine);
-            writer.writeSnapshot(baos_v1);
-            writer.writeDelta(baos_v0_to_v1);
-            writer.writeReverseDelta(baos_v1_to_v0);
+            writer.writeSnapshot(baosV1);
+            writer.writeDelta(baosV0ToV1);
+            writer.writeReverseDelta(baosV1ToV0);
             stateEngine.prepareForNextCycle();
 
             // v2
@@ -148,12 +148,12 @@ public class HistoryUITest {
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 7, 9 });
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 8, 10 });
             stateEngine.prepareForWrite();
-            ByteArrayOutputStream baos_v2 = new ByteArrayOutputStream();
-            ByteArrayOutputStream baos_v1_to_v2 = new ByteArrayOutputStream();
-            ByteArrayOutputStream baos_v2_to_v1 = new ByteArrayOutputStream();
-            writer.writeSnapshot(baos_v2);
-            writer.writeDelta(baos_v1_to_v2);
-            writer.writeReverseDelta(baos_v2_to_v1);
+            ByteArrayOutputStream baosV2 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV1ToV2 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV2ToV1 = new ByteArrayOutputStream();
+            writer.writeSnapshot(baosV2);
+            writer.writeDelta(baosV1ToV2);
+            writer.writeReverseDelta(baosV2ToV1);
             stateEngine.prepareForNextCycle();
 
             // v3
@@ -165,10 +165,10 @@ public class HistoryUITest {
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 7, 13 });
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 8, 10 });
             stateEngine.prepareForWrite();
-            ByteArrayOutputStream baos_v2_to_v3 = new ByteArrayOutputStream();
-            ByteArrayOutputStream baos_v3_to_v2 = new ByteArrayOutputStream();
-            writer.writeDelta(baos_v2_to_v3);
-            writer.writeReverseDelta(baos_v3_to_v2);
+            ByteArrayOutputStream baosV2ToV3 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV3ToV2 = new ByteArrayOutputStream();
+            writer.writeDelta(baosV2ToV3);
+            writer.writeReverseDelta(baosV3ToV2);
 
             // v4
             stateEngine.prepareForNextCycle();
@@ -182,22 +182,22 @@ public class HistoryUITest {
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 18, 10 }); // 6
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 28, 90 }); // 7
             stateEngine.prepareForWrite();
-            ByteArrayOutputStream baos_v4 = new ByteArrayOutputStream();
-            ByteArrayOutputStream baos_v4_to_v3 = new ByteArrayOutputStream();
-            ByteArrayOutputStream baos_v3_to_v4 = new ByteArrayOutputStream();
-            writer.writeSnapshot(baos_v4);
-            writer.writeDelta(baos_v3_to_v4);
-            writer.writeReverseDelta(baos_v4_to_v3);
+            ByteArrayOutputStream baosV4 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV4ToV3 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV3ToV4 = new ByteArrayOutputStream();
+            writer.writeSnapshot(baosV4);
+            writer.writeDelta(baosV3ToV4);
+            writer.writeReverseDelta(baosV4ToV3);
 
             // build history bi-directionally
             HollowReadStateEngine fwdReadStateEngine = new HollowReadStateEngine();
             HollowReadStateEngine revReadStateEngine = new HollowReadStateEngine();
             HollowBlobReader fwdReader = new HollowBlobReader(fwdReadStateEngine);
             HollowBlobReader revReader = new HollowBlobReader(revReadStateEngine);
-            fwdReader.readSnapshot(HollowBlobInput.serial(baos_v2.toByteArray()));
+            fwdReader.readSnapshot(HollowBlobInput.serial(baosV2.toByteArray()));
             System.out.println("Ordinals populated in fwdReadStateEngine: ");
             exploreOrdinals(fwdReadStateEngine);
-            revReader.readSnapshot(HollowBlobInput.serial(baos_v2.toByteArray()));
+            revReader.readSnapshot(HollowBlobInput.serial(baosV2.toByteArray()));
             System.out.println("Ordinals populated in revReadStateEngine (same as fwdReadStateEngine): ");
             exploreOrdinals(revReadStateEngine);
             history = new HollowHistory(fwdReadStateEngine, 2L, MAX_STATES, true);
@@ -205,19 +205,19 @@ public class HistoryUITest {
             history.getKeyIndex().indexTypeField("TypeA", "a1");
             history.initializeReverseStateEngine(revReadStateEngine, 2L);
 
-            fwdReader.applyDelta(HollowBlobInput.serial(baos_v2_to_v3.toByteArray()));
+            fwdReader.applyDelta(HollowBlobInput.serial(baosV2ToV3.toByteArray()));
             exploreOrdinals(fwdReadStateEngine);
             history.deltaOccurred(3L);
 
-            revReader.applyDelta(HollowBlobInput.serial(baos_v2_to_v1.toByteArray()));
+            revReader.applyDelta(HollowBlobInput.serial(baosV2ToV1.toByteArray()));
             exploreOrdinals(revReadStateEngine);
             history.reverseDeltaOccurred(1L);
 
-            fwdReader.applyDelta(HollowBlobInput.serial(baos_v3_to_v4.toByteArray()));
+            fwdReader.applyDelta(HollowBlobInput.serial(baosV3ToV4.toByteArray()));
             exploreOrdinals(fwdReadStateEngine);
             history.deltaOccurred(4L);
 
-            revReader.applyDelta(HollowBlobInput.serial(baos_v1_to_v0.toByteArray()));
+            revReader.applyDelta(HollowBlobInput.serial(baosV1ToV0.toByteArray()));
             exploreOrdinals(revReadStateEngine);
             history.reverseDeltaOccurred(0L);
         }
@@ -269,9 +269,9 @@ public class HistoryUITest {
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 15, 150 });
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 16, 160 });
             stateEngine.prepareForWrite();
-            ByteArrayOutputStream baos_v0 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV0 = new ByteArrayOutputStream();
             HollowBlobWriter writer = new HollowBlobWriter(stateEngine);
-            writer.writeSnapshot(baos_v0);
+            writer.writeSnapshot(baosV0);
             stateEngine.prepareForNextCycle();
 
             // v1
@@ -283,13 +283,13 @@ public class HistoryUITest {
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 5, 5 });
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 6, 6 });
             stateEngine.prepareForWrite();
-            ByteArrayOutputStream baos_v0_to_v1 = new ByteArrayOutputStream();
-            ByteArrayOutputStream baos_v1_to_v0 = new ByteArrayOutputStream();
-            ByteArrayOutputStream baos_v1 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV0ToV1 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV1ToV0 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV1 = new ByteArrayOutputStream();
             writer = new HollowBlobWriter(stateEngine);
-            writer.writeSnapshot(baos_v1);
-            writer.writeDelta(baos_v0_to_v1);
-            writer.writeReverseDelta(baos_v1_to_v0);
+            writer.writeSnapshot(baosV1);
+            writer.writeDelta(baosV0ToV1);
+            writer.writeReverseDelta(baosV1ToV0);
 
             stateEngine.prepareForNextCycle();
 
@@ -302,12 +302,12 @@ public class HistoryUITest {
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 7, 9 });
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 8, 10 });
             stateEngine.prepareForWrite();
-            ByteArrayOutputStream baos_v2 = new ByteArrayOutputStream();
-            ByteArrayOutputStream baos_v1_to_v2 = new ByteArrayOutputStream();
-            ByteArrayOutputStream baos_v2_to_v1 = new ByteArrayOutputStream();
-            writer.writeSnapshot(baos_v2);
-            writer.writeDelta(baos_v1_to_v2);
-            writer.writeReverseDelta(baos_v2_to_v1);
+            ByteArrayOutputStream baosV2 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV1ToV2 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV2ToV1 = new ByteArrayOutputStream();
+            writer.writeSnapshot(baosV2);
+            writer.writeDelta(baosV1ToV2);
+            writer.writeReverseDelta(baosV2ToV1);
             stateEngine.prepareForNextCycle();
 
             // v3
@@ -319,12 +319,12 @@ public class HistoryUITest {
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 7, 13 });
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 8, 10 });
             stateEngine.prepareForWrite();
-            ByteArrayOutputStream baos_v3 = new ByteArrayOutputStream();
-            ByteArrayOutputStream baos_v2_to_v3 = new ByteArrayOutputStream();
-            ByteArrayOutputStream baos_v3_to_v2 = new ByteArrayOutputStream();
-            writer.writeSnapshot(baos_v3);
-            writer.writeDelta(baos_v2_to_v3);
-            writer.writeReverseDelta(baos_v3_to_v2);
+            ByteArrayOutputStream baosV3 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV2ToV3 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV3ToV2 = new ByteArrayOutputStream();
+            writer.writeSnapshot(baosV3);
+            writer.writeDelta(baosV2ToV3);
+            writer.writeReverseDelta(baosV3ToV2);
             stateEngine.prepareForNextCycle();
 
             // v4
@@ -338,26 +338,26 @@ public class HistoryUITest {
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 18, 10 });
             addRec(stateEngine, schema, new String[] { "a1", "a2" }, new int[] { 28, 90 });
             stateEngine.prepareForWrite();
-            ByteArrayOutputStream baos_v4 = new ByteArrayOutputStream();
-            ByteArrayOutputStream baos_v3_to_v4 = new ByteArrayOutputStream();
-            ByteArrayOutputStream baos_v4_to_v3 = new ByteArrayOutputStream();
-            writer.writeDelta(baos_v3_to_v4);
-            writer.writeReverseDelta(baos_v4_to_v3);
-            writer.writeSnapshot(baos_v4);
+            ByteArrayOutputStream baosV4 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV3ToV4 = new ByteArrayOutputStream();
+            ByteArrayOutputStream baosV4ToV3 = new ByteArrayOutputStream();
+            writer.writeDelta(baosV3ToV4);
+            writer.writeReverseDelta(baosV4ToV3);
+            writer.writeSnapshot(baosV4);
 
             // Build history
             readStateEngine = new HollowReadStateEngine();
             reader = new HollowBlobReader(readStateEngine);
-            reader.readSnapshot(HollowBlobInput.serial(baos_v0.toByteArray()));
+            reader.readSnapshot(HollowBlobInput.serial(baosV0.toByteArray()));
             history = new HollowHistory(readStateEngine, 0L, MAX_STATES);
             history.getKeyIndex().addTypeIndex("TypeA", "a1");
-            reader.applyDelta(HollowBlobInput.serial(baos_v0_to_v1.toByteArray()));
+            reader.applyDelta(HollowBlobInput.serial(baosV0ToV1.toByteArray()));
             history.deltaOccurred(1L);
-            reader.applyDelta(HollowBlobInput.serial(baos_v1_to_v2.toByteArray()));
+            reader.applyDelta(HollowBlobInput.serial(baosV1ToV2.toByteArray()));
             history.deltaOccurred(2L);
-            reader.applyDelta(HollowBlobInput.serial(baos_v2_to_v3.toByteArray()));
+            reader.applyDelta(HollowBlobInput.serial(baosV2ToV3.toByteArray()));
             history.deltaOccurred(3L);
-            reader.applyDelta(HollowBlobInput.serial(baos_v3_to_v4.toByteArray()));
+            reader.applyDelta(HollowBlobInput.serial(baosV3ToV4.toByteArray()));
             history.deltaOccurred(4L);
         }
 

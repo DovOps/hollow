@@ -42,7 +42,7 @@ public final class Status {
         /**
          * If the producer action failed.
          */
-        FAIL;
+        FAIL
     }
 
     /**

@@ -42,8 +42,9 @@ public class SnapshotPopulatedOrdinalsReader {
     }
 
     private static void notifyPopulatedOrdinals(long l, int ordinal, HollowTypeStateListener[] listeners) {
-        if(l == 0)
+        if(l == 0) {
             return;
+        }
 
         int stopOrdinal = ordinal + 64;
 
@@ -62,8 +63,9 @@ public class SnapshotPopulatedOrdinalsReader {
         long numLongs = in.readInt();
         long bytesToSkip = numLongs * 8;
 
-        while(bytesToSkip > 0)
+        while (bytesToSkip > 0) {
             bytesToSkip -= in.skipBytes(bytesToSkip);
+        }
     }
 
 }

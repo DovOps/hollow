@@ -67,8 +67,8 @@ public class HollowCombinerIgnoreTest {
         assertEquals(0, combined.getTypeState("TypeC").getPopulatedOrdinals().cardinality());
     }
 
-    @HollowPrimaryKey(fields={"id", "b.id"})
-    private static class TypeA {
+    @HollowPrimaryKey(fields = {"id", "b.id"})
+    private static final class TypeA {
         final int id;
         final TypeB b;
         final TypeC c;
@@ -80,8 +80,8 @@ public class HollowCombinerIgnoreTest {
         }
     }
 
-    @HollowPrimaryKey(fields="id")
-    private static class TypeB {
+    @HollowPrimaryKey(fields = "id")
+    private static final class TypeB {
         final int id;
 
         private TypeB(int id) {
@@ -89,7 +89,7 @@ public class HollowCombinerIgnoreTest {
         }
     }
 
-    private static class TypeC {
+    private static final class TypeC {
         final int id;
 
         private TypeC(int id) {

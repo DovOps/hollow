@@ -74,8 +74,9 @@ public class HollowFilesystemBlobStager implements BlobStager {
         this.optionalPartConfig = optionalPartConfig;
 
         try {
-            if (!Files.exists(stagingPath))
+            if(!Files.exists(stagingPath)) {
                 Files.createDirectories(stagingPath);
+            }
         } catch (IOException e) {
             throw new RuntimeException("Could not create folder; path=" + this.stagingPath, e);
         }
@@ -141,11 +142,13 @@ public class HollowFilesystemBlobStager implements BlobStager {
         @Override
         public void write(HollowBlobWriter blobWriter) throws IOException {
             Path parent = this.path.getParent();
-            if (!Files.exists(parent))
+            if(!Files.exists(parent)) {
                 Files.createDirectories(parent);
+            }
 
-            if (!Files.exists(path))
+            if(!Files.exists(path)) {
                 Files.createFile(path);
+            }
 
             try (OutputStream os = new BufferedOutputStream(compressor.compress(Files.newOutputStream(path)))) {
                 blobWriter.writeHeader(os, null);
@@ -168,7 +171,7 @@ public class HollowFilesystemBlobStager implements BlobStager {
         }
     }
 
-    public static class FilesystemBlob extends Blob {
+    public static final class FilesystemBlob extends Blob {
 
         protected final Path path;
         protected final Map<String, Path> optionalPartPaths;
@@ -227,11 +230,13 @@ public class HollowFilesystemBlobStager implements BlobStager {
         @Override
         public void write(HollowBlobWriter writer) throws IOException {
             Path parent = this.path.getParent();
-            if (!Files.exists(parent))
+            if(!Files.exists(parent)) {
                 Files.createDirectories(parent);
+            }
 
-            if (!Files.exists(path))
+            if(!Files.exists(path)) {
                 Files.createFile(path);
+            }
 
             ProducerOptionalBlobPartConfig.OptionalBlobPartOutputStreams optionalPartStreams = null;
 
@@ -260,8 +265,9 @@ public class HollowFilesystemBlobStager implements BlobStager {
                     throw new IllegalStateException("unknown type, type=" + type);
                 }
             } finally {
-                if (optionalPartStreams != null)
+                if(optionalPartStreams != null) {
                     optionalPartStreams.close();
+                }
             }
 
         }
@@ -274,8 +280,9 @@ public class HollowFilesystemBlobStager implements BlobStager {
         @Override
         public InputStream newOptionalPartInputStream(String partName) throws IOException {
             Path partPath = optionalPartPaths.get(partName);
-            if (partPath == null)
+            if(partPath == null) {
                 throw new IllegalArgumentException("Path for part " + partName + " does not exist.");
+            }
 
             return new BufferedInputStream(compressor.decompress(Files.newInputStream(partPath)));
         }
@@ -283,8 +290,9 @@ public class HollowFilesystemBlobStager implements BlobStager {
         @Override
         public Path getOptionalPartPath(String partName) {
             Path partPath = optionalPartPaths.get(partName);
-            if (partPath == null)
+            if(partPath == null) {
                 throw new IllegalArgumentException("Path for part " + partName + " does not exist.");
+            }
             return partPath;
         }
 
@@ -298,8 +306,9 @@ public class HollowFilesystemBlobStager implements BlobStager {
 
         private void cleanupFile(Path path) {
             try {
-                if (path != null)
+                if(path != null) {
                     Files.delete(path);
+                }
             } catch (IOException e) {
                 throw new RuntimeException("Could not cleanup file: " + this.path.toString(), e);
             }

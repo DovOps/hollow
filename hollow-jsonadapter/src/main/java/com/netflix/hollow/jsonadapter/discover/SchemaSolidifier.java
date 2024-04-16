@@ -27,7 +27,7 @@ import java.util.Map;
 public class SchemaSolidifier {
     
     public static Collection<HollowSchema> convertDiscoveredSchemas(Collection<HollowDiscoveredSchema> discoveredSchemas) {
-        Map<String, HollowSchema> schemaMap = new HashMap<String, HollowSchema>();
+        Map<String, HollowSchema> schemaMap = new HashMap<>();
         
         for(HollowDiscoveredSchema discoveredSchema : discoveredSchemas) {
             HollowSchema schema = discoveredSchema.toHollowSchema();
@@ -35,11 +35,13 @@ public class SchemaSolidifier {
             
             if(schema instanceof HollowMapSchema) {
                 String keyType = ((HollowMapSchema)schema).getKeyType();
-                if(!schemaMap.containsKey(keyType))
+                if(!schemaMap.containsKey(keyType)) {
                     schemaMap.put(keyType, getStringSchema(keyType));
+                }
             } else if(referencesGenericStringSchema(schema)) {
-                if(!schemaMap.containsKey("String"))
+                if(!schemaMap.containsKey("String")) {
                     schemaMap.put("String", getStringSchema("String"));
+                }
             }
         }
         

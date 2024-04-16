@@ -39,8 +39,9 @@ public class MoviePrimaryKeyIndex extends AbstractHollowUniqueKeyIndex<AwardsAPI
     @Override
     public Movie findMatch(Object... keys) {
         int ordinal = idx.getMatchingOrdinal(keys);
-        if(ordinal == -1)
+        if(ordinal == -1) {
             return null;
+        }
         return api.getMovie(ordinal);
     }
 

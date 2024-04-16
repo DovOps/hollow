@@ -43,14 +43,15 @@ public class SchemaDisplay {
     }
     
     private List<SchemaDisplayField> createDisplayFields() {
-        List<SchemaDisplayField> displayFields = new ArrayList<SchemaDisplayField>();
+        List<SchemaDisplayField> displayFields = new ArrayList<>();
         
         switch(schema.getSchemaType()) {
         case OBJECT:
             HollowObjectSchema objSchema = (HollowObjectSchema)schema;
-            
-            for(int i=0;i<objSchema.numFields();i++)
+
+            for (int i = 0;i < objSchema.numFields();i++) {
                 displayFields.add(new SchemaDisplayField(fieldPath + "." + objSchema.getFieldName(i), objSchema, i));
+            }
 
             return displayFields;
             

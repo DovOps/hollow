@@ -35,8 +35,9 @@ public class BooleanDelegateCachedImpl extends HollowObjectAbstractDelegate impl
 
     @Override
     public boolean getValue(int ordinal) {
-        if(value == null)
+        if(value == null) {
             return false;
+        }
         return value.booleanValue();
     }
 

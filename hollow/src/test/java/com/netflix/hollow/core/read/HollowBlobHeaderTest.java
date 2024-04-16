@@ -70,7 +70,7 @@ public class HollowBlobHeaderTest {
 
     @Test
     public void writeAndReadHeaderMapForSnapshot() throws IOException {
-        Map<String, String> headerTags = new HashMap<String, String>();
+        Map<String, String> headerTags = new HashMap<>();
         headerTags.put(HEADER_NAME1, HEADER_VAL1);
         headerTags.put(HEADER_NAME2, HEADER_VAL2);
         writeStateEngine.addHeaderTags(headerTags);

@@ -22,8 +22,9 @@ public class AwardDelegateCachedImpl extends HollowObjectAbstractDelegate implem
     }
 
     public long getId(int ordinal) {
-        if(id == null)
+        if(id == null) {
             return Long.MIN_VALUE;
+        }
         return id.longValue();
     }
 

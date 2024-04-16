@@ -59,8 +59,8 @@ public class ReuseMemoizedObjectsAcrossCyclesTest {
         HollowWriteStateEngine writeEngine = new HollowWriteStateEngine();
         HollowObjectMapper mapper = new HollowObjectMapper(writeEngine);
 
-        List<TypeA> a1 = new MemoizedList<TypeA>(Arrays.asList(new TypeA(1)));
-        List<TypeA> a2 = new MemoizedList<TypeA>(Arrays.asList(new TypeA(2)));
+        List<TypeA> a1 = new MemoizedList<>(Arrays.asList(new TypeA(1)));
+        List<TypeA> a2 = new MemoizedList<>(Arrays.asList(new TypeA(2)));
 
         Assert.assertEquals(0, mapper.add(new ListType(a1)));
         Assert.assertEquals(1, mapper.add(new ListType(a2)));
@@ -69,7 +69,7 @@ public class ReuseMemoizedObjectsAcrossCyclesTest {
         HollowReadStateEngine readEngine = StateEngineRoundTripper.roundTripSnapshot(writeEngine);
         writeEngine.prepareForNextCycle();
 
-        List<TypeA> a3 = new MemoizedList<TypeA>(Arrays.asList(new TypeA(3)));
+        List<TypeA> a3 = new MemoizedList<>(Arrays.asList(new TypeA(3)));
         
         Assert.assertEquals(0, mapper.add(new ListType(a1)));
         Assert.assertEquals(2, mapper.add(new ListType(a3)));
@@ -94,8 +94,8 @@ public class ReuseMemoizedObjectsAcrossCyclesTest {
         HollowWriteStateEngine writeEngine = new HollowWriteStateEngine();
         HollowObjectMapper mapper = new HollowObjectMapper(writeEngine);
 
-        Set<TypeA> a1 = new MemoizedSet<TypeA>(Arrays.asList(new TypeA(1)));
-        Set<TypeA> a2 = new MemoizedSet<TypeA>(Arrays.asList(new TypeA(2)));
+        Set<TypeA> a1 = new MemoizedSet<>(Arrays.asList(new TypeA(1)));
+        Set<TypeA> a2 = new MemoizedSet<>(Arrays.asList(new TypeA(2)));
 
         Assert.assertEquals(0, mapper.add(new SetType(a1)));
         Assert.assertEquals(1, mapper.add(new SetType(a2)));
@@ -104,7 +104,7 @@ public class ReuseMemoizedObjectsAcrossCyclesTest {
         HollowReadStateEngine readEngine = StateEngineRoundTripper.roundTripSnapshot(writeEngine);
         writeEngine.prepareForNextCycle();
 
-        Set<TypeA> a3 = new MemoizedSet<TypeA>(Arrays.asList(new TypeA(3)));
+        Set<TypeA> a3 = new MemoizedSet<>(Arrays.asList(new TypeA(3)));
         
         Assert.assertEquals(0, mapper.add(new SetType(a1)));
         Assert.assertEquals(2, mapper.add(new SetType(a3)));
@@ -130,9 +130,9 @@ public class ReuseMemoizedObjectsAcrossCyclesTest {
         HollowWriteStateEngine writeEngine = new HollowWriteStateEngine();
         HollowObjectMapper mapper = new HollowObjectMapper(writeEngine);
 
-        Map<Integer, TypeA> a1 = new MemoizedMap<Integer, TypeA>();
+        Map<Integer, TypeA> a1 = new MemoizedMap<>();
         a1.put(1, new TypeA(1));
-        Map<Integer, TypeA> a2 = new MemoizedMap<Integer, TypeA>();
+        Map<Integer, TypeA> a2 = new MemoizedMap<>();
         a2.put(2, new TypeA(2));
 
         Assert.assertEquals(0, mapper.add(new MapType(a1)));
@@ -142,7 +142,7 @@ public class ReuseMemoizedObjectsAcrossCyclesTest {
         HollowReadStateEngine readEngine = StateEngineRoundTripper.roundTripSnapshot(writeEngine);
         writeEngine.prepareForNextCycle();
 
-        Map<Integer, TypeA> a3 = new MemoizedMap<Integer, TypeA>();
+        Map<Integer, TypeA> a3 = new MemoizedMap<>();
         a3.put(3, new TypeA(3));
         
         Assert.assertEquals(0, mapper.add(new MapType(a1)));

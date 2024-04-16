@@ -57,45 +57,47 @@ public class HollowDiffHtmlKickstarter {
             initialHtml.append("<tr id=\"r").append(rowPath).append("\"");
 
             if(action == Action.PARTIAL_UNCOLLAPSE || action == Action.UNCOLLAPSE) {
-                initialHtml.append(" onclick=\"uncollapseRow('" + rowPath + "')\"");
+                initialHtml.append(" onclick=\"uncollapseRow('").append(rowPath).append("')\"");
             } else if(action == Action.COLLAPSE) {
-                initialHtml.append(" onclick=\"collapseRow('" + rowPath + "')\"");
+                initialHtml.append(" onclick=\"collapseRow('").append(rowPath).append("')\"");
             }
 
             initialHtml.append(">");
 
             if(action == Action.PARTIAL_UNCOLLAPSE) {
-                initialHtml.append("<td class=\"margin\">").append("<img src=\""+baseURL+"/resource/partial_expand.png\"/>").append("</td>");
+                initialHtml.append("<td class=\"margin\">").append("<img src=\"").append(baseURL).append("/resource/partial_expand.png\"/>").append("</td>");
             } else if(action == Action.UNCOLLAPSE) {
-                initialHtml.append("<td class=\"margin\">").append("<img src=\""+baseURL+"/resource/expand.png\"/>").append("</td>");
+                initialHtml.append("<td class=\"margin\">").append("<img src=\"").append(baseURL).append("/resource/expand.png\"/>").append("</td>");
             } else if(action == Action.COLLAPSE) {
-                initialHtml.append("<td class=\"margin\">").append("<img src=\""+baseURL+"/resource/collapse.png\"/>").append("</td>");
+                initialHtml.append("<td class=\"margin\">").append("<img src=\"").append(baseURL).append("/resource/collapse.png\"/>").append("</td>");
             } else {
                 initialHtml.append("<td class=\"margin\"/>");
             }
 
 
-            if(!"".equals(origFromIndexValue))
+            if(!"".equals(origFromIndexValue)) {
                 initialHtml.append("<td class=\"margin\">").append(origFromIndexValue).append("</td>");
-            else
+            } else {
                 initialHtml.append("<td class=\"margin\"/>");
+            }
 
             initialHtml.append("<td class=\"").append(fromCellClassname).append("\">").append(fromCellContent).append("</td>");
 
             if(action == Action.PARTIAL_UNCOLLAPSE) {
-                initialHtml.append("<td class=\"margin\">").append("<img src=\""+baseURL+"/resource/partial_expand.png\"/>").append("</td>");
+                initialHtml.append("<td class=\"margin\">").append("<img src=\"").append(baseURL).append("/resource/partial_expand.png\"/>").append("</td>");
             } else if(action == Action.UNCOLLAPSE) {
-                initialHtml.append("<td class=\"margin\">").append("<img src=\""+baseURL+"/resource/expand.png\"/>").append("</td>");
+                initialHtml.append("<td class=\"margin\">").append("<img src=\"").append(baseURL).append("/resource/expand.png\"/>").append("</td>");
             } else if(action == Action.COLLAPSE) {
-                initialHtml.append("<td class=\"margin\">").append("<img src=\""+baseURL+"/resource/collapse.png\"/>").append("</td>");
+                initialHtml.append("<td class=\"margin\">").append("<img src=\"").append(baseURL).append("/resource/collapse.png\"/>").append("</td>");
             } else {
                 initialHtml.append("<td class=\"margin\"/>");
             }
 
-            if(!"".equals(origToIndexValue))
+            if(!"".equals(origToIndexValue)) {
                 initialHtml.append("<td class=\"margin\">").append(origToIndexValue).append("</td>");
-            else
+            } else {
                 initialHtml.append("<td class=\"margin\"/>");
+            }
 
             initialHtml.append("<td class=\"").append(toCellClassname).append("\">").append(toCellContent).append("</td>");
         }

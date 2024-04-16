@@ -219,7 +219,7 @@ public class HollowClient {
     }
     
     public static class Builder {
-        private HollowBlobRetriever blobRetriever = null;
+        private HollowBlobRetriever blobRetriever;
         private HollowAnnouncementWatcher announcementWatcher = new HollowAnnouncementWatcher.DefaultWatcher();
         private HollowUpdateListener updateListener = DEFAULT_LISTENER;
         private HollowAPIFactory apiFactory = DEFAULT_FACTORY;
@@ -256,8 +256,9 @@ public class HollowClient {
         }
         
         public HollowClient build() {
-            if(blobRetriever == null) 
+            if(blobRetriever == null) {
                 throw new IllegalArgumentException("A HollowBlobRetriever must be specified when building a HollowClient");
+            }
             
             return new HollowClient(blobRetriever, announcementWatcher, updateListener, apiFactory, memoryConfig);
         }

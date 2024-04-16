@@ -32,7 +32,7 @@ public class IntMapOrdinalRemapper implements OrdinalRemapper {
     private final Map<String, IntMap> ordinalMappings;
     
     public IntMapOrdinalRemapper() {
-        this.ordinalMappings = new HashMap<String, IntMap>();
+        this.ordinalMappings = new HashMap<>();
     }
     
     public void addOrdinalRemapping(String typeName, IntMap mapping) {
@@ -46,16 +46,18 @@ public class IntMapOrdinalRemapper implements OrdinalRemapper {
     @Override
     public int getMappedOrdinal(String type, int originalOrdinal) {
         IntMap mapping = ordinalMappings.get(type);
-        if(mapping != null)
+        if(mapping != null) {
             return mapping.get(originalOrdinal);
+        }
         return -1;
     }
 
     @Override
     public boolean ordinalIsMapped(String type, int originalOrdinal) {
         IntMap mapping = ordinalMappings.get(type);
-        if(mapping != null)
+        if(mapping != null) {
             return mapping.get(originalOrdinal) != -1;
+        }
         return false;
     }
     

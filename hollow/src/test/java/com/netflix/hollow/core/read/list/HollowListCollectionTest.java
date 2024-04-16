@@ -64,7 +64,7 @@ public class HollowListCollectionTest {
         GenericHollowList l = new GenericHollowList(rse, "ListOfInteger", 0);
 
         List<Integer> keys = l.stream()
-                .map(r -> (GenericHollowObject) r)
+                .map(GenericHollowObject.class::cast)
                 .map(o -> o.getInt("value"))
                 .collect(toList());
         Assert.assertEquals(Arrays.asList(1, 2, 3), keys);

@@ -45,12 +45,13 @@ public class HistoryQueryPage extends HistoryPage {
 
         Map<String, IntList> typeQueryKeyMatches = typeQueryKeyMatches(history, query);
 
-        List<HistoryStateQueryMatches> list = new ArrayList<HistoryStateQueryMatches>();
+        List<HistoryStateQueryMatches> list = new ArrayList<>();
 
         for(HollowHistoricalState state : history.getHistoricalStates()) {
             HistoryStateQueryMatches matches = new HistoryStateQueryMatches(state, ui, VersionTimestampConverter.getTimestamp(state.getVersion(), ui.getTimeZone()), typeQueryKeyMatches);
-            if(matches.hasMatches())
+            if(matches.hasMatches()) {
                 list.add(matches);
+            }
         }
 
         ctx.put("stateQueryMatchesList", list);
@@ -58,12 +59,13 @@ public class HistoryQueryPage extends HistoryPage {
     }
 
     private Map<String, IntList> typeQueryKeyMatches(HollowHistory history, String query) {
-        Map<String, IntList> typeQueryKeyMatches = new HashMap<String, IntList>();
+        Map<String, IntList> typeQueryKeyMatches = new HashMap<>();
 
         for(Map.Entry<String, HollowHistoryTypeKeyIndex> entry : history.getKeyIndex().getTypeKeyIndexes().entrySet()) {
             IntList typeQueryResult = entry.getValue().queryIndexedFields(query);
-            if(typeQueryResult.size() != 0)
+            if(typeQueryResult.size() != 0) {
                 typeQueryKeyMatches.put(entry.getKey(), typeQueryResult);
+            }
         }
         return typeQueryKeyMatches;
     }

@@ -35,8 +35,9 @@ public class DoubleDelegateCachedImpl extends HollowObjectAbstractDelegate imple
 
     @Override
     public double getValue(int ordinal) {
-        if(value == null)
+        if(value == null) {
             return Double.NaN;
+        }
         return value.doubleValue();
     }
 

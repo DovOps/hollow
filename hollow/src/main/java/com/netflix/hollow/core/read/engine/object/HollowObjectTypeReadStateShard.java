@@ -81,31 +81,32 @@ class HollowObjectTypeReadStateShard {
         long bitOffset = fieldOffset(ordinal, fieldIndex);
         int numBitsForField = dataElements.bitsPerField[fieldIndex];
 
-        long value = dataElements.fixedLengthData.getElementValue(bitOffset, numBitsForField);
-
-        return value;
+        return dataElements.fixedLengthData.getElementValue(bitOffset, numBitsForField);
     }
 
     public byte[] readBytes(long startByte, long endByte, int numBitsForField, int fieldIndex) {
         byte[] result;
 
-        if((endByte & (1L << numBitsForField - 1)) != 0)
+        if((endByte & (1L << numBitsForField - 1)) != 0) {
             return null;
+        }
 
         startByte &= (1L << numBitsForField - 1) - 1;
 
         int length = (int)(endByte - startByte);
 
         result = new byte[length];
-        for(int i=0;i<length;i++)
+        for (int i = 0;i < length;i++) {
             result[i] = dataElements.varLengthData[fieldIndex].get(startByte + i);
+        }
 
         return result;
     }
 
     public String readString(long startByte, long endByte, int numBitsForField, int fieldIndex) {
-        if((endByte & (1L << numBitsForField - 1)) != 0)
+        if((endByte & (1L << numBitsForField - 1)) != 0) {
             return null;
+        }
 
         startByte &= (1L << numBitsForField - 1) - 1;
 
@@ -115,10 +116,12 @@ class HollowObjectTypeReadStateShard {
     }
 
     public boolean isStringFieldEqual(long startByte, long endByte, int numBitsForField, int fieldIndex, String testValue) {
-        if((endByte & (1L << numBitsForField - 1)) != 0)
+        if((endByte & (1L << numBitsForField - 1)) != 0) {
             return testValue == null;
-        if(testValue == null)
+        }
+        if(testValue == null) {
             return false;
+        }
 
         startByte &= (1L << numBitsForField - 1) - 1;
 
@@ -128,8 +131,9 @@ class HollowObjectTypeReadStateShard {
     }
 
     public int findVarLengthFieldHashCode(long startByte, long endByte, int numBitsForField, int fieldIndex) {
-        if((endByte & (1L << numBitsForField - 1)) != 0)
+        if((endByte & (1L << numBitsForField - 1)) != 0) {
             return -1;
+        }
 
         startByte &= (1L << numBitsForField - 1) - 1;
 
@@ -170,8 +174,9 @@ class HollowObjectTypeReadStateShard {
     }
 
     private boolean testStringEquality(ByteData data, long position, int length, String testValue) {
-        if(length < testValue.length()) // can't check exact length here; the length argument is in bytes, which is equal to or greater than the number of characters.
+        if(length < testValue.length()) { // can't check exact length here; the length argument is in bytes, which is equal to or greater than the number of characters.
             return false;
+        }
 
         long endPosition = position + length;
 
@@ -179,8 +184,9 @@ class HollowObjectTypeReadStateShard {
 
         while(position < endPosition && count < testValue.length()) {
             int c = VarInt.readVInt(data, position);
-            if(testValue.charAt(count++) != (char)c)
+            if(testValue.charAt(count++) != (char)c) {
                 return false;
+            }
             position += VarInt.sizeOfVInt(c);
         }
 
@@ -194,17 +200,19 @@ class HollowObjectTypeReadStateShard {
         long endByte;
         long startByte;
 
-        if(!(withSchema instanceof HollowObjectSchema))
+        if(!(withSchema instanceof HollowObjectSchema)) {
             throw new IllegalArgumentException("HollowObjectTypeReadState can only calculate checksum with a HollowObjectSchema: " + schema.getName());
+        }
 
         HollowObjectSchema commonSchema = schema.findCommonSchema((HollowObjectSchema)withSchema);
 
-        List<String> commonFieldNames = new ArrayList<String>();
-        for(int i=0;i<commonSchema.numFields();i++)
+        List<String> commonFieldNames = new ArrayList<>();
+        for (int i = 0;i < commonSchema.numFields();i++) {
             commonFieldNames.add(commonSchema.getFieldName(i));
+        }
         Collections.sort(commonFieldNames);
         
-        int fieldIndexes[] = new int[commonFieldNames.size()];
+        int[] fieldIndexes = new int[commonFieldNames.size()];
         for(int i=0;i<commonFieldNames.size();i++) {
             fieldIndexes[i] = schema.getPosition(commonFieldNames.get(i));
         }
@@ -222,11 +230,12 @@ class HollowObjectTypeReadStateShard {
                         long fixedLengthValue = numBitsForField <= 56 ?
                                 dataElements.fixedLengthData.getElementValue(bitOffset, numBitsForField)
                                 : dataElements.fixedLengthData.getLargeElementValue(bitOffset, numBitsForField);
-    
-                        if(fixedLengthValue == dataElements.nullValueForField[fieldIdx])
+
+                        if(fixedLengthValue == dataElements.nullValueForField[fieldIdx]) {
                             checksum.applyInt(Integer.MAX_VALUE);
-                        else
+                        } else {
                             checksum.applyLong(fixedLengthValue);
+                        }
                     } else {
                         endByte = dataElements.fixedLengthData.getElementValue(bitOffset, numBitsForField);
                         startByte = shardOrdinal != 0 ? dataElements.fixedLengthData.getElementValue(bitOffset - dataElements.bitsPerRecord, numBitsForField) : 0;
@@ -245,8 +254,9 @@ class HollowObjectTypeReadStateShard {
         long requiredBytes = bitsPerFixedLengthData / 8;
         
         for(int i=0;i<dataElements.varLengthData.length;i++) {
-            if(dataElements.varLengthData[i] != null)
+            if(dataElements.varLengthData[i] != null) {
                 requiredBytes += dataElements.varLengthData[i].size();
+            }
         }
         
         return requiredBytes;
@@ -257,8 +267,9 @@ class HollowObjectTypeReadStateShard {
         
         int holeOrdinal = populatedOrdinals.nextClearBit(0);
         while(holeOrdinal <= dataElements.maxOrdinal) {
-            if((holeOrdinal & (numShards - 1)) == shardNumber)
+            if((holeOrdinal & (numShards - 1)) == shardNumber) {
                 holeBits += dataElements.bitsPerRecord;
+            }
             
             holeOrdinal = populatedOrdinals.nextClearBit(holeOrdinal + 1);
         }

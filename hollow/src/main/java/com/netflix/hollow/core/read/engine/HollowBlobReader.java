@@ -146,8 +146,9 @@ public class HollowBlobReader {
     public void readSnapshot(HollowBlobInput in, OptionalBlobPartInput optionalParts, TypeFilter filter) throws IOException {
         validateMemoryMode(in.getMemoryMode());
         Map<String, HollowBlobInput> optionalPartInputs = null;
-        if(optionalParts != null)
+        if(optionalParts != null) {
             optionalPartInputs = optionalParts.getInputsByPartName(in.getMemoryMode());
+        }
 
         HollowBlobHeader header = readHeader(in, false);
         List<HollowBlobOptionalPartHeader> partHeaders = readPartHeaders(header, optionalPartInputs, in.getMemoryMode());
@@ -220,8 +221,9 @@ public class HollowBlobReader {
     public void applyDelta(HollowBlobInput in, OptionalBlobPartInput optionalParts) throws IOException {
         validateMemoryMode(in.getMemoryMode());
         Map<String, HollowBlobInput> optionalPartInputs = null;
-        if(optionalParts != null)
+        if(optionalParts != null) {
             optionalPartInputs = optionalParts.getInputsByPartName(in.getMemoryMode());
+        }
 
         HollowBlobHeader header = readHeader(in, true);
         List<HollowBlobOptionalPartHeader> partHeaders = readPartHeaders(header, optionalPartInputs, in.getMemoryMode());
@@ -231,7 +233,7 @@ public class HollowBlobReader {
 
         int numStates = VarInt.readVInt(in);
 
-        Collection<String> typeNames = new TreeSet<String>();
+        Collection<String> typeNames = new TreeSet<>();
         for(int i=0;i<numStates;i++) {
             String typeName = readTypeStateDelta(in);
             typeNames.add(typeName);
@@ -261,8 +263,9 @@ public class HollowBlobReader {
     private HollowBlobHeader readHeader(HollowBlobInput in, boolean isDelta) throws IOException {
         HollowBlobHeader header = headerReader.readHeader(in);
 
-        if(isDelta && header.getOriginRandomizedTag() != stateEngine.getCurrentRandomizedTag())
+        if(isDelta && header.getOriginRandomizedTag() != stateEngine.getCurrentRandomizedTag()) {
             throw new IOException("Attempting to apply a delta to a state from which it was not originated!");
+        }
 
         stateEngine.setCurrentRandomizedTag(header.getDestinationRandomizedTag());
         stateEngine.setOriginRandomizedTag(header.getOriginRandomizedTag());
@@ -271,17 +274,20 @@ public class HollowBlobReader {
     }
 
     private List<HollowBlobOptionalPartHeader> readPartHeaders(HollowBlobHeader header, Map<String, HollowBlobInput> inputsByPartName, MemoryMode mode) throws IOException {
-        if(inputsByPartName == null)
+        if(inputsByPartName == null) {
             return Collections.emptyList();
+        }
 
         List<HollowBlobOptionalPartHeader> list = new ArrayList<>(inputsByPartName.size());
         for(Map.Entry<String, HollowBlobInput> entry : inputsByPartName.entrySet()) {
             HollowBlobOptionalPartHeader partHeader = headerReader.readPartHeader(entry.getValue());
-            if(!partHeader.getPartName().equals(entry.getKey()))
+            if(!partHeader.getPartName().equals(entry.getKey())) {
                 throw new IllegalArgumentException("Optional blob part expected name " + entry.getKey() + " but was " + partHeader.getPartName());
+            }
             if(partHeader.getOriginRandomizedTag() != header.getOriginRandomizedTag()
-                    || partHeader.getDestinationRandomizedTag() != header.getDestinationRandomizedTag())
+            || partHeader.getDestinationRandomizedTag() != header.getDestinationRandomizedTag()) {
                 throw new IllegalArgumentException("Optional blob part " + entry.getKey() + " does not appear to be matched with the main input");
+            }
 
             list.add(partHeader);
         }
@@ -290,8 +296,9 @@ public class HollowBlobReader {
     }
 
     private List<HollowSchema> combineSchemas(HollowBlobHeader header, List<HollowBlobOptionalPartHeader> partHeaders) throws IOException {
-        if(partHeaders.isEmpty())
+        if(partHeaders.isEmpty()) {
             return header.getSchemas();
+        }
 
         List<HollowSchema> schemas = new ArrayList<>(header.getSchemas());
 
@@ -387,9 +394,10 @@ public class HollowBlobReader {
     private int readNumShards(HollowBlobInput in) throws IOException {
         int backwardsCompatibilityBytes = VarInt.readVInt(in);
 
-        if(backwardsCompatibilityBytes == 0)
+        if(backwardsCompatibilityBytes == 0) {
             return 1;  /// produced by a version of hollow prior to 2.1.0, always only 1 shard.
 
+        }
         skipForwardsCompatibilityBytes(in);
 
         return VarInt.readVInt(in);
@@ -399,22 +407,24 @@ public class HollowBlobReader {
         int bytesToSkip = VarInt.readVInt(in);
         while(bytesToSkip > 0) {
             int skippedBytes = (int) in.skipBytes(bytesToSkip);
-            if(skippedBytes < 0)
+            if(skippedBytes < 0) {
                 throw new EOFException();
+            }
             bytesToSkip -= skippedBytes;
         }
     }
 
 
     private void discardDelta(HollowBlobInput in, HollowSchema schema, int numShards) throws IOException {
-        if(schema instanceof HollowObjectSchema)
+        if(schema instanceof HollowObjectSchema) {
             HollowObjectTypeReadState.discardDelta(in, (HollowObjectSchema)schema, numShards);
-        else if(schema instanceof HollowListSchema)
+        } else if(schema instanceof HollowListSchema) {
             HollowListTypeReadState.discardDelta(in, numShards);
-        else if(schema instanceof HollowSetSchema)
+        } else if(schema instanceof HollowSetSchema) {
             HollowSetTypeReadState.discardDelta(in, numShards);
-        else if(schema instanceof HollowMapSchema)
+        } else if(schema instanceof HollowMapSchema) {
             HollowMapTypeReadState.discardDelta(in, numShards);
+        }
     }
 
     private void validateMemoryMode(MemoryMode inputMode) {

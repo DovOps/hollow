@@ -34,19 +34,19 @@ public class HollowMapTypeWriteState extends HollowTypeWriteState {
     private int bitsPerMapSizeValue;
     private int bitsPerKeyElement;
     private int bitsPerValueElement;
-    private long totalOfMapBuckets[];
+    private long[] totalOfMapBuckets;
 
     /// data required for writing snapshot or delta
     private int maxOrdinal;
-    private int maxShardOrdinal[];
-    private FixedLengthElementArray mapPointersAndSizesArray[];
-    private FixedLengthElementArray entryData[];
+    private int[] maxShardOrdinal;
+    private FixedLengthElementArray[] mapPointersAndSizesArray;
+    private FixedLengthElementArray[] entryData;
 
     /// additional data required for writing delta
-    private int numMapsInDelta[];
-    private long numBucketsInDelta[];
-    private ByteDataArray deltaAddedOrdinals[];
-    private ByteDataArray deltaRemovedOrdinals[];
+    private int[] numMapsInDelta;
+    private long[] numBucketsInDelta;
+    private ByteDataArray[] deltaAddedOrdinals;
+    private ByteDataArray[] deltaRemovedOrdinals;
 
     public HollowMapTypeWriteState(HollowMapSchema schema) {
         this(schema, -1);
@@ -69,8 +69,9 @@ public class HollowMapTypeWriteState extends HollowTypeWriteState {
     }
 
     private void gatherStatistics() {
-        if(numShards == -1)
+        if(numShards == -1) {
             calculateNumShards();
+        }
         revNumShards = numShards;
 
         int maxKeyOrdinal = 0;
@@ -79,9 +80,10 @@ public class HollowMapTypeWriteState extends HollowTypeWriteState {
         int maxOrdinal = ordinalMap.maxOrdinal();
 
         maxShardOrdinal = new int[numShards];
-        int minRecordLocationsPerShard = (maxOrdinal + 1) / numShards; 
-        for(int i=0;i<numShards;i++)
-            maxShardOrdinal[i] = (i < ((maxOrdinal + 1) & (numShards - 1))) ? minRecordLocationsPerShard : minRecordLocationsPerShard - 1;
+        int minRecordLocationsPerShard = (maxOrdinal + 1) / numShards;
+        for (int i = 0;i < numShards;i++) {
+            maxShardOrdinal[i] = i < ((maxOrdinal + 1) & (numShards - 1)) ? minRecordLocationsPerShard : minRecordLocationsPerShard - 1;
+        }
         
         int maxMapSize = 0;
         ByteData data = ordinalMap.getByteData().getUnderlyingArray();
@@ -95,8 +97,9 @@ public class HollowMapTypeWriteState extends HollowTypeWriteState {
 
                 int numBuckets = HashCodes.hashTableSize(size);
 
-                if(size > maxMapSize)
+                if(size > maxMapSize) {
                     maxMapSize = size;
+                }
 
                 pointer += VarInt.sizeOfVInt(size);
 
@@ -109,10 +112,12 @@ public class HollowMapTypeWriteState extends HollowTypeWriteState {
                     pointer += VarInt.sizeOfVInt(valueOrdinal);
 
                     keyOrdinal += keyOrdinalDelta;
-                    if(keyOrdinal > maxKeyOrdinal)
+                    if(keyOrdinal > maxKeyOrdinal) {
                         maxKeyOrdinal = keyOrdinal;
-                    if(valueOrdinal > maxValueOrdinal)
+                    }
+                    if(valueOrdinal > maxValueOrdinal) {
                         maxValueOrdinal = valueOrdinal;
+                    }
 
                     pointer += VarInt.nextVLongSize(data, pointer);  /// discard hashed bucket
                 }
@@ -123,8 +128,9 @@ public class HollowMapTypeWriteState extends HollowTypeWriteState {
         
         long maxShardTotalOfMapBuckets = 0;
         for(int i=0;i<numShards;i++) {
-            if(totalOfMapBuckets[i] > maxShardTotalOfMapBuckets)
+            if(totalOfMapBuckets[i] > maxShardTotalOfMapBuckets) {
                 maxShardTotalOfMapBuckets = totalOfMapBuckets[i];
+            }
         }
 
         bitsPerKeyElement = 64 - Long.numberOfLeadingZeros(maxKeyOrdinal + 1);
@@ -152,8 +158,9 @@ public class HollowMapTypeWriteState extends HollowTypeWriteState {
 
                 int numBuckets = HashCodes.hashTableSize(size);
 
-                if(size > maxMapSize)
+                if(size > maxMapSize) {
                     maxMapSize = size;
+                }
 
                 pointer += VarInt.sizeOfVInt(size);
 
@@ -166,10 +173,12 @@ public class HollowMapTypeWriteState extends HollowTypeWriteState {
                     pointer += VarInt.sizeOfVInt(valueOrdinal);
 
                     keyOrdinal += keyOrdinalDelta;
-                    if(keyOrdinal > maxKeyOrdinal)
+                    if(keyOrdinal > maxKeyOrdinal) {
                         maxKeyOrdinal = keyOrdinal;
-                    if(valueOrdinal > maxValueOrdinal)
+                    }
+                    if(valueOrdinal > maxValueOrdinal) {
                         maxValueOrdinal = valueOrdinal;
+                    }
 
                     pointer += VarInt.nextVLongSize(data, pointer);  /// discard hashed bucket
                 }
@@ -187,8 +196,9 @@ public class HollowMapTypeWriteState extends HollowTypeWriteState {
         projectedSizeOfType += ((bitsPerKeyElement + bitsPerValueElement) * totalOfMapBuckets) / 8;
         
         numShards = 1;
-        while(stateEngine.getTargetMaxTypeShardSize() * numShards < projectedSizeOfType) 
+        while (stateEngine.getTargetMaxTypeShardSize() * numShards < projectedSizeOfType) {
             numShards *= 2;
+        }
     }
 
     @Override
@@ -207,13 +217,14 @@ public class HollowMapTypeWriteState extends HollowTypeWriteState {
 
         ByteData data = ordinalMap.getByteData().getUnderlyingArray();
 
-        int bucketCounter[] = new int[numShards];
+        int[] bucketCounter = new int[numShards];
         int shardMask = numShards - 1;
 
         HollowWriteStateEnginePrimaryKeyHasher primaryKeyHasher = null;
 
-        if(getSchema().getHashKey() != null)
+        if(getSchema().getHashKey() != null) {
             primaryKeyHasher = new HollowWriteStateEnginePrimaryKeyHasher(getSchema().getHashKey(), getStateEngine());
+        }
         
         for(int ordinal=0;ordinal<=maxOrdinal;ordinal++) {
             int shardNumber = ordinal & shardMask;
@@ -245,12 +256,13 @@ public class HollowMapTypeWriteState extends HollowTypeWriteState {
 
                     keyElementOrdinal += keyElementOrdinalDelta;
 
-                    if(primaryKeyHasher != null)
+                    if(primaryKeyHasher != null) {
                         hashedBucket = primaryKeyHasher.getRecordHash(keyElementOrdinal) & (numBuckets - 1);
+                    }
 
                     while(entryData[shardNumber].getElementValue((long)bitsPerMapEntry * (bucketCounter[shardNumber] + hashedBucket), bitsPerKeyElement) != ((1L << bitsPerKeyElement) - 1)) {
                         hashedBucket++;
-                        hashedBucket &= (numBuckets - 1);
+                        hashedBucket &= numBuckets - 1;
                     }
 
                     long mapEntryBitOffset = (long)bitsPerMapEntry * (bucketCounter[shardNumber] + hashedBucket);
@@ -371,15 +383,16 @@ public class HollowMapTypeWriteState extends HollowTypeWriteState {
 
         ByteData data = ordinalMap.getByteData().getUnderlyingArray();
 
-        int mapCounter[] = new int[numShards];
-        long bucketCounter[] = new long[numShards];
-        int previousRemovedOrdinal[] = new int[numShards];
-        int previousAddedOrdinal[] = new int[numShards];
+        int[] mapCounter = new int[numShards];
+        long[] bucketCounter = new long[numShards];
+        int[] previousRemovedOrdinal = new int[numShards];
+        int[] previousAddedOrdinal = new int[numShards];
         
         HollowWriteStateEnginePrimaryKeyHasher primaryKeyHasher = null;
 
-        if(getSchema().getHashKey() != null)
+        if(getSchema().getHashKey() != null) {
             primaryKeyHasher = new HollowWriteStateEnginePrimaryKeyHasher(getSchema().getHashKey(), getStateEngine());
+        }
 
         for(int ordinal=0;ordinal<=maxOrdinal;ordinal++) {
             int shardNumber = ordinal & shardMask;
@@ -412,12 +425,13 @@ public class HollowMapTypeWriteState extends HollowTypeWriteState {
 
                     keyElementOrdinal += keyElementOrdinalDelta;
 
-                    if(primaryKeyHasher != null)
+                    if(primaryKeyHasher != null) {
                         hashedBucket = primaryKeyHasher.getRecordHash(keyElementOrdinal) & (numBuckets - 1);
+                    }
 
                     while(entryData[shardNumber].getElementValue((long)bitsPerMapEntry * (bucketCounter[shardNumber] + hashedBucket), bitsPerKeyElement) != ((1L << bitsPerKeyElement) - 1)) {
                         hashedBucket++;
-                        hashedBucket &= (numBuckets - 1);
+                        hashedBucket &= numBuckets - 1;
                     }
 
                     long mapEntryBitOffset = (long)bitsPerMapEntry * (bucketCounter[shardNumber] + hashedBucket);

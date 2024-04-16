@@ -62,7 +62,7 @@ public class StaleHollowReferenceDetector {
     private Thread monitor;
 
     public StaleHollowReferenceDetector(HollowConsumer.ObjectLongevityConfig config, HollowConsumer.ObjectLongevityDetector detector) {
-        this.handles = new ArrayList<HollowWeakReferenceHandle>();
+        this.handles = new ArrayList<>();
         this.config = config;
         this.detector = detector;
         this.stackTraceRecorder = new StackTraceRecorder(25);
@@ -70,8 +70,9 @@ public class StaleHollowReferenceDetector {
 
     synchronized boolean isKnownAPIHandle(HollowAPI api) {
         for(HollowWeakReferenceHandle handle : handles)
-            if(handle.isAPIHandled(api))
+            if(handle.isAPIHandled(api)) {
                 return true;
+            }
         return false;
     }
 
@@ -85,8 +86,9 @@ public class StaleHollowReferenceDetector {
         int signals = 0;
 
         for(HollowWeakReferenceHandle handle : handles) {
-            if(handle.isExistingStaleReferenceHint())
+            if(handle.isExistingStaleReferenceHint()) {
                 signals++;
+            }
         }
 
         return signals;
@@ -96,8 +98,9 @@ public class StaleHollowReferenceDetector {
         int signals = 0;
 
         for(HollowWeakReferenceHandle handle : handles) {
-            if(handle.hasBeenUsedSinceReset())
+            if(handle.hasBeenUsedSinceReset()) {
                 signals++;
+            }
         }
 
         return signals;
@@ -108,8 +111,9 @@ public class StaleHollowReferenceDetector {
         while(iter.hasNext()) {
             HollowWeakReferenceHandle handle = iter.next();
             handle.housekeeping();
-            if(handle.isFinished())
+            if(handle.isFinished()) {
                 iter.remove();
+            }
         }
     }
 
@@ -151,7 +155,7 @@ public class StaleHollowReferenceDetector {
         }
     }
 
-    private class HollowWeakReferenceHandle {
+    private final class HollowWeakReferenceHandle {
         private final WeakReference<HollowAPI> apiHandle;
         private final WeakReference<Object> siblingHandle;
         private long gracePeriodBeginTimestamp = Long.MAX_VALUE;
@@ -162,9 +166,9 @@ public class StaleHollowReferenceDetector {
         private boolean detached;
 
         private HollowWeakReferenceHandle(HollowAPI stateEngine) {
-            this.apiHandle = new WeakReference<HollowAPI>(stateEngine);
+            this.apiHandle = new WeakReference<>(stateEngine);
             this.sibling = new Object();
-            this.siblingHandle = new WeakReference<Object>(sibling);
+            this.siblingHandle = new WeakReference<>(sibling);
         }
 
         private boolean isFinished() {
@@ -178,18 +182,21 @@ public class StaleHollowReferenceDetector {
         private boolean hasBeenUsedSinceReset() {
             if(sibling == null) {
                 HollowAPI myAPI = apiHandle.get();
-                if(myAPI != null)
+                if(myAPI != null) {
                     return myAPI.getDataAccess().hasSampleResults();
+                }
             }
             return false;
         }
 
         private void housekeeping() {
             if(gracePeriodBeginTimestamp != Long.MAX_VALUE) {
-                if(shouldBeginUsageDetectionPeriod())
+                if(shouldBeginUsageDetectionPeriod()) {
                     beginUsageDetectionPeriod();
-                if(shouldDetach())
+                }
+                if(shouldDetach()) {
                     detach();
+                }
                 setUpStackTraceRecording();
             }
         }
@@ -199,8 +206,9 @@ public class StaleHollowReferenceDetector {
                 if(config.forceDropData()) {
                     return true;
                 } else if(config.dropDataAutomatically()) {
-                    if(usageDetected)
+                    if(usageDetected) {
                         return false;
+                    }
 
                     HollowAPI api = apiHandle.get();
 
@@ -225,10 +233,11 @@ public class StaleHollowReferenceDetector {
             if(api != null) {
                 HollowDataAccess dataAccess = api.getDataAccess();
 
-                if (dataAccess instanceof HollowProxyDataAccess)
-                    ((HollowProxyDataAccess) dataAccess).disableDataAccess();
-                else if (dataAccess instanceof HollowReadStateEngine)
-                    ((HollowReadStateEngine) dataAccess).invalidate();
+                if(dataAccess instanceof HollowProxyDataAccess) {
+                    ((HollowProxyDataAccess)dataAccess).disableDataAccess();
+                } else if(dataAccess instanceof HollowReadStateEngine) {
+                    ((HollowReadStateEngine)dataAccess).invalidate();
+                }
 
                 api.detachCaches();
             }
@@ -254,8 +263,9 @@ public class StaleHollowReferenceDetector {
                 HollowDataAccess dataAccess = api.getDataAccess();
                 if(dataAccess instanceof HollowProxyDataAccess) {
                     HollowDataAccess proxiedDataAccess = ((HollowProxyDataAccess) dataAccess).getProxiedDataAccess();
-                    if(proxiedDataAccess instanceof HollowHistoricalStateDataAccess)
+                    if(proxiedDataAccess instanceof HollowHistoricalStateDataAccess) {
                         ((HollowHistoricalStateDataAccess)proxiedDataAccess).setStackTraceRecorder(config.enableExpiredUsageStackTraces() ? stackTraceRecorder : null);
+                    }
                 }
             }
         }
@@ -279,25 +289,28 @@ public class StaleHollowReferenceDetector {
         }
 
         private boolean shouldBeginGracePeriod(HollowAPI newAPI) {
-            if(gracePeriodBeginTimestamp != Long.MAX_VALUE)
+            if(gracePeriodBeginTimestamp != Long.MAX_VALUE) {
                 return false;
+            }
             HollowAPI myAPI = apiHandle.get();
-            if(myAPI == null)
+            if(myAPI == null) {
                 return false;
-            if(myAPI == newAPI)
+            }
+            if(myAPI == newAPI) {
                 return false;
-            if(myAPI.getDataAccess() == newAPI.getDataAccess())
+            }
+            if(myAPI.getDataAccess() == newAPI.getDataAccess()) {
                 return false;
-            if(newAPI.getDataAccess() instanceof HollowProxyDataAccess && ((HollowProxyDataAccess)newAPI.getDataAccess()).getProxiedDataAccess() == myAPI.getDataAccess())
+            }
+            if(newAPI.getDataAccess() instanceof HollowProxyDataAccess && ((HollowProxyDataAccess)newAPI.getDataAccess()).getProxiedDataAccess() == myAPI.getDataAccess()) {
                 return false;
-            if(myAPI.getDataAccess() instanceof HollowProxyDataAccess && ((HollowProxyDataAccess)myAPI.getDataAccess()).getProxiedDataAccess() == newAPI.getDataAccess())
+            }
+            if(myAPI.getDataAccess() instanceof HollowProxyDataAccess && ((HollowProxyDataAccess)myAPI.getDataAccess()).getProxiedDataAccess() == newAPI.getDataAccess()) {
                 return false;
-            if(myAPI.getDataAccess() instanceof HollowProxyDataAccess
-              && newAPI.getDataAccess() instanceof HollowProxyDataAccess
-              && ((HollowProxyDataAccess)myAPI.getDataAccess()).getProxiedDataAccess() == ((HollowProxyDataAccess)newAPI.getDataAccess()).getProxiedDataAccess())
-                return false;
-
-            return true;
+            }
+            return !(myAPI.getDataAccess() instanceof HollowProxyDataAccess
+            && newAPI.getDataAccess() instanceof HollowProxyDataAccess
+            && ((HollowProxyDataAccess)myAPI.getDataAccess()).getProxiedDataAccess() == ((HollowProxyDataAccess)newAPI.getDataAccess()).getProxiedDataAccess());
         }
     }
 

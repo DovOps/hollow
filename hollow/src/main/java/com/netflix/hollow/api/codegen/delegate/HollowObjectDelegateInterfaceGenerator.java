@@ -89,8 +89,8 @@ public class HollowObjectDelegateInterfaceGenerator extends HollowObjectDelegate
                     case FLOAT:
                     case INT:
                     case LONG:
-                        classBuilder.append("    public " + HollowCodeGenerationUtils.getJavaScalarType(shortcut.getType()) + " get").append(methodFieldName).append("(int ordinal);\n\n");
-                        classBuilder.append("    public " + HollowCodeGenerationUtils.getJavaBoxedType(shortcut.getType()) + " get").append(methodFieldName).append("Boxed(int ordinal);\n\n");
+                        classBuilder.append("    public ").append(HollowCodeGenerationUtils.getJavaScalarType(shortcut.getType())).append(" get").append(methodFieldName).append("(int ordinal);\n\n");
+                        classBuilder.append("    public ").append(HollowCodeGenerationUtils.getJavaBoxedType(shortcut.getType())).append(" get").append(methodFieldName).append("Boxed(int ordinal);\n\n");
                         break;
                     case BYTES:
                         classBuilder.append("    public byte[] get").append(methodFieldName).append("(int ordinal);\n\n");

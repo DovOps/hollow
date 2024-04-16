@@ -41,8 +41,12 @@ public class HollowSchemaHash {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if(this == o) {
+            return true;
+        }
+        if(o == null || getClass() != o.getClass()) {
+            return false;
+        }
         HollowSchemaHash that = (HollowSchemaHash) o;
         return Objects.equals(hash, that.hash);
     }

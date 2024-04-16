@@ -89,8 +89,9 @@ public abstract class HollowHistoricalTypeDataAccess implements HollowTypeDataAc
 
     protected void recordStackTrace() {
         StackTraceRecorder recorder = dataAccess.getStackTraceRecorder();
-        if(recorder != null)
+        if(recorder != null) {
             recorder.recordStackTrace(2);
+        }
     }
 
     HollowTypeReadState getRemovedRecords() {

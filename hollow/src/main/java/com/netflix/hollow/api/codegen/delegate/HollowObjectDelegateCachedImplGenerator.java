@@ -85,8 +85,9 @@ public class HollowObjectDelegateCachedImplGenerator extends HollowObjectDelegat
                 break;
             case REFERENCE:
                 Shortcut shortcut = ergonomicShortcuts.getShortcut(schema.getName() + "." + schema.getFieldName(i));
-                if(shortcut != null)
+                if(shortcut != null) {
                     builder.append("    private final ").append(HollowCodeGenerationUtils.getJavaBoxedType(shortcut.getType())).append(" ").append(substituteInvalidChars(schema.getFieldName(i))).append(";\n");
+                }
                 builder.append("    private final int ").append(substituteInvalidChars(schema.getFieldName(i))).append("Ordinal;\n");
                 break;
             case STRING:
@@ -123,7 +124,7 @@ public class HollowObjectDelegateCachedImplGenerator extends HollowObjectDelegat
 
                     for(int j=0;j<shortcut.getPath().length-1;j++) {
                         String typeAPIName = HollowCodeGenerationUtils.typeAPIClassname(shortcut.getPathTypes()[j]);
-                        builder.append("        " + ordinalVariableName + " = " + ordinalVariableName + " == -1 ? -1 : typeAPI.getAPI().get").append(typeAPIName).append("().get").append(uppercase(shortcut.getPath()[j])).append("Ordinal(").append(ordinalVariableName).append(");\n");
+                        builder.append("        ").append(ordinalVariableName).append(" = ").append(ordinalVariableName).append(" == -1 ? -1 : typeAPI.getAPI().get").append(typeAPIName).append("().get").append(uppercase(shortcut.getPath()[j])).append("Ordinal(").append(ordinalVariableName).append(");\n");
                     }
 
                     String typeAPIName = HollowCodeGenerationUtils.typeAPIClassname(shortcut.getPathTypes()[shortcut.getPathTypes().length-1]);
@@ -140,8 +141,9 @@ public class HollowObjectDelegateCachedImplGenerator extends HollowObjectDelegat
             String fieldName = substituteInvalidChars(schema.getFieldName(i));
             if(schema.getFieldType(i) == FieldType.REFERENCE) {
                 Shortcut shortcut = ergonomicShortcuts.getShortcut(schema.getName() + "." + schema.getFieldName(i));
-                if(shortcut != null)
+                if(shortcut != null) {
                     addAccessor(builder, shortcut.getType(), fieldName);
+                }
 
                 builder.append("    public int get").append(uppercase(fieldName)).append("Ordinal(int ordinal) {\n");
                 builder.append("        return ").append(fieldName).append("Ordinal;\n");

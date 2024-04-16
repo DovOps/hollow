@@ -38,11 +38,11 @@ public class HollowListDeltaHistoricalStateCreator {
     private final int shardOrdinalShift;
 
     private HollowListTypeReadState typeState;
-    private HollowListTypeDataElements stateEngineDataElements[];
+    private HollowListTypeDataElements[] stateEngineDataElements;
     private RemovedOrdinalIterator iter;
     private IntMap ordinalMapping;
-    private int nextOrdinal = 0;
-    private long nextStartElement = 0;
+    private int nextOrdinal;
+    private long nextStartElement;
 
     public HollowListDeltaHistoricalStateCreator(HollowListTypeReadState typeState, boolean reverse) {
         this.typeState = typeState;

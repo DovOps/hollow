@@ -39,7 +39,7 @@ public class SimultaneousExecutor extends ThreadPoolExecutor {
 
     private static final String DEFAULT_THREAD_NAME = "simultaneous-executor";
 
-    private final List<Future<?>> futures = new ArrayList<Future<?>>();
+    private final List<Future<?>> futures = new ArrayList<>();
 
     /**
      * Creates an executor with a thread per processor.

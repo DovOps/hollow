@@ -47,8 +47,8 @@ public class HollowJsonAdapter extends AbstractHollowJsonAdaptorTask {
 
     final HollowWriteStateEngine stateEngine;
     private final Map<String, HollowSchema> hollowSchemas;
-    private final ThreadLocal<Map<String, HollowWriteRecord>> hollowWriteRecordsHolder = new ThreadLocal<Map<String, HollowWriteRecord>>();
-    private final ThreadLocal<Map<String, ObjectFieldMapping>> objectFieldMappingHolder = new ThreadLocal<Map<String, ObjectFieldMapping>>();
+    private final ThreadLocal<Map<String, HollowWriteRecord>> hollowWriteRecordsHolder = new ThreadLocal<>();
+    private final ThreadLocal<Map<String, ObjectFieldMapping>> objectFieldMappingHolder = new ThreadLocal<>();
 
     private final Map<String, ObjectFieldMapping> canonicalObjectFieldMappings;
 
@@ -60,18 +60,19 @@ public class HollowJsonAdapter extends AbstractHollowJsonAdaptorTask {
     public HollowJsonAdapter(HollowWriteStateEngine stateEngine, String typeName) {
         super(typeName, "populate");
         this.stateEngine = stateEngine;
-        this.hollowSchemas = new HashMap<String, HollowSchema>();
-        this.canonicalObjectFieldMappings = new HashMap<String, ObjectFieldMapping>();
-        this.passthroughDecoratedTypes = new HashSet<String>();
+        this.hollowSchemas = new HashMap<>();
+        this.canonicalObjectFieldMappings = new HashMap<>();
+        this.passthroughDecoratedTypes = new HashSet<>();
 
         for(HollowSchema schema : stateEngine.getSchemas()) {
             hollowSchemas.put(schema.getName(), schema);
-            if(schema instanceof HollowObjectSchema)
+            if(schema instanceof HollowObjectSchema) {
                 canonicalObjectFieldMappings.put(schema.getName(), new ObjectFieldMapping(schema.getName(), this));
+            }
         }
 
         ////TODO: Special 'passthrough' processing.
-        this.passthroughRecords = new ThreadLocal<PassthroughWriteRecords>();
+        this.passthroughRecords = new ThreadLocal<>();
     }
 
     @Override
@@ -132,15 +133,17 @@ public class HollowJsonAdapter extends AbstractHollowJsonAdaptorTask {
         HollowSchema subTypeSchema = hollowSchemas.get(subType);
         switch(subTypeSchema.getSchemaType()) {
             case OBJECT:
-                if(currentToken != JsonToken.START_OBJECT)
+                if(currentToken != JsonToken.START_OBJECT) {
                     throw new IOException("Expecting to parse a " + subType + ", which is a " + subTypeSchema.getSchemaType() + ", expected JsonToken.START_OBJECT but instead found a " + currentToken.toString());
+                }
 
                 return addObject(parser, flatRecordWriter, subType);
 
             case LIST:
             case SET:
-                if(currentToken != JsonToken.START_ARRAY)
+                if(currentToken != JsonToken.START_ARRAY) {
                     throw new IOException("Expecting to parse a " + subType + ", which is a " + subTypeSchema.getSchemaType() + ", expected JsonToken.START_ARRAY but instead found a " + currentToken.toString());
+                }
 
                 return addSubArray(parser, flatRecordWriter, subType, getWriteRecord(subType));
 
@@ -389,14 +392,16 @@ public class HollowJsonAdapter extends AbstractHollowJsonAdaptorTask {
 
         while(token != JsonToken.END_ARRAY) {
             if(token == JsonToken.START_OBJECT) {
-                int keyOrdinal = -1, valueOrdinal = -1;
+                int keyOrdinal = -1;
+                int valueOrdinal = -1;
                 while(token != JsonToken.END_OBJECT) {
 
                     if(token == JsonToken.START_OBJECT || token == JsonToken.START_ARRAY) {
-                        if("key".equals(parser.getCurrentName()))
+                        if("key".equals(parser.getCurrentName())) {
                             keyOrdinal = parseSubType(parser, flatRecordWriter, token, schema.getKeyType());
-                        else if("value".equals(parser.getCurrentName()))
+                        } else if("value".equals(parser.getCurrentName())) {
                             valueOrdinal = parseSubType(parser, flatRecordWriter, token, schema.getValueType());
+                        }
                     }
 
                     token = parser.nextToken();
@@ -563,7 +568,7 @@ public class HollowJsonAdapter extends AbstractHollowJsonAdaptorTask {
     }
 
     private Map<String, ObjectFieldMapping> cloneFieldMappings() {
-        Map<String, ObjectFieldMapping> clonedMap = new HashMap<String, ObjectFieldMapping>();
+        Map<String, ObjectFieldMapping> clonedMap = new HashMap<>();
         for(Map.Entry<String, ObjectFieldMapping> entry : canonicalObjectFieldMappings.entrySet()) {
             clonedMap.put(entry.getKey(), entry.getValue().clone());
         }

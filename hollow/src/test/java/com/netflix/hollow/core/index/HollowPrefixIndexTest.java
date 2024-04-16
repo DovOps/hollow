@@ -91,7 +91,7 @@ public class HollowPrefixIndexTest {
 
         ordinals = toSet(tokenizedPrefixIndex.findKeysWithPrefix("the "));// note the whitespace in findKeysWithPrefix string.
         // expected result ordinals size is 0, since entire movie is not indexed. movie name is split by whitespace.
-        Assert.assertTrue(ordinals.size() == 0);
+        Assert.assertTrue(ordinals.isEmpty());
 
         ordinals = toSet(tokenizedPrefixIndex.findKeysWithPrefix(""));
         Assert.assertTrue(ordinals.size() == 6);
@@ -122,16 +122,16 @@ public class HollowPrefixIndexTest {
         Assert.assertTrue(match.get(0) > -1);
 
         match = tokenizedPrefixIndex.findLongestMatch("doesnotexist");
-        Assert.assertTrue(match.size() == 0);
+        Assert.assertTrue(match.isEmpty());
 
         match = tokenizedPrefixIndex.findLongestMatch("resurrect");
-        Assert.assertTrue(match.size() == 0);
+        Assert.assertTrue(match.isEmpty());
 
         match = tokenizedPrefixIndex.findLongestMatch("");  // empty string is not indexed in prefix index but supported in hollow type state
-        Assert.assertTrue(match.size() == 0);
+        Assert.assertTrue(match.isEmpty());
 
         match = tokenizedPrefixIndex.findLongestMatch(null); // null value is not supported in hollow type state
-        Assert.assertTrue(match.size() == 0);
+        Assert.assertTrue(match.isEmpty());
     }
 
     @Test
@@ -143,18 +143,18 @@ public class HollowPrefixIndexTest {
         HollowTokenizedPrefixIndex tokenizedPrefixIndex = new HollowTokenizedPrefixIndex(readStateEngine, "SimpleMovie", "name.value", true);
 
         Set<Integer> ordinals = toSet(tokenizedPrefixIndex.findKeysWithPrefix("th"));
-        Assert.assertTrue(ordinals.size() == 0);
+        Assert.assertTrue(ordinals.isEmpty());
         ordinals = toSet(tokenizedPrefixIndex.findKeysWithPrefix("Th"));
         Assert.assertTrue(ordinals.size() == 3);
 
         ordinals = toSet(tokenizedPrefixIndex.findKeysWithPrefix("matrix"));
-        Assert.assertTrue(ordinals.size() == 0);
+        Assert.assertTrue(ordinals.isEmpty());
         ordinals = toSet(tokenizedPrefixIndex.findKeysWithPrefix("Matrix"));
         Assert.assertTrue(ordinals.size() == 3);
 
         List<Integer> match;
         match = tokenizedPrefixIndex.findLongestMatch("rush");
-        Assert.assertTrue(match.size() == 0);
+        Assert.assertTrue(match.isEmpty());
         match = tokenizedPrefixIndex.findLongestMatch("Rush");
         Assert.assertTrue(match.get(0) > -1);
     }
@@ -291,7 +291,7 @@ public class HollowPrefixIndexTest {
         Set<Integer> ordinals = toSet(prefixIndex.findKeysWithPrefix("carr"));
         Assert.assertTrue(ordinals.size() == 1);
         ordinals = toSet(prefixIndex.findKeysWithPrefix("aaa"));
-        Assert.assertTrue(ordinals.size() == 0);
+        Assert.assertTrue(ordinals.isEmpty());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -462,7 +462,7 @@ public class HollowPrefixIndexTest {
     /**
      * Abstract Movie class for testing purposes.
      */
-    private static abstract class Movie {
+    private abstract static class Movie {
         private int id;
         private int yearRelease;
 

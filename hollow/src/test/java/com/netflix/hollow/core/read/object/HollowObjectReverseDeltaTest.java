@@ -66,21 +66,21 @@ public class HollowObjectReverseDeltaTest {
         addWriteRecord(103);
 
         writeEngine.prepareForWrite();
-        byte reverseDelta3[] = createReverseDelta();
+        byte[] reverseDelta3 = createReverseDelta();
         writeEngine.prepareForNextCycle();
 
         addWriteRecord(101);
 
         writeEngine.prepareForWrite();
-        byte reverseDelta2[] = createReverseDelta();
+        byte[] reverseDelta2 = createReverseDelta();
         writeEngine.prepareForNextCycle();
 
         addWriteRecord(100);
         addWriteRecord(101);
 
         writeEngine.prepareForWrite();
-        byte reverseDelta1[] = createReverseDelta();
-        byte snapshot[] = createSnapshot();
+        byte[] reverseDelta1 = createReverseDelta();
+        byte[] snapshot = createSnapshot();
 
         HollowBlobReader reader = new HollowBlobReader(readEngine);
 
@@ -101,10 +101,11 @@ public class HollowObjectReverseDeltaTest {
 
         for(int i=0;i<expectedValuesInOrdinalPosition.length;i++) {
             if(expectedValuesInOrdinalPosition[i] != -1) {
-                if(expectedValuesInOrdinalPosition[i] < 0)
+                if(expectedValuesInOrdinalPosition[i] < 0) {
                     Assert.assertFalse(listener.getPopulatedOrdinals().get(i));
-                else
+                } else {
                     Assert.assertTrue(listener.getPopulatedOrdinals().get(i));
+                }
 
                 int expectedValue = Math.abs(expectedValuesInOrdinalPosition[i]);
 

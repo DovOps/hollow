@@ -53,9 +53,9 @@ public class HollowCombinerMissingTypeWithPrimaryKeyTest {
         assertEquals(2, combined.getTypeState("TypeB").getPopulatedOrdinals().cardinality());
         assertEquals(1, combined.getTypeState("TypeA").getPopulatedOrdinals().cardinality());
     }
-    
-    @HollowPrimaryKey(fields="id")
-    private static class TypeA {
+
+    @HollowPrimaryKey(fields = "id")
+    private static final class TypeA {
         @SuppressWarnings("unused")
         int id;
         
@@ -63,9 +63,9 @@ public class HollowCombinerMissingTypeWithPrimaryKeyTest {
             this.id = id;
         }
     }
-    
-    @HollowPrimaryKey(fields="id")
-    private static class TypeB {
+
+    @HollowPrimaryKey(fields = "id")
+    private static final class TypeB {
         @SuppressWarnings("unused")
         int id;
         

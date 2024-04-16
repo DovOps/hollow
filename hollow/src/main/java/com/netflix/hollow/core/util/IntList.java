@@ -23,7 +23,7 @@ import java.util.Arrays;
  */
 public class IntList {
 
-    private int values[];
+    private int[] values;
     private int size;
 
     public IntList() {
@@ -39,14 +39,16 @@ public class IntList {
     }
 
     public void add(int value) {
-        if(values.length == size)
+        if(values.length == size) {
             values = Arrays.copyOf(values, (values.length * 3) / 2);
+        }
         values[size++] = value;
     }
 
     public void addAll(IntList list) {
-        for(int i=0;i<list.size;i++)
+        for (int i = 0;i < list.size;i++) {
             add(list.get(i));
+        }
     }
 
     public void set(int index, int value) {
@@ -70,8 +72,9 @@ public class IntList {
     }
 
     public void expandTo(int size) {
-        if(values.length < size)
+        if(values.length < size) {
             values = Arrays.copyOf(values, size);
+        }
         this.size = size;
     }
 
@@ -80,7 +83,7 @@ public class IntList {
     }
 
     public int[] arrayCopyOfRange(int beginIdx, int endIdx) {
-        int arr[] = new int[endIdx - beginIdx];
+        int[] arr = new int[endIdx - beginIdx];
         System.arraycopy(values, beginIdx, arr, 0, endIdx - beginIdx);
         return arr;
     }
@@ -91,8 +94,9 @@ public class IntList {
             IntList that = (IntList)other;
             if(this.size() == that.size()) {
                 for(int i=0;i<size;i++) {
-                    if(this.get(i) != that.get(i))
+                    if(this.get(i) != that.get(i)) {
                         return false;
+                    }
                 }
                 return true;
             }

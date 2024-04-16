@@ -50,7 +50,7 @@ public class HollowCombinerExcludePrimaryKeysCopyDirector implements HollowCombi
      * @param baseDirector if primary keys are not matched, delegate to the provided director for the answer to {@link #shouldCopy(HollowTypeReadState, int) }
      */
     public HollowCombinerExcludePrimaryKeysCopyDirector(HollowCombinerCopyDirector baseDirector) {
-        this.excludedOrdinals = new HashMap<HollowTypeReadState, BitSet>();
+        this.excludedOrdinals = new HashMap<>();
         this.baseDirector = baseDirector;
     }
     
@@ -79,12 +79,12 @@ public class HollowCombinerExcludePrimaryKeysCopyDirector implements HollowCombi
      * Exclude any objects which are referenced by excluded objects.
      */
     public void excludeReferencedObjects() {
-        Set<HollowReadStateEngine> stateEngines = new HashSet<HollowReadStateEngine>();
+        Set<HollowReadStateEngine> stateEngines = new HashSet<>();
         for(Map.Entry<HollowTypeReadState, BitSet> entry : excludedOrdinals.entrySet())
             stateEngines.add(entry.getKey().getStateEngine());
         
         for(HollowReadStateEngine stateEngine : stateEngines) {
-            Map<String, BitSet> typeBitSetsForStateEngine = new HashMap<String, BitSet>();
+            Map<String, BitSet> typeBitSetsForStateEngine = new HashMap<>();
             
             for(Map.Entry<HollowTypeReadState, BitSet> entry : excludedOrdinals.entrySet()) {
                 if(entry.getKey().getStateEngine() == stateEngine) {
@@ -103,8 +103,9 @@ public class HollowCombinerExcludePrimaryKeysCopyDirector implements HollowCombi
     @Override
     public boolean shouldCopy(HollowTypeReadState typeState, int ordinal) {
         BitSet bitSet = excludedOrdinals.get(typeState);
-        if(bitSet != null && bitSet.get(ordinal))
+        if(bitSet != null && bitSet.get(ordinal)) {
             return false;
+        }
         return baseDirector.shouldCopy(typeState, ordinal);
     }
     

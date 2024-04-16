@@ -35,8 +35,9 @@ public class FloatDelegateCachedImpl extends HollowObjectAbstractDelegate implem
 
     @Override
     public float getValue(int ordinal) {
-        if(value == null)
+        if(value == null) {
             return Float.NaN;
+        }
         return value.floatValue();
     }
 

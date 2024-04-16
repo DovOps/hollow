@@ -39,7 +39,7 @@ public class HollowAPI {
 
     public HollowAPI(HollowDataAccess dataAccess) {
         this.dataAccess = dataAccess;
-        this.typeAPIs = new ArrayList<HollowTypeAPI>();
+        this.typeAPIs = new ArrayList<>();
     }
 
     public HollowDataAccess getDataAccess() {
@@ -70,7 +70,7 @@ public class HollowAPI {
     }
 
     public List<SampleResult> getAccessSampleResults() {
-        List<SampleResult> sampleResults = new ArrayList<SampleResult>();
+        List<SampleResult> sampleResults = new ArrayList<>();
         for(HollowTypeAPI typeAPI : typeAPIs) {
             sampleResults.addAll(typeAPI.getAccessSampleResults());
         }
@@ -81,7 +81,7 @@ public class HollowAPI {
     }
 
     public List<SampleResult> getBoxedSampleResults() {
-        List<SampleResult> sampleResults = new ArrayList<SampleResult>();
+        List<SampleResult> sampleResults = new ArrayList<>();
         for(HollowTypeAPI typeAPI : typeAPIs) {
             if(typeAPI instanceof HollowObjectTypeAPI) {
                 sampleResults.addAll(((HollowObjectTypeAPI)typeAPI).getBoxedFieldAccessSampler().getSampleResults());

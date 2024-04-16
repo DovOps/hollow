@@ -33,14 +33,16 @@ public class BooleanTypeAPI extends HollowObjectTypeAPI {
     }
 
     public boolean getValue(int ordinal) {
-        if(fieldIndex[0] == -1)
+        if(fieldIndex[0] == -1) {
             return missingDataHandler().handleBoolean("Boolean", ordinal, "value") == Boolean.TRUE;
+        }
         return getTypeDataAccess().readBoolean(ordinal, fieldIndex[0]) == Boolean.TRUE;
     }
 
     public Boolean getValueBoxed(int ordinal) {
-        if(fieldIndex[0] == -1)
+        if(fieldIndex[0] == -1) {
             return missingDataHandler().handleBoolean("Boolean", ordinal, "value");
+        }
         return getTypeDataAccess().readBoolean(ordinal, fieldIndex[0]);
     }
 

@@ -34,8 +34,8 @@ public class HollowSplitterPrimaryKeyCopyDirector implements HollowSplitterCopyD
     
     public HollowSplitterPrimaryKeyCopyDirector(HollowReadStateEngine stateEngine, int numShards, PrimaryKey... keys) {
         this.numShards = numShards;
-        this.topLevelTypes = new ArrayList<String>(keys.length);
-        this.primaryKeyDeriverByType = new HashMap<String, HollowPrimaryKeyValueDeriver>();
+        this.topLevelTypes = new ArrayList<>(keys.length);
+        this.primaryKeyDeriverByType = new HashMap<>();
         
         for(int i=0;i<keys.length;i++) {
             topLevelTypes.add(keys[i].getType());
@@ -61,9 +61,10 @@ public class HollowSplitterPrimaryKeyCopyDirector implements HollowSplitterCopyD
     @Override
     public int getShard(HollowTypeReadState topLevelType, int ordinal) {
         HollowPrimaryKeyValueDeriver deriver = primaryKeyDeriverByType.get(topLevelType.getSchema().getName());
-        
-        if(deriver == null)
+
+        if(deriver == null) {
             return -1;
+        }
         
         Object[] key = deriver.getRecordKey(ordinal);
         

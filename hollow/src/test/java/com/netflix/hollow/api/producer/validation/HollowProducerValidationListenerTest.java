@@ -102,7 +102,7 @@ public class HollowProducerValidationListenerTest {
         }
 
         HollowProducer hollowProducer = builder.build();
-        if (typeName.equals("MovieWithPrimaryKey")) {
+        if ("MovieWithPrimaryKey".equals(typeName)) {
             hollowProducer.initializeDataModel(MovieWithPrimaryKey.class);
         } else {
             hollowProducer.initializeDataModel(MovieWithoutPrimaryKey.class);
@@ -110,7 +110,7 @@ public class HollowProducerValidationListenerTest {
 
         hollowProducer.runCycle(newState -> {
             List<String> actors = Arrays.asList("Angelina Jolie", "Brad Pitt");
-            if (typeName.equals("MovieWithPrimaryKey")) {
+            if ("MovieWithPrimaryKey".equals(typeName)) {
                 newState.add(new MovieWithPrimaryKey(123, "someTitle1", actors));
                 newState.add(new MovieWithPrimaryKey(123, "someTitle1", actors));
             } else {

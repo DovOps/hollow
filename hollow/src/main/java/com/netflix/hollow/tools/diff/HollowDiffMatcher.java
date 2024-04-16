@@ -65,19 +65,19 @@ public class HollowDiffMatcher {
 
     public void calculateMatches() {
         if (fromTypeState==null) {
-            toTypeState.getPopulatedOrdinals().stream().forEach(i -> extraInTo.add(i));
+            toTypeState.getPopulatedOrdinals().stream().forEach(extraInTo::add);
             return;
         }
 
         if (toTypeState==null) {
-            fromTypeState.getPopulatedOrdinals().stream().forEach(i -> extraInFrom.add(i));
+            fromTypeState.getPopulatedOrdinals().stream().forEach(extraInFrom::add);
             return;
         }
 
         // No Primary Key so no matching will be done
         if (matchPaths==null || matchPaths.isEmpty()) {
-            toTypeState.getPopulatedOrdinals().stream().forEach(i -> extraInTo.add(i));
-            fromTypeState.getPopulatedOrdinals().stream().forEach(i -> extraInFrom.add(i));
+            toTypeState.getPopulatedOrdinals().stream().forEach(extraInTo::add);
+            fromTypeState.getPopulatedOrdinals().stream().forEach(extraInFrom::add);
             return;
         }
 
@@ -92,7 +92,7 @@ public class HollowDiffMatcher {
 
         int candidateToMatchOrdinal = toPopulatedOrdinals.nextSetBit(0);
         while(candidateToMatchOrdinal != -1) {
-            Object key[] = toIdx.getRecordKey(candidateToMatchOrdinal);
+            Object[] key = toIdx.getRecordKey(candidateToMatchOrdinal);
             int matchedOrdinal = HollowConstants.ORDINAL_NONE;
             try {
                 matchedOrdinal = fromIdx.getMatchingOrdinal(key);
@@ -141,8 +141,9 @@ public class HollowDiffMatcher {
         }
 
         // Show Display similar to Hollow Explorer when there is no primary key
-        if(key == null)
+        if(key == null) {
             return "ORDINAL:" + ordinal;
+        }
 
         return keyDisplayString(key);
     }

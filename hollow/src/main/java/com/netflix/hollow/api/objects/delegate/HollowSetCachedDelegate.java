@@ -31,7 +31,7 @@ import com.netflix.hollow.core.schema.HollowSetSchema;
  */
 public class HollowSetCachedDelegate<T> implements HollowSetDelegate<T>, HollowCachedDelegate {
 
-    private final int ordinals[];
+    private final int[] ordinals;
     private final int size;
     private final int hashMask;
     protected HollowSetTypeAPI typeAPI;
@@ -48,7 +48,7 @@ public class HollowSetCachedDelegate<T> implements HollowSetDelegate<T>, HollowC
     private HollowSetCachedDelegate(HollowSetTypeDataAccess dataAccess, HollowSetTypeAPI typeAPI, int ordinal) {
         int size = dataAccess.size(ordinal);
 
-        int ordinals[] = new int[HashCodes.hashTableSize(size)];
+        int[] ordinals = new int[HashCodes.hashTableSize(size)];
 
         for(int i=0;i<ordinals.length;i++) {
             ordinals[i] = dataAccess.relativeBucketValue(ordinal, i);
@@ -70,8 +70,9 @@ public class HollowSetCachedDelegate<T> implements HollowSetDelegate<T>, HollowC
     public boolean contains(HollowSet<T> set, int ordinal, Object o) {
         if(getSchema().getHashKey() != null) {
             for(int i=0;i<ordinals.length;i++) {
-                if(ordinals[i] != -1 && set.equalsElement(ordinals[i], o))
+                if(ordinals[i] != -1 && set.equalsElement(ordinals[i], o)) {
                     return true;
+                }
             }
         } else {
             int hashCode = dataAccess.getDataAccess().getHashCodeFinder().hashCode(o);
@@ -79,8 +80,9 @@ public class HollowSetCachedDelegate<T> implements HollowSetDelegate<T>, HollowC
             int bucket = HashCodes.hashInt(hashCode) & hashMask;
     
             while(ordinals[bucket] != -1) {
-                if(set.equalsElement(ordinals[bucket], o))
+                if(set.equalsElement(ordinals[bucket], o)) {
                     return true;
+                }
                 bucket ++;
                 bucket &= hashMask;
             }
@@ -92,8 +94,9 @@ public class HollowSetCachedDelegate<T> implements HollowSetDelegate<T>, HollowC
     @Override
     public T findElement(HollowSet<T> set, int ordinal, Object... keys) {
         int elementOrdinal = dataAccess.findElement(ordinal, keys);
-        if(elementOrdinal != -1)
+        if(elementOrdinal != -1) {
             return set.instantiateElement(elementOrdinal);
+        }
         return null;
     }
 
@@ -108,8 +111,9 @@ public class HollowSetCachedDelegate<T> implements HollowSetDelegate<T>, HollowC
                     bucket++;
                 } while(bucket < ordinals.length && ordinals[bucket] == -1);
 
-                if(bucket >= ordinals.length)
+                if(bucket >= ordinals.length) {
                     return NO_MORE_ORDINALS;
+                }
                 return ordinals[bucket];
             }
         };

@@ -44,13 +44,15 @@ public class HollowSetTest extends AbstractStateEngineTest {
 
         int ordinal = iter.next();
         while(ordinal != NO_MORE_ORDINALS) {
-            if(ordinal == 20)
+            if(ordinal == 20) {
                 foundValue = true;
+            }
             ordinal = iter.next();
         }
 
-        if(!foundValue)
+        if(!foundValue) {
             Assert.fail("Did not find value in PotentialMatchOrdinalIterator");
+        }
     }
 
     @Test

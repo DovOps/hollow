@@ -50,10 +50,10 @@ public class FakeDataGenerator {
     public static final int NUM_ARTISTS = 1000;
 
 
-    private final static Faker faker = new Faker();
+    private static final Faker faker = new Faker();
     private static final List<String> COUNTRIES = Arrays.asList("US", "CA", "MX", "BE", "BZ", "BJ", "BM", "BT", "BR", "BG", "BI", "CV", "KH", "CM", "CL", "CN", "CW", "CY", "CZ", "DK", "DJ", "DM", "EC", "EG", "SV", "ER", "EE", "SZ", "ET", "FI", "FR", "GA", "GE", "DE", "GH", "GI", "GR", "GL", "GD", "GP", "GT", "GG", "GN", "GY", "HT", "HK", "HU", "IS", "IN", "ID", "IRQ", "IE", "Man", "IL", "IT", "JM", "JP", "JE", "JO", "KZ", "KE", "KI", "PK", "PW", "TK", "TO", "TN", "TR", "TM", "TV", "UG", "UA");
 
-    private static List<Book> books = new ArrayList<>();
+    private static final List<Book> books = new ArrayList<>();
     private static int maxBookId;
     private static List<Artist> artists = new ArrayList<>(100000);
 
@@ -111,12 +111,11 @@ public class FakeDataGenerator {
 
     private static Genre randomGenre() {
         int randomGenreOrdinal = new Random().nextInt(Genre.values().length);
-        Genre randomGenre = Genre.values()[randomGenreOrdinal];
-        return randomGenre;
+        return Genre.values()[randomGenreOrdinal];
     }
 
     private static String randomSceneDescription() {
-        return faker.funnyName().name() + ", a " + faker.job().title().toString() + ", teams up with a pet " + faker.animal().name() + " to rescue the planet from " + faker.pokemon().name();
+        return faker.funnyName().name() + ", a " + faker.job().title() + ", teams up with a pet " + faker.animal().name() + " to rescue the planet from " + faker.pokemon().name();
     }
 
     private static Set<String> randomSetOfPeople() {
@@ -151,7 +150,7 @@ public class FakeDataGenerator {
     private static void populateArtists() {
         Set<Artist> setOfArtists = new HashSet<>(NUM_ARTISTS);
         for (int i = 0; i < NUM_ARTISTS; i ++) {
-            Artist artist = new Artist(faker.artist().name().toString(), faker.country().capital().toString());
+            Artist artist = new Artist(faker.artist().name(), faker.country().capital());
             setOfArtists.add(artist);
         }
         artists = new ArrayList<>(setOfArtists);
@@ -208,7 +207,7 @@ public class FakeDataGenerator {
 
         boolean maybeRemoveBookChapter = new Random().nextBoolean();
         if (maybeRemoveBookChapter) {
-            if (book.bookMetadata.chapters.size() > 0) {
+            if (!book.bookMetadata.chapters.isEmpty()) {
                 book.bookMetadata.chapters.remove(0);
             }
         }

@@ -51,8 +51,9 @@ public class FocusedShardHoleFillTest {
         
         long v2 = producer.runCycle(state -> {
             for(int i=1;i<=36;i++) {
-                if(!removeSet.contains(i))
+                if(!removeSet.contains(i)) {
                     add(state, "val" + i, i);
+                }
             }
             
             add(state, "newval37", 37);
@@ -64,8 +65,9 @@ public class FocusedShardHoleFillTest {
        
         long v3 = producer.runCycle(state -> {
             for(int i=1;i<=36;i++) {
-                if(!removeSet.contains(i))
+                if(!removeSet.contains(i)) {
                     add(state, "val" + i, i);
+                }
             }
 
             add(state, "newval37", 37);
@@ -91,8 +93,9 @@ public class FocusedShardHoleFillTest {
         
         long v4 = producer.runCycle(state -> {
             for(int i=1;i<=36;i++) {
-                if(!removeSet.contains(i))
+                if(!removeSet.contains(i)) {
                     add(state, "val" + i, i);
+                }
             }
 
             add(state, "newval37", 37);
@@ -118,8 +121,9 @@ public class FocusedShardHoleFillTest {
         
         long v5 = producer.runCycle(state -> {
             for(int i=1;i<=36;i++) {
-                if(!removeSet.contains(i))
+                if(!removeSet.contains(i)) {
                     add(state, "val" + i, i);
+                }
             }
 
             add(state, "newval37", 37);

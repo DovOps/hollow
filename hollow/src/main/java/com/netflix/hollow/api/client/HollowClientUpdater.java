@@ -46,7 +46,7 @@ public class HollowClientUpdater {
 
     private final HollowUpdatePlanner planner;
     private final CompletableFuture<Long> initialLoad;
-    private boolean forceDoubleSnapshot = false;
+    private boolean forceDoubleSnapshot;
     private final FailedTransitionTracker failedTransitionTracker;
     private final StaleHollowReferenceDetector staleReferenceDetector;
 
@@ -93,8 +93,9 @@ public class HollowClientUpdater {
     public void setSkipShardUpdateWithNoAdditions(boolean skipTypeShardUpdateWithNoAdditions) {
         this.skipTypeShardUpdateWithNoAdditions = skipTypeShardUpdateWithNoAdditions;
         HollowDataHolder dataHolder = hollowDataHolderVolatile;
-        if(dataHolder != null)
+        if(dataHolder != null) {
             dataHolder.getStateEngine().setSkipTypeShardUpdateWithNoAdditions(skipTypeShardUpdateWithNoAdditions);
+        }
     }
 
     /**
@@ -150,8 +151,9 @@ public class HollowClientUpdater {
                         doubleSnapshotConfig.allowDoubleSnapshot());
 
             for (HollowConsumer.RefreshListener listener : localListeners)
-                if (listener instanceof HollowConsumer.TransitionAwareRefreshListener)
+                if(listener instanceof HollowConsumer.TransitionAwareRefreshListener) {
                     ((HollowConsumer.TransitionAwareRefreshListener)listener).transitionsPlanned(beforeVersion, requestedVersion, updatePlan.isSnapshotPlan(), updatePlan.getTransitionSequence());
+                }
 
             if (updatePlan.destinationVersion() == HollowConstants.VERSION_NONE
                     && requestedVersion != HollowConstants.VERSION_LATEST) {
@@ -163,12 +165,14 @@ public class HollowClientUpdater {
                 throw new IllegalArgumentException(msg);
             }
 
-            if (updatePlan.equals(HollowUpdatePlan.DO_NOTHING)
-                    && requestedVersion == HollowConstants.VERSION_LATEST)
+            if(updatePlan.equals(HollowUpdatePlan.DO_NOTHING)
+            && requestedVersion == HollowConstants.VERSION_LATEST) {
                 throw new IllegalArgumentException("Could not create an update plan, because no existing versions could be retrieved.");
+            }
 
-            if (updatePlan.destinationVersion(requestedVersion) == getCurrentVersionId())
+            if(updatePlan.destinationVersion(requestedVersion) == getCurrentVersionId()) {
                 return true;
+            }
 
             if (updatePlan.isSnapshotPlan()) {  // 1 snapshot and 0+ delta transitions
                 HollowDataHolder oldDh = hollowDataHolderVolatile;
@@ -201,16 +205,18 @@ public class HollowClientUpdater {
                 refreshListener.refreshSuccessful(beforeVersion, getCurrentVersionId(), requestedVersion);
 
             metrics.updateTypeStateMetrics(getStateEngine(), requestedVersion);
-            if(metricsCollector != null)
+            if(metricsCollector != null) {
                 metricsCollector.collect(metrics);
+            }
 
             initialLoad.complete(getCurrentVersionId()); // only set the first time
             return getCurrentVersionId() == requestedVersion;
         } catch(Throwable th) {
             forceDoubleSnapshotNextUpdate();
             metrics.updateRefreshFailed();
-            if(metricsCollector != null)
+            if(metricsCollector != null) {
                 metricsCollector.collect(metrics);
+            }
             for(HollowConsumer.RefreshListener refreshListener : localListeners)
                 refreshListener.refreshFailed(beforeVersion, getCurrentVersionId(), requestedVersion, th);
 
@@ -261,7 +267,7 @@ public class HollowClientUpdater {
             return true;
         }
 
-        if (doubleSnapshotConfig.doubleSnapshotOnSchemaChange() == true) {
+        if (doubleSnapshotConfig.doubleSnapshotOnSchemaChange()) {
             // double snapshot on schema change relies on presence of a header tag in incoming version metadata
             if (incomingVersionInfo.getAnnouncementMetadata() == null
              || !incomingVersionInfo.getAnnouncementMetadata().isPresent()) {

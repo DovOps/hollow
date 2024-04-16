@@ -103,11 +103,13 @@ public class TransitiveSetTraverser {
         for(HollowSchema referencedSchema : orderedSchemas) {
             if(matches.containsKey(referencedSchema.getName())) {
                 for(HollowSchema referencerSchema : orderedSchemas) {
-                    if(referencerSchema == referencedSchema)
+                    if(referencerSchema == referencedSchema) {
                         break;
+                    }
 
-                    if(matches.containsKey(referencedSchema.getName()) && matches.get(referencedSchema.getName()).cardinality() > 0)
+                    if(matches.containsKey(referencedSchema.getName()) && matches.get(referencedSchema.getName()).cardinality() > 0) {
                         traverseReferencesOutsideClosure(stateEngine, referencerSchema.getName(), referencedSchema.getName(), matches, REMOVE_REFERENCED_OUTSIDE_CLOSURE);
+                    }
                 }
             }
         }
@@ -124,11 +126,13 @@ public class TransitiveSetTraverser {
 
         for(HollowSchema referencerSchema : orderedSchemas) {
             for(HollowSchema referencedSchema : orderedSchemas) {
-                if(referencedSchema == referencerSchema)
+                if(referencedSchema == referencerSchema) {
                     break;
+                }
 
-                if(matches.containsKey(referencedSchema.getName()) && matches.get(referencedSchema.getName()).cardinality() > 0)
+                if(matches.containsKey(referencedSchema.getName()) && matches.get(referencedSchema.getName()).cardinality() > 0) {
                     traverseReferencesOutsideClosure(stateEngine, referencerSchema.getName(), referencedSchema.getName(), matches, ADD_REFERENCING_OUTSIDE_CLOSURE);
+                }
             }
         }
     }
@@ -154,13 +158,14 @@ public class TransitiveSetTraverser {
         HollowObjectSchema schema = typeState.getSchema();
         BitSet matchingOrdinals = getOrCreateBitSet(matches, schema.getName(), typeState.maxOrdinal());
 
-        BitSet childOrdinals[] = new BitSet[schema.numFields()];
+        BitSet[] childOrdinals = new BitSet[schema.numFields()];
 
         for(int i=0;i<schema.numFields();i++) {
             if(schema.getFieldType(i) == FieldType.REFERENCE) {
                 HollowTypeReadState childTypeState = stateEngine.getTypeState(schema.getReferencedType(i));
-                if(childTypeState != null && childTypeState.maxOrdinal() >= 0)
+                if(childTypeState != null && childTypeState.maxOrdinal() >= 0) {
                     childOrdinals[i] = getOrCreateBitSet(matches, schema.getReferencedType(i), childTypeState.maxOrdinal());
+                }
             }
         }
 
@@ -222,10 +227,12 @@ public class TransitiveSetTraverser {
         while(ordinal != -1) {
             HollowMapEntryOrdinalIterator iter = typeState.ordinalIterator(ordinal);
             while(iter.next()) {
-                if(keyOrdinals != null)
+                if(keyOrdinals != null) {
                     keyOrdinals.set(iter.getKey());
-                if(valueOrdinals != null)
+                }
+                if(valueOrdinals != null) {
                     valueOrdinals.set(iter.getValue());
+                }
             }
 
             ordinal = matchingOrdinals.nextSetBit(ordinal + 1);
@@ -278,8 +285,9 @@ public class TransitiveSetTraverser {
     private static void traverseReferencesOutsideClosure(HollowReadStateEngine stateEngine, HollowCollectionTypeReadState referencerTypeState, String referencedType, Map<String, BitSet> closureMatches, TransitiveSetTraverserAction action) {
         HollowCollectionSchema schema = referencerTypeState.getSchema();
 
-        if(!referencedType.equals(schema.getElementType()))
+        if(!referencedType.equals(schema.getElementType())) {
             return;
+        }
 
         BitSet referencedClosureMatches = getOrCreateBitSet(closureMatches, referencedType, stateEngine.getTypeState(referencedType).maxOrdinal());
         BitSet referencerClosureMatches = getOrCreateBitSet(closureMatches, schema.getName(), referencerTypeState.maxOrdinal());
@@ -345,8 +353,9 @@ public class TransitiveSetTraverser {
     }
 
     private static BitSet getOrCreateBitSet(Map<String, BitSet> bitSets, String typeName, int numBitsRequired) {
-        if(numBitsRequired < 0)
+        if(numBitsRequired < 0) {
             numBitsRequired = 0;
+        }
 
         BitSet bs = bitSets.get(typeName);
         if(bs == null) {

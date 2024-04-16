@@ -38,7 +38,7 @@ public class HollowDiffNodeIdentifier {
 
     public HollowDiffNodeIdentifier(HollowDiffNodeIdentifier parent, String viaFieldName, String typeName) {
         this.parents = parent == null ?
-                Collections.<HollowDiffNodeIdentifier>emptyList()
+                Collections.emptyList()
                 : buildParentsList(parent);
         this.viaFieldName = viaFieldName;
         this.nodeName = typeName;
@@ -57,7 +57,7 @@ public class HollowDiffNodeIdentifier {
     }
 
     private List<HollowDiffNodeIdentifier> buildParentsList(HollowDiffNodeIdentifier immediateParent) {
-        List<HollowDiffNodeIdentifier> parents = new ArrayList<HollowDiffNodeIdentifier>(immediateParent.getParents().size() + 1);
+        List<HollowDiffNodeIdentifier> parents = new ArrayList<>(immediateParent.getParents().size() + 1);
         parents.addAll(immediateParent.getParents());
         parents.add(immediateParent);
         return parents;
@@ -68,21 +68,24 @@ public class HollowDiffNodeIdentifier {
 
         for(int i=0;i<parents.size();i++) {
             String parentViaFieldName = parents.get(i).getViaFieldName();
-            if(parentViaFieldName != null)
+            if(parentViaFieldName != null) {
                 hashCode = 31 * hashCode + parentViaFieldName.hashCode();
+            }
             hashCode = 31 * hashCode + parents.get(i).getNodeName().hashCode();
         }
 
-        if(viaFieldName != null)
+        if(viaFieldName != null) {
             hashCode = 31 * hashCode + viaFieldName.hashCode();
+        }
         hashCode = 31 * hashCode + nodeName.hashCode();
 
         return hashCode;
     }
 
     public boolean equals(Object other) {
-        if(this == other)
+        if(this == other) {
             return true;
+        }
         if(other instanceof HollowDiffNodeIdentifier) {
             HollowDiffNodeIdentifier otherId = (HollowDiffNodeIdentifier)other;
             if(otherId.getParents().size() == parents.size()) {
@@ -90,8 +93,9 @@ public class HollowDiffNodeIdentifier {
                     HollowDiffNodeIdentifier myParent = parents.get(i);
                     HollowDiffNodeIdentifier otherParent = otherId.getParents().get(i);
 
-                    if(!myParent.shallowEquals(otherParent))
+                    if(!myParent.shallowEquals(otherParent)) {
                         return false;
+                    }
                 }
 
                 return shallowEquals(otherId);
@@ -106,7 +110,7 @@ public class HollowDiffNodeIdentifier {
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        if(parents.size() > 0) {
+        if(!parents.isEmpty()) {
             builder.append(parents.get(0).getNodeName());
         }
 
@@ -123,9 +127,10 @@ public class HollowDiffNodeIdentifier {
 
     private boolean shallowEquals(HollowDiffNodeIdentifier other) {
         if(viaFieldName == null ?
-                other.getViaFieldName() == null
-                : viaFieldName.equals(other.getViaFieldName()))
+        other.getViaFieldName() == null
+        : viaFieldName.equals(other.getViaFieldName())) {
             return nodeName.equals(other.getNodeName());
+        }
         return false;
     }
 }

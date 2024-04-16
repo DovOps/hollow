@@ -42,7 +42,7 @@ public class HollowWriteStateCreatorTest {
 
         HollowObjectMapper mapper = new HollowObjectMapper(writeEngine);
         for (int i=0; i<10; i++) {
-            mapper.add(new Integer(i));
+            mapper.add(Integer.valueOf(i));
         }
         writeEngine.addHeaderTag("CopyTag", "copied");
         writeEngine.addHeaderTag(HEADER_TAG_METRIC_CYCLE_START, String.valueOf(System.currentTimeMillis()));
@@ -70,7 +70,7 @@ public class HollowWriteStateCreatorTest {
         HollowWriteStateEngine writeEngine = new HollowWriteStateEngine();
         HollowObjectMapper mapper = new HollowObjectMapper(writeEngine);
         
-        mapper.add(new Integer(1));
+        mapper.add(Integer.valueOf(1));
         
         HollowReadStateEngine readEngine = StateEngineRoundTripper.roundTripSnapshot(writeEngine);
         
@@ -85,8 +85,8 @@ public class HollowWriteStateCreatorTest {
         HollowWriteStateEngine writeEngine = new HollowWriteStateEngine();
         HollowObjectMapper mapper = new HollowObjectMapper(writeEngine);
         
-        mapper.add(new Integer(1));
-        mapper.add(new Integer(2));
+        mapper.add(Integer.valueOf(1));
+        mapper.add(Integer.valueOf(2));
         
         HollowReadStateEngine readEngine = StateEngineRoundTripper.roundTripSnapshot(writeEngine);
         
@@ -130,7 +130,7 @@ public class HollowWriteStateCreatorTest {
         
         repopulatedWriteStateEngine.prepareForNextCycle();
         repopulatedWriteStateEngine.addAllObjectsFromPreviousCycle();
-        new HollowObjectMapper(repopulatedWriteStateEngine).add(new Integer(3));
+        new HollowObjectMapper(repopulatedWriteStateEngine).add(Integer.valueOf(3));
         HollowReadStateEngine recreatedReadEngine = StateEngineRoundTripper.roundTripSnapshot(repopulatedWriteStateEngine);
 
         HollowObjectSchema schema = (HollowObjectSchema)recreatedReadEngine.getSchema("Integer");
@@ -153,8 +153,8 @@ public class HollowWriteStateCreatorTest {
         HollowWriteStateEngine writeEngine = new HollowWriteStateEngine();
         HollowObjectMapper mapper = new HollowObjectMapper(writeEngine);
         
-        mapper.add(new Integer(1));
-        mapper.add(new Integer(2));
+        mapper.add(Integer.valueOf(1));
+        mapper.add(Integer.valueOf(2));
         
         HollowReadStateEngine readEngine = StateEngineRoundTripper.roundTripSnapshot(writeEngine);
 

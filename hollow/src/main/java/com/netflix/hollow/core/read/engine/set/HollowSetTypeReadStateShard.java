@@ -69,8 +69,9 @@ class HollowSetTypeReadStateShard {
                     continue threadsafe;
                 }
                 bucket++;
-                if(bucket == endBucket)
+                if(bucket == endBucket) {
                     bucket = startBucket;
+                }
                 bucketOrdinal = absoluteBucketValue(currentData, bucket);
             }
 
@@ -101,15 +102,18 @@ class HollowSetTypeReadStateShard {
             int bucketOrdinal = absoluteBucketValue(currentData, bucket);
 
             while(bucketOrdinal != currentData.emptyBucketValue) {
-                if(readWasUnsafe(currentData))
+                if(readWasUnsafe(currentData)) {
                     continue threadsafe;
-                
-                if(keyDeriver.keyMatches(bucketOrdinal, hashKey))
+                }
+
+                if(keyDeriver.keyMatches(bucketOrdinal, hashKey)) {
                     return bucketOrdinal;
+                }
                 
                 bucket++;
-                if(bucket == endBucket)
+                if(bucket == endBucket) {
                     bucket = startBucket;
+                }
                 bucketOrdinal = absoluteBucketValue(currentData, bucket);
             }
 
@@ -132,8 +136,9 @@ class HollowSetTypeReadStateShard {
 
             value = absoluteBucketValue(currentData, startBucket + bucketIndex);
 
-            if(value == currentData.emptyBucketValue)
+            if(value == currentData.emptyBucketValue) {
                 value = ORDINAL_NONE;
+            }
         } while(readWasUnsafe(currentData));
 
         return value;
@@ -185,7 +190,7 @@ class HollowSetTypeReadStateShard {
             } else {
                 // Round up ordinal
                 int r = (ordinal & -numShards) + shardNumber;
-                ordinal = (r <= ordinal) ? r + numShards : r;
+                ordinal = r <= ordinal ? r + numShards : r;
             }
             ordinal = populatedOrdinals.nextSetBit(ordinal);
         }
@@ -205,8 +210,9 @@ class HollowSetTypeReadStateShard {
         
         int holeOrdinal = populatedOrdinals.nextClearBit(0);
         while(holeOrdinal <= currentData.maxOrdinal) {
-            if((holeOrdinal & (numShards - 1)) == shardNumber)
+            if((holeOrdinal & (numShards - 1)) == shardNumber) {
                 holeBits += currentData.bitsPerFixedLengthSetPortion;
+            }
             
             holeOrdinal = populatedOrdinals.nextClearBit(holeOrdinal + 1);
         }

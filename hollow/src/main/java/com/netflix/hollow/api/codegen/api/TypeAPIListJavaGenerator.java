@@ -50,9 +50,9 @@ public class TypeAPIListJavaGenerator extends HollowTypeAPIGenerator {
         StringBuilder builder = new StringBuilder();
         appendPackageAndCommonImports(builder, apiClassname);
 
-        builder.append("import " + HollowListTypeAPI.class.getName() + ";\n\n");
-        builder.append("import " + HollowListTypeDataAccess.class.getName() + ";\n");
-        builder.append("import " + HollowListLookupDelegate.class.getName() + ";\n");
+        builder.append("import ").append(HollowListTypeAPI.class.getName()).append(";\n\n");
+        builder.append("import ").append(HollowListTypeDataAccess.class.getName()).append(";\n");
+        builder.append("import ").append(HollowListLookupDelegate.class.getName()).append(";\n");
 
         builder.append("\n@SuppressWarnings(\"all\")\n");
         builder.append("public class ").append(className).append(" extends HollowListTypeAPI {\n\n");

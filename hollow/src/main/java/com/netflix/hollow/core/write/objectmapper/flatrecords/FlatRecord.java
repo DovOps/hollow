@@ -116,8 +116,9 @@ public class FlatRecord {
                 cnt++;
             }
 
-            if(cnt < s.length)
+            if(cnt < s.length) {
                 s = Arrays.copyOf(s, cnt);
+            }
 
             return new String(s);
         case BYTES:

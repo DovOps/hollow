@@ -57,11 +57,13 @@ public class SchemaDisplayField {
     
     private boolean isSearchable(HollowObjectSchema schema, int fieldNumber) {
         if(schema.getFieldType(fieldNumber) == FieldType.REFERENCE) {
-            if(schema.getReferencedTypeState(fieldNumber).getSchema().getSchemaType() != SchemaType.OBJECT)
+            if(schema.getReferencedTypeState(fieldNumber).getSchema().getSchemaType() != SchemaType.OBJECT) {
                 return false;
+            }
             HollowObjectSchema refObjSchema = (HollowObjectSchema)schema.getReferencedTypeState(fieldNumber).getSchema();
-            if(refObjSchema.numFields() != 1)
+            if(refObjSchema.numFields() != 1) {
                 return false;
+            }
             
             return isSearchable(refObjSchema, 0);
         }

@@ -37,7 +37,7 @@ class HollowPerformanceAPIClassGenerator {
     public String generate() {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("package " + packageName + ";\n\n");
+        builder.append("package ").append(packageName).append(";\n\n");
 
         builder.append("import com.netflix.hollow.api.perfapi.HollowListTypePerfAPI;\n" +
                 "import com.netflix.hollow.api.perfapi.HollowMapTypePerfAPI;\n" +
@@ -53,7 +53,7 @@ class HollowPerformanceAPIClassGenerator {
                 "\n");
 
         builder.append("@SuppressWarnings(\"all\")\n");
-        builder.append("public class " + apiClassName + " extends HollowPerformanceAPI {\n\n");
+        builder.append("public class ").append(apiClassName).append(" extends HollowPerformanceAPI {\n\n");
 
         List<HollowSchema> schemas = new ArrayList<>(dataset.getSchemas());
         schemas.sort(Comparator.comparing(HollowSchema::getName));
@@ -63,23 +63,23 @@ class HollowPerformanceAPIClassGenerator {
 
             switch(schema.getSchemaType()) {
                 case OBJECT:
-                    builder.append("    public final " + schemaName + "PerfAPI " + schemaName + ";\n");
+                    builder.append("    public final ").append(schemaName).append("PerfAPI ").append(schemaName).append(";\n");
                     break;
                 case LIST:
-                    builder.append("    public final HollowListTypePerfAPI " + schemaName + ";\n");
+                    builder.append("    public final HollowListTypePerfAPI ").append(schemaName).append(";\n");
                     break;
                 case SET:
-                    builder.append("    public final HollowSetTypePerfAPI " + schemaName + ";\n");
+                    builder.append("    public final HollowSetTypePerfAPI ").append(schemaName).append(";\n");
                     break;
                 case MAP:
-                    builder.append("    public final HollowMapTypePerfAPI " + schemaName + ";\n");
+                    builder.append("    public final HollowMapTypePerfAPI ").append(schemaName).append(";\n");
                     break;
             }
         }
 
         builder.append("\n");
 
-        builder.append("    public " + apiClassName + "(HollowDataAccess dataAccess) {\n");
+        builder.append("    public ").append(apiClassName).append("(HollowDataAccess dataAccess) {\n");
         builder.append("        super(dataAccess);\n\n");
 
         for(HollowSchema schema : schemas) {
@@ -87,16 +87,16 @@ class HollowPerformanceAPIClassGenerator {
 
             switch (schema.getSchemaType()) {
                 case OBJECT:
-                    builder.append("        this." + schemaName + " = new " + schemaName + "PerfAPI(dataAccess, \"" + schemaName + "\", this);\n");
+                    builder.append("        this.").append(schemaName).append(" = new ").append(schemaName).append("PerfAPI(dataAccess, \"").append(schemaName).append("\", this);\n");
                     break;
                 case LIST:
-                    builder.append("        this." + schemaName + " = new HollowListTypePerfAPI(dataAccess, \"" + schemaName + "\", this);\n");
+                    builder.append("        this.").append(schemaName).append(" = new HollowListTypePerfAPI(dataAccess, \"").append(schemaName).append("\", this);\n");
                     break;
                 case MAP:
-                    builder.append("        this." + schemaName + " = new HollowMapTypePerfAPI(dataAccess, \"" + schemaName + "\",  this);\n");
+                    builder.append("        this.").append(schemaName).append(" = new HollowMapTypePerfAPI(dataAccess, \"").append(schemaName).append("\",  this);\n");
                     break;
                 case SET:
-                    builder.append("        this." + schemaName + " = new HollowSetTypePerfAPI(dataAccess, \"" + schemaName + "\",  this);\n");
+                    builder.append("        this.").append(schemaName).append(" = new HollowSetTypePerfAPI(dataAccess, \"").append(schemaName).append("\",  this);\n");
                     break;
             }
         }

@@ -68,10 +68,12 @@ public class MissingMapTest extends AbstractStateEngineTest {
     private class FakeMissingDataHandler extends DefaultMissingDataHandler {
         @Override
         public HollowSchema handleSchema(String type) {
-            if("MissingMap".equals(type))
+            if("MissingMap".equals(type)) {
                 return new HollowMapSchema("MissingMap", "MissingObject", "MissingObject");
-            if("MissingObject".equals(type))
+            }
+            if("MissingObject".equals(type)) {
                 return new HollowObjectSchema("MissingObject", 0);
+            }
             return null;
         }
 
@@ -83,8 +85,8 @@ public class MissingMapTest extends AbstractStateEngineTest {
         @Override
         public HollowMapEntryOrdinalIterator handleMapOrdinalIterator(String type, int ordinal) {
             return new HollowMapEntryOrdinalIterator() {
-                private final int keys[] = { 2, 3 };
-                private final int values[] = { 200, 300 };
+                private final int[] keys = { 2, 3 };
+                private final int[] values = { 200, 300 };
                 private int counter = -1;
 
                 @Override
@@ -111,10 +113,12 @@ public class MissingMapTest extends AbstractStateEngineTest {
 
         @Override
         public int handleMapGet(String type, int ordinal, int keyOrdinal, int keyOrdinalHashCode) {
-            if(ordinal == 2)
+            if(ordinal == 2) {
                 return 200;
-            if(ordinal == 3)
+            }
+            if(ordinal == 3) {
                 return 300;
+            }
             return -1;
         }
 

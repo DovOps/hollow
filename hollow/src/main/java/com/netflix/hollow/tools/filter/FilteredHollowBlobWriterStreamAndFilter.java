@@ -39,22 +39,25 @@ class FilteredHollowBlobWriterStreamAndFilter {
     }
 
     public static DataOutputStream[] streamsOnly(FilteredHollowBlobWriterStreamAndFilter[] streamAndFilters) {
-        DataOutputStream streams[] = new DataOutputStream[streamAndFilters.length];
+        DataOutputStream[] streams = new DataOutputStream[streamAndFilters.length];
 
-        for(int i=0;i<streams.length;i++)
+        for (int i = 0;i < streams.length;i++) {
             streams[i] = streamAndFilters[i].getStream();
+        }
 
         return streams;
     }
 
-    public static FilteredHollowBlobWriterStreamAndFilter[] combine(OutputStream streams[], HollowFilterConfig configs[]) {
-        if(streams.length != configs.length)
+    public static FilteredHollowBlobWriterStreamAndFilter[] combine(OutputStream[] streams, HollowFilterConfig[] configs) {
+        if(streams.length != configs.length) {
             throw new IllegalArgumentException("Must provide exactly the same number of streams as configs");
+        }
 
-        FilteredHollowBlobWriterStreamAndFilter streamAndFilters[] = new FilteredHollowBlobWriterStreamAndFilter[streams.length];
+        FilteredHollowBlobWriterStreamAndFilter[] streamAndFilters = new FilteredHollowBlobWriterStreamAndFilter[streams.length];
 
-        for(int i=0;i<streams.length;i++)
+        for (int i = 0;i < streams.length;i++) {
             streamAndFilters[i] = new FilteredHollowBlobWriterStreamAndFilter(new DataOutputStream(streams[i]), configs[i]);
+        }
 
         return streamAndFilters;
     }
@@ -63,16 +66,18 @@ class FilteredHollowBlobWriterStreamAndFilter {
         int countConfigsWithType = 0;
 
         for(int i=0;i<allStreamAndFilters.length;i++) {
-            if(allStreamAndFilters[i].getConfig().doesIncludeType(typeName))
+            if(allStreamAndFilters[i].getConfig().doesIncludeType(typeName)) {
                 countConfigsWithType++;
+            }
         }
 
         FilteredHollowBlobWriterStreamAndFilter[] streamAndFiltersWithType = new FilteredHollowBlobWriterStreamAndFilter[countConfigsWithType];
         int withTypeCounter = 0;
 
         for(int i=0;i<allStreamAndFilters.length;i++) {
-            if(allStreamAndFilters[i].getConfig().doesIncludeType(typeName))
+            if(allStreamAndFilters[i].getConfig().doesIncludeType(typeName)) {
                 streamAndFiltersWithType[withTypeCounter++] = allStreamAndFilters[i];
+            }
         }
 
         return streamAndFiltersWithType;

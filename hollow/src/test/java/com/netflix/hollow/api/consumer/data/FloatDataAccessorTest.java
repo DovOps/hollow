@@ -39,77 +39,77 @@ public class FloatDataAccessorTest extends AbstractPrimitiveTypeDataAccessorTest
 
     @Test
     public void test() throws IOException {
-        addRecord(new Float(1));
-        addRecord(new Float(2));
-        addRecord(new Float(3));
+        addRecord(Float.valueOf(1));
+        addRecord(Float.valueOf(2));
+        addRecord(Float.valueOf(3));
 
         roundTripSnapshot();
         {
             FloatDataAccessor dAccessor = new FloatDataAccessor(readStateEngine, new PrimitiveTypeTestAPI(readStateEngine));
             Assert.assertEquals(3, dAccessor.getAddedRecords().size());
-            assertList(dAccessor.getAddedRecords(), Arrays.<Float>asList(new Float(1), new Float(2), new Float(3)));
+            assertList(dAccessor.getAddedRecords(), Arrays.<Float>asList(Float.valueOf(1), Float.valueOf(2), Float.valueOf(3)));
             Assert.assertTrue(dAccessor.getRemovedRecords().isEmpty());
             Assert.assertTrue(dAccessor.getUpdatedRecords().isEmpty());
         }
 
         writeStateEngine.prepareForNextCycle(); /// not necessary to call, but needs to be a no-op.
 
-        addRecord(new Float(1));
+        addRecord(Float.valueOf(1));
         // addRecord(new Float(2)); // removed
-        addRecord(new Float(3));
-        addRecord(new Float(1000)); // added
-        addRecord(new Float(0)); // added
+        addRecord(Float.valueOf(3));
+        addRecord(Float.valueOf(1000)); // added
+        addRecord(Float.valueOf(0)); // added
 
         roundTripDelta();
         {
             FloatDataAccessor dAccessor = new FloatDataAccessor(readStateEngine, new PrimitiveTypeTestAPI(readStateEngine));
             Assert.assertEquals(2, dAccessor.getAddedRecords().size());
-            assertList(dAccessor.getAddedRecords(), Arrays.asList(new Float(1000), new Float(0)));
+            assertList(dAccessor.getAddedRecords(), Arrays.asList(Float.valueOf(1000), Float.valueOf(0)));
             Assert.assertEquals(1, dAccessor.getRemovedRecords().size());
-            assertList(dAccessor.getRemovedRecords(), Arrays.asList(new Float(2)));
+            assertList(dAccessor.getRemovedRecords(), Arrays.asList(Float.valueOf(2)));
             Assert.assertEquals(0, dAccessor.getUpdatedRecords().size());
         }
 
         HollowObjectTypeReadState typeState = (HollowObjectTypeReadState) readStateEngine.getTypeState("Float");
         Assert.assertEquals(4, typeState.maxOrdinal());
 
-        assertObject(typeState, 0, new Float(1));
-        assertObject(typeState, 1, new Float(2)); /// this was "removed", but the data hangs around as a "ghost" until the following cycle.
-        assertObject(typeState, 2, new Float(3));
-        assertObject(typeState, 3, new Float(1000));
-        assertObject(typeState, 4, new Float(0));
+        assertObject(typeState, 0, Float.valueOf(1));
+        assertObject(typeState, 1, Float.valueOf(2)); /// this was "removed", but the data hangs around as a "ghost" until the following cycle.
+        assertObject(typeState, 2, Float.valueOf(3));
+        assertObject(typeState, 3, Float.valueOf(1000));
+        assertObject(typeState, 4, Float.valueOf(0));
 
         roundTripDelta(); // remove everything
         {
             FloatDataAccessor dAccessor = new FloatDataAccessor(readStateEngine, new PrimitiveTypeTestAPI(readStateEngine));
             Assert.assertEquals(0, dAccessor.getAddedRecords().size());
             Assert.assertEquals(4, dAccessor.getRemovedRecords().size());
-            assertList(dAccessor.getRemovedRecords(), Arrays.asList(new Float(1), new Float(3), new Float(1000), new Float(0)));
+            assertList(dAccessor.getRemovedRecords(), Arrays.asList(Float.valueOf(1), Float.valueOf(3), Float.valueOf(1000), Float.valueOf(0)));
             Assert.assertEquals(0, dAccessor.getUpdatedRecords().size());
         }
 
-        assertObject(typeState, 0, new Float(1)); /// all records were "removed", but again hang around until the following cycle.
+        assertObject(typeState, 0, Float.valueOf(1)); /// all records were "removed", but again hang around until the following cycle.
         // assertObject(typeState, 1, new Float(2)); /// this record should now be disappeared.
-        assertObject(typeState, 2, new Float(3)); /// "ghost"
-        assertObject(typeState, 3, new Float(1000)); /// "ghost"
-        assertObject(typeState, 4, new Float(0)); /// "ghost"
+        assertObject(typeState, 2, Float.valueOf(3)); /// "ghost"
+        assertObject(typeState, 3, Float.valueOf(1000)); /// "ghost"
+        assertObject(typeState, 4, Float.valueOf(0)); /// "ghost"
 
         Assert.assertEquals(4, typeState.maxOrdinal());
 
-        addRecord(new Float(634));
-        addRecord(new Float(0));
+        addRecord(Float.valueOf(634));
+        addRecord(Float.valueOf(0));
 
         roundTripDelta();
         {
             FloatDataAccessor dAccessor = new FloatDataAccessor(readStateEngine, new PrimitiveTypeTestAPI(readStateEngine));
             Assert.assertEquals(2, dAccessor.getAddedRecords().size());
-            assertList(dAccessor.getAddedRecords(), Arrays.asList(new Float(634), new Float(0)));
+            assertList(dAccessor.getAddedRecords(), Arrays.asList(Float.valueOf(634), Float.valueOf(0)));
             Assert.assertEquals(0, dAccessor.getRemovedRecords().size());
             Assert.assertEquals(0, dAccessor.getUpdatedRecords().size());
         }
 
         Assert.assertEquals(1, typeState.maxOrdinal());
-        assertObject(typeState, 0, new Float(634)); /// now, since all records were removed, we can recycle the ordinal "0", even though it was a "ghost" in the last cycle.
-        assertObject(typeState, 1, new Float(0)); /// even though new Float(0) had an equivalent record in the previous cycle at ordinal "4", it is now assigned to recycled ordinal "1".
+        assertObject(typeState, 0, Float.valueOf(634)); /// now, since all records were removed, we can recycle the ordinal "0", even though it was a "ghost" in the last cycle.
+        assertObject(typeState, 1, Float.valueOf(0)); /// even though new Float(0) had an equivalent record in the previous cycle at ordinal "4", it is now assigned to recycled ordinal "1".
     }
 }

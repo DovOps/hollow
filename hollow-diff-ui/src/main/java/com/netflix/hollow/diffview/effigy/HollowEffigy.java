@@ -39,7 +39,7 @@ public class HollowEffigy {
         this.objectType = objectType;
         this.dataAccess = null;
         this.ordinal = -1;
-        this.fields = new ArrayList<Field>();
+        this.fields = new ArrayList<>();
     }
     
     public HollowEffigy(HollowEffigyFactory factory, HollowTypeDataAccess dataAccess, int ordinal) {
@@ -54,8 +54,9 @@ public class HollowEffigy {
     }
     
     public String getObjectType() {
-        if(objectType != null)
+        if(objectType != null) {
             return objectType;
+        }
         return dataAccess.getSchema().getName();
     }
     
@@ -68,8 +69,9 @@ public class HollowEffigy {
     }
 
     public List<Field> getFields() {
-        if(fields == null)
+        if(fields == null) {
             fields = factory.createFields(this);
+        }
         return fields;
     }
 
@@ -113,13 +115,15 @@ public class HollowEffigy {
 
         @Override
         public boolean equals(Object other) {
-            if(this == other)
+            if(this == other) {
                 return true;
+            }
 
             if(other instanceof Field) {
                 if(this.fieldName.equals(((Field) other).fieldName) && this.typeName.equals(((Field) other).typeName)) {
-                    if(this.value == null)
-                        return ((Field) other).value == null;
+                    if(this.value == null) {
+                        return ((Field)other).value == null;
+                    }
                     return this.value.equals(((Field) other).value);
                 }
             }
@@ -128,7 +132,7 @@ public class HollowEffigy {
         }
     }
 
-    public static enum CollectionType {
+    public enum CollectionType {
         NONE,
         MAP,
         COLLECTION
@@ -136,14 +140,14 @@ public class HollowEffigy {
 
     @Override
     public int hashCode() {
-        int hashcode = 31 + getFields().hashCode();
-        return hashcode;
+        return 31 + getFields().hashCode();
     }
 
     @Override
     public boolean equals(Object other) {
-        if(this == other)
+        if(this == other) {
             return true;
+        }
 
         if(other instanceof HollowEffigy) {
             HollowEffigy otherEffigy = (HollowEffigy) other;

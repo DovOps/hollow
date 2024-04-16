@@ -30,7 +30,7 @@ public class JsonArrayChunkReader extends Reader {
     private int currentSegmentOffset;
     
     public JsonArrayChunkReader(JsonArrayChunkerInputSegment firstSegment, int startOffset) {
-        this.segments = new ArrayList<JsonArrayChunkerInputSegment>(2);
+        this.segments = new ArrayList<>(2);
         segments.add(firstSegment);
         
         this.currentSegment = 0;
@@ -61,8 +61,9 @@ public class JsonArrayChunkReader extends Reader {
 
     @Override
     public int read(char[] cbuf, int off, int len) throws IOException {
-        if(currentSegment == segments.size())
+        if(currentSegment == segments.size()) {
             return -1;
+        }
         
         int totalCopiedBytes = 0;
         while(currentSegment < segments.size()) {
@@ -72,9 +73,10 @@ public class JsonArrayChunkReader extends Reader {
             len -= copiedBytes;
             totalCopiedBytes += copiedBytes;
             currentSegmentOffset += copiedBytes;
-            
-            if(len == 0)
+
+            if(len == 0) {
                 return totalCopiedBytes;
+            }
             
             off += copiedBytes;
             currentSegment++;

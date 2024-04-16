@@ -52,12 +52,11 @@ public class UniqueKeyUpdatesTest {
                 .withBlobStager(new HollowInMemoryBlobStager())
                 .build();
 
-        long v1 = producer.runCycle(ws -> {
+        long v1 = producer.runCycle(ws ->
             ws.add(new DataModel.Producer.TypeWithPrimaryKey(
                     1,
                     new DataModel.Producer.SubTypeOfTypeWithPrimaryKey("1", 1),
-                    new DataModel.Producer.SubTypeOfTypeWithPrimaryKey("2", 2)));
-        });
+                    new DataModel.Producer.SubTypeOfTypeWithPrimaryKey("2", 2))));
         HollowConsumer consumer = HollowConsumer.withBlobRetriever(blobStore)
                 .withGeneratedAPIClass(DataModel.Consumer.Api.class)
                 .build();

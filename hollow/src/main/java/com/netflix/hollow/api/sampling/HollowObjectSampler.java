@@ -30,9 +30,9 @@ public class HollowObjectSampler implements HollowSampler {
             new HollowObjectSchema("test", 0), DisabledSamplingDirector.INSTANCE);
 
     private final String typeName;
-    private final String fieldNames[];
-    private final long sampleCounts[];
-    private final HollowSamplingDirector samplingDirectors[];
+    private final String[] fieldNames;
+    private final long[] sampleCounts;
+    private final HollowSamplingDirector[] samplingDirectors;
     private boolean isSamplingDisabled;
 
     public HollowObjectSampler(HollowObjectSchema schema, HollowSamplingDirector director) {
@@ -42,7 +42,7 @@ public class HollowObjectSampler implements HollowSampler {
         HollowSamplingDirector[] samplingDirectors = new HollowSamplingDirector[schema.numFields()];
         Arrays.fill(samplingDirectors, director);
 
-        String fieldNames[] = new String[schema.numFields()];
+        String[] fieldNames = new String[schema.numFields()];
         for(int i=0;i<fieldNames.length;i++) {
             fieldNames[i] = schema.getFieldName(i);
         }
@@ -70,26 +70,32 @@ public class HollowObjectSampler implements HollowSampler {
     }
 
     public void setUpdateThread(Thread t) {
-        for(int i=0;i<samplingDirectors.length;i++)
+        for (int i = 0;i < samplingDirectors.length;i++) {
             samplingDirectors[i].setUpdateThread(t);
+        }
     }
 
     public void recordFieldAccess(int fieldPosition) {
-        if (this.isSamplingDisabled) return;
-        if(samplingDirectors[fieldPosition].shouldRecord())
+        if(this.isSamplingDisabled) {
+            return;
+        }
+        if(samplingDirectors[fieldPosition].shouldRecord()) {
             sampleCounts[fieldPosition]++;
+        }
     }
 
     public boolean hasSampleResults() {
-        for(int i=0;i<sampleCounts.length;i++)
-            if(sampleCounts[i] > 0)
+        for (int i = 0;i < sampleCounts.length;i++) {
+            if(sampleCounts[i] > 0) {
                 return true;
+            }
+        }
         return false;
     }
 
     @Override
     public Collection<SampleResult> getSampleResults() {
-        List<SampleResult> sampleResults = new ArrayList<SampleResult>(sampleCounts.length);
+        List<SampleResult> sampleResults = new ArrayList<>(sampleCounts.length);
 
         for(int i=0;i<sampleCounts.length;i++) {
             sampleResults.add(new SampleResult(typeName + "." + fieldNames[i], sampleCounts[i]));

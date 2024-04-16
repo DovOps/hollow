@@ -37,9 +37,8 @@ public class HashIndexUpdatesTest {
                 .withBlobStager(new HollowInMemoryBlobStager())
                 .build();
 
-        long v1 = producer.runCycle(ws -> {
-            ws.add(new DataModel.Producer.TypeA(1, "1"));
-        });
+        long v1 = producer.runCycle(ws ->
+            ws.add(new DataModel.Producer.TypeA(1, "1")));
         HollowConsumer consumer = HollowConsumer.withBlobRetriever(blobStore)
                 .withGeneratedAPIClass(DataModel.Consumer.Api.class)
                 .build();

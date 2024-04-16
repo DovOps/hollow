@@ -41,8 +41,8 @@ public class ObjectFieldMapping {
         HollowObjectTypeWriteState typeState = (HollowObjectTypeWriteState) stateEngine.getTypeState(typeName);
         HollowObjectWriteRecord writeRec = new HollowObjectWriteRecord(typeState.getSchema());
         this.rootInstruction = new RemappingBuilderInstruction(writeRec, typeState);
-        this.mappedFieldPaths = new HashMap<String, ObjectMappedFieldPath>();
-        this.writeRecords = new HashMap<String, HollowObjectWriteRecord>();
+        this.mappedFieldPaths = new HashMap<>();
+        this.writeRecords = new HashMap<>();
 
         mapAllPaths((HollowObjectSchema)stateEngine.getSchema(typeName));
     }
@@ -128,8 +128,9 @@ public class ObjectFieldMapping {
 
     private FieldProcessor findFieldProcessor(String typeName, String fieldName, String mappedTypeName, String mappedFieldName) {
         FieldProcessor fp = populator.getFieldProcessor(typeName, fieldName);
-        if(fp != null)
+        if(fp != null) {
             return fp;
+        }
 
         return populator.getFieldProcessor(mappedTypeName, mappedFieldName);
     }
@@ -150,7 +151,7 @@ public class ObjectFieldMapping {
         private final Map<String, RemappingBuilderInstruction> childrenRecs;
 
         public RemappingBuilderInstruction(HollowObjectWriteRecord rec, HollowObjectTypeWriteState typeState) {
-            this(rec, typeState, new HashMap<String, RemappingBuilderInstruction>());
+            this(rec, typeState, new HashMap<>());
         }
 
         private RemappingBuilderInstruction(HollowObjectWriteRecord rec, HollowObjectTypeWriteState typeState, Map<String, RemappingBuilderInstruction> childrenRecs) {
@@ -169,16 +170,18 @@ public class ObjectFieldMapping {
                 rec.setReference(childEntry.getKey(), childOrdinal);
             }
 
-            if(passthroughOrdinal != -1)
+            if(passthroughOrdinal != -1) {
                 rec.setReference("passthrough", passthroughOrdinal);
+            }
 
-            if(flatRecordWriter != null)
+            if(flatRecordWriter != null) {
                 return flatRecordWriter.write(typeState.getSchema(), rec);
+            }
             return typeState.add(rec);
         }
 
         public RemappingBuilderInstruction clone(Map<String, HollowObjectWriteRecord> clonedWriteRecords) {
-            Map<String, RemappingBuilderInstruction> childClones = new HashMap<String, ObjectFieldMapping.RemappingBuilderInstruction>();
+            Map<String, RemappingBuilderInstruction> childClones = new HashMap<>();
             for(Map.Entry<String, RemappingBuilderInstruction> childEntry : childrenRecs.entrySet())
                 childClones.put(childEntry.getKey(), childEntry.getValue().clone(clonedWriteRecords));
 
@@ -191,12 +194,12 @@ public class ObjectFieldMapping {
 
     @Override
     public ObjectFieldMapping clone() {
-        Map<String, HollowObjectWriteRecord> clonedWriteRecords = new HashMap<String, HollowObjectWriteRecord>();
+        Map<String, HollowObjectWriteRecord> clonedWriteRecords = new HashMap<>();
         for(Map.Entry<String, HollowObjectWriteRecord> recEntry : writeRecords.entrySet()) {
             clonedWriteRecords.put(recEntry.getKey(), new HollowObjectWriteRecord(recEntry.getValue().getSchema()));
         }
 
-        Map<String, ObjectMappedFieldPath> clonedMappedFieldPaths = new HashMap<String, ObjectMappedFieldPath>();
+        Map<String, ObjectMappedFieldPath> clonedMappedFieldPaths = new HashMap<>();
         for(Map.Entry<String, ObjectMappedFieldPath> fieldEntry : mappedFieldPaths.entrySet()) {
             ObjectMappedFieldPath original = fieldEntry.getValue();
             HollowObjectWriteRecord clonedWriteRecord = clonedWriteRecords.get(original.getWriteRecord().getSchema().getName());

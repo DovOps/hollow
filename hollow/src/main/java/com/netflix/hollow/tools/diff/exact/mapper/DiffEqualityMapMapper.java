@@ -72,10 +72,12 @@ public class DiffEqualityMapMapper extends DiffEqualityTypeMapper {
             int keyIdentityOrdinal = keyTranslator.getIdentityOrdinal(iter.getKey());
             int valueIdentityOrdinal = valueTranslator.getIdentityOrdinal(iter.getValue());
 
-            if(keyIdentityOrdinal == -1 && iter.getKey() != -1)
+            if(keyIdentityOrdinal == -1 && iter.getKey() != -1) {
                 return -1;
-            if(valueIdentityOrdinal == -1 && iter.getValue() != -1)
+            }
+            if(valueIdentityOrdinal == -1 && iter.getValue() != -1) {
                 return -1;
+            }
 
             hashCode ^= HashCodes.hashInt(keyIdentityOrdinal + (31 * valueIdentityOrdinal));
         }
@@ -93,10 +95,12 @@ public class DiffEqualityMapMapper extends DiffEqualityTypeMapper {
 
             @Override
             public boolean recordsAreEqual(int fromOrdinal, int toOrdinal) {
-                if(!populateIntLists(fromKeysIntList, fromValuesIntList, fromState().ordinalIterator(fromOrdinal), keyEqualOrdinalMap.getFromOrdinalIdentityTranslator(), valueEqualOrdinalMap.getFromOrdinalIdentityTranslator()))
+                if(!populateIntLists(fromKeysIntList, fromValuesIntList, fromState().ordinalIterator(fromOrdinal), keyEqualOrdinalMap.getFromOrdinalIdentityTranslator(), valueEqualOrdinalMap.getFromOrdinalIdentityTranslator())) {
                     return false;
-                if(!populateIntLists(toKeysIntList, toValuesIntList, toState().ordinalIterator(toOrdinal), keyEqualOrdinalMap.getToOrdinalIdentityTranslator(), valueEqualOrdinalMap.getToOrdinalIdentityTranslator()))
+                }
+                if(!populateIntLists(toKeysIntList, toValuesIntList, toState().ordinalIterator(toOrdinal), keyEqualOrdinalMap.getToOrdinalIdentityTranslator(), valueEqualOrdinalMap.getToOrdinalIdentityTranslator())) {
                     return false;
+                }
 
                 return fromKeysIntList.equals(toKeysIntList) && fromValuesIntList.equals(toValuesIntList);
             }
@@ -109,10 +113,12 @@ public class DiffEqualityMapMapper extends DiffEqualityTypeMapper {
                     int keyIdentity = keyTranslator.getIdentityOrdinal(iter.getKey());
                     int valueIdentity = valueTranslator.getIdentityOrdinal(iter.getValue());
 
-                    if(keyIdentity == -1 && iter.getKey() != -1)
+                    if(keyIdentity == -1 && iter.getKey() != -1) {
                         return false;
-                    if(valueIdentity == -1 && iter.getValue() != -1)
+                    }
+                    if(valueIdentity == -1 && iter.getValue() != -1) {
                         return false;
+                    }
 
                     keysList.add(keyTranslator.getIdentityOrdinal(iter.getKey()));
                     valuesList.add(valueTranslator.getIdentityOrdinal(iter.getValue()));

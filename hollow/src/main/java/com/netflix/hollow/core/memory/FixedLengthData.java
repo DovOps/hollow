@@ -102,8 +102,9 @@ public interface FixedLengthData {
     }
 
     static int bitsRequiredToRepresentValue(long value) {
-        if(value == 0)
+        if(value == 0) {
             return 1;
+        }
         return 64 - Long.numberOfLeadingZeros(value);
     }
 

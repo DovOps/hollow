@@ -16,7 +16,7 @@
  */
 package com.netflix.hollow.api.sampling;
 
-public class DisabledSamplingDirector extends HollowSamplingDirector {
+public final class DisabledSamplingDirector extends HollowSamplingDirector {
 
     public static final DisabledSamplingDirector INSTANCE = new DisabledSamplingDirector();
 

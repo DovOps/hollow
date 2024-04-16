@@ -25,7 +25,7 @@ public class BitSetIterator implements Iterator<Integer> {
     private final BitSet bitset;
     private final Integer limit;
     private int next = -1;
-    private int count = 0;
+    private int count;
 
     public BitSetIterator(BitSet bitSet) {
         this(bitSet, null, null);
@@ -41,8 +41,9 @@ public class BitSetIterator implements Iterator<Integer> {
         } else {
             for (int i = 0; i < start; i++) {
                 next = bitset.nextSetBit(next + 1);
-                if (next == -1)
+                if(next == -1) {
                     break;
+                }
             }
         }
     }
@@ -54,13 +55,15 @@ public class BitSetIterator implements Iterator<Integer> {
 
     @Override
     public Integer next() {
-        if (!hasNext())
+        if(!hasNext()) {
             return null;
+        }
 
         int returnValue = next;
         next = bitset.nextSetBit(next + 1);
-        if (++count >= limit)
+        if(++count >= limit) {
             next = -1;
+        }
 
         return returnValue;
     }

@@ -37,7 +37,7 @@ public class HollowSpecificDiff {
 
     private BitSet elementKeyPaths;
     private BitSet elementNonKeyPaths;
-    private String elementPaths[];
+    private String[] elementPaths;
 
     private final AtomicLong totalUnmatchedFromElements;
     private final AtomicLong totalUnmatchedToElements;
@@ -92,8 +92,9 @@ public class HollowSpecificDiff {
         elementKeyPaths = new BitSet(elementPaths.length);
         for(int i=0;i<paths.length;i++) {
             int elementPathIdx = getElementPathIdx(paths[i]);
-            if(elementPathIdx == -1)
+            if(elementPathIdx == -1) {
                 throw new IllegalArgumentException("Key path must have been specified as an element match path.  Offending path: " + paths[i]);
+            }
             elementKeyPaths.set(elementPathIdx);
         }
 
@@ -104,8 +105,9 @@ public class HollowSpecificDiff {
 
     public int getElementPathIdx(String path) {
         for(int i=0;i<elementPaths.length;i++) {
-            if(elementPaths[i].equals(path))
+            if(elementPaths[i].equals(path)) {
                 return i;
+            }
         }
         return -1;
     }
@@ -132,7 +134,7 @@ public class HollowSpecificDiff {
                     HollowIndexerValueTraverser fromTraverser = new HollowIndexerValueTraverser(from, type, elementPaths);
                     HollowIndexerValueTraverser toTraverser = new HollowIndexerValueTraverser(to, type, elementPaths);
 
-                    int hashedResults[] = new int[16];
+                    int[] hashedResults = new int[16];
 
                     for(int i=threadNumber;i<matcher.getMatchedOrdinals().size();i += numThreads) {
                         long ordinalPair = matcher.getMatchedOrdinals().get(i);
@@ -142,8 +144,9 @@ public class HollowSpecificDiff {
                         fromTraverser.traverse(fromOrdinal);
                         toTraverser.traverse(toOrdinal);
 
-                        if(fromTraverser.getNumMatches() * 2 > hashedResults.length)
+                        if(fromTraverser.getNumMatches() * 2 > hashedResults.length) {
                             hashedResults = new int[hashTableSize(fromTraverser.getNumMatches())];
+                        }
 
                         populateHashTable(fromTraverser, hashedResults);
 
@@ -188,10 +191,11 @@ public class HollowSpecificDiff {
                     }
                 } else {
                     if(fromTraverser.isMatchEqual(hashedResults[bucket], toTraverser, j, elementKeyPaths)) {
-                        if(fromTraverser.isMatchEqual(hashedResults[bucket], toTraverser, j, elementNonKeyPaths))
+                        if(fromTraverser.isMatchEqual(hashedResults[bucket], toTraverser, j, elementNonKeyPaths)) {
                             numMatchedEqualElements++;
-                        else
+                        } else {
                             numModifiedElements++;
+                        }
                         break;
                     }
                 }

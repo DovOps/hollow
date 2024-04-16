@@ -55,8 +55,9 @@ public class HollowMapEntryOrdinalIteratorImpl implements HollowMapEntryOrdinalI
 
         while(key == -1) {
             currentBucket++;
-            if(currentBucket >= numBuckets)
+            if(currentBucket >= numBuckets) {
                 return false;
+            }
 
             long bucketVal = dataAccess.relativeBucket(mapOrdinal, currentBucket);
             this.key = (int)(bucketVal >>> 32);

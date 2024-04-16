@@ -69,11 +69,13 @@ public class HollowUpdatePlanner {
      * @throws Exception if the plan cannot be updated
      */
     public HollowUpdatePlan planUpdate(long currentVersion, long desiredVersion, boolean allowSnapshot) throws Exception {
-        if(desiredVersion == currentVersion)
+        if(desiredVersion == currentVersion) {
             return HollowUpdatePlan.DO_NOTHING;
+        }
 
-        if (currentVersion == HollowConstants.VERSION_NONE)
+        if(currentVersion == HollowConstants.VERSION_NONE) {
             return snapshotPlan(desiredVersion);
+        }
 
         HollowUpdatePlan deltaPlan = deltaPlan(currentVersion, desiredVersion, doubleSnapshotConfig.maxDeltasBeforeDoubleSnapshot());
 
@@ -84,10 +86,11 @@ public class HollowUpdatePlanner {
             long snapshotDestinationVersion = snapshotPlan.destinationVersion(currentVersion);
 
             if(snapshotDestinationVersion == desiredVersion
-                    || ((deltaDestinationVersion > desiredVersion) && (snapshotDestinationVersion < desiredVersion))
-                    || ((snapshotDestinationVersion < desiredVersion) && (snapshotDestinationVersion > deltaDestinationVersion)))
+            || ((deltaDestinationVersion > desiredVersion) && (snapshotDestinationVersion < desiredVersion))
+            || ((snapshotDestinationVersion < desiredVersion) && (snapshotDestinationVersion > deltaDestinationVersion))) {
 
                 return snapshotPlan;
+            }
         }
 
         return deltaPlan;
@@ -107,13 +110,15 @@ public class HollowUpdatePlanner {
         long nearestPreviousSnapshotVersion = includeNearestSnapshot(plan, desiredVersion);
 
         // The includeNearestSnapshot function returns a snapshot version that is less than or equal to the desired version
-        if(nearestPreviousSnapshotVersion > desiredVersion)
+        if(nearestPreviousSnapshotVersion > desiredVersion) {
             return HollowUpdatePlan.DO_NOTHING;
+        }
 
         // If the nearest snapshot version is {@code HollowConstants.VERSION_LATEST} then no past snapshots were found, so
         // skip the delta planning and the update plan does nothing
-        if(nearestPreviousSnapshotVersion == HollowConstants.VERSION_LATEST)
+        if(nearestPreviousSnapshotVersion == HollowConstants.VERSION_LATEST) {
             return HollowUpdatePlan.DO_NOTHING;
+        }
 
         plan.appendPlan(deltaPlan(nearestPreviousSnapshotVersion, desiredVersion, Integer.MAX_VALUE));
 
@@ -147,8 +152,9 @@ public class HollowUpdatePlanner {
 
         while (currentVersion > desiredVersion && transitionCounter < maxDeltas) {
             currentVersion = includeNextReverseDelta(plan, currentVersion);
-            if (currentVersion != HollowConstants.VERSION_NONE)
+            if(currentVersion != HollowConstants.VERSION_NONE) {
                 achievedVersion = currentVersion;
+            }
             transitionCounter++;
         }
 

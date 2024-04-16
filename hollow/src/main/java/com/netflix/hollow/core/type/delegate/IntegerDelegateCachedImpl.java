@@ -35,8 +35,9 @@ public class IntegerDelegateCachedImpl extends HollowObjectAbstractDelegate impl
 
     @Override
     public int getValue(int ordinal) {
-        if(value == null)
+        if(value == null) {
             return Integer.MIN_VALUE;
+        }
         return value.intValue();
     }
 

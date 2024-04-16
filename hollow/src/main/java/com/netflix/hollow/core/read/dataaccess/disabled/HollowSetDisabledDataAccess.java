@@ -25,7 +25,7 @@ import com.netflix.hollow.core.read.filter.HollowFilterConfig;
 import com.netflix.hollow.core.read.iterator.HollowOrdinalIterator;
 import com.netflix.hollow.core.schema.HollowSetSchema;
 
-public class HollowSetDisabledDataAccess implements HollowSetTypeDataAccess {
+public final class HollowSetDisabledDataAccess implements HollowSetTypeDataAccess {
 
     public static final HollowSetDisabledDataAccess INSTANCE = new HollowSetDisabledDataAccess();
 

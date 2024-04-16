@@ -119,8 +119,9 @@ public class HollowHistorySetTest extends AbstractStateEngineTest {
 
             int actual = iter.next();
             while(actual != HollowOrdinalIterator.NO_MORE_ORDINALS) {
-                if(actual == expected)
+                if(actual == expected) {
                     continue test;
+                }
                 actual = iter.next();
             }
 

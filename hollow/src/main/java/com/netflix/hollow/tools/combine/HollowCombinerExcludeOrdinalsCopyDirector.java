@@ -39,8 +39,9 @@ public class HollowCombinerExcludeOrdinalsCopyDirector implements HollowCombiner
     public boolean shouldCopy(HollowTypeReadState typeState, int ordinal) {
         BitSet typeExcludedOrdinals = excludedOrdinals.get(typeState.getSchema().getName());
 
-        if(typeExcludedOrdinals == null)
+        if(typeExcludedOrdinals == null) {
             return true;
+        }
 
         return !typeExcludedOrdinals.get(ordinal);
     }

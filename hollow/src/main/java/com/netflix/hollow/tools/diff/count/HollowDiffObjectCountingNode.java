@@ -45,9 +45,9 @@ public class HollowDiffObjectCountingNode extends HollowDiffCountingNode {
 
     private final int[] fromFieldMapping;
     private final int[] toFieldMapping;
-    private final HollowDiffCountingNode fieldNodes[];
-    private final boolean fieldRequiresMissingFieldTraversal[];
-    private final DiffEqualOrdinalFilter fieldEqualOrdinalFilters[];
+    private final HollowDiffCountingNode[] fieldNodes;
+    private final boolean[] fieldRequiresMissingFieldTraversal;
+    private final DiffEqualOrdinalFilter[] fieldEqualOrdinalFilters;
 
     public HollowDiffObjectCountingNode(HollowDiff diff, HollowTypeDiff topLevelTypeDiff, HollowDiffNodeIdentifier nodeId, HollowObjectTypeReadState fromState, HollowObjectTypeReadState toState) {
         super(diff, topLevelTypeDiff, nodeId);
@@ -56,8 +56,9 @@ public class HollowDiffObjectCountingNode extends HollowDiffCountingNode {
         this.fromSchema = fromState == null ? emptySchema(toState.getSchema()) : fromState.getSchema();
         this.toSchema = toState == null ? emptySchema(fromState.getSchema()) : toState.getSchema();
 
-        if(!fromSchema.getName().equals(toSchema.getName()))
+        if(!fromSchema.getName().equals(toSchema.getName())) {
             throw new IllegalArgumentException("Cannot diff between two schemas with different names: from '" + fromSchema.getName() + "' to '" + toSchema.getName() + "'");
+        }
 
         this.unionSchema = fromSchema.findUnionSchema(toSchema);
         this.fieldNodes = new HollowDiffCountingNode[unionSchema.numFields()];
@@ -76,8 +77,9 @@ public class HollowDiffObjectCountingNode extends HollowDiffCountingNode {
                 HollowTypeReadState refToState = toFieldIndex == -1 ? null : toSchema.getReferencedTypeState(toFieldIndex);
                 fieldNodes[i] = getHollowDiffCountingNode(refFromState, refToState, unionSchema.getFieldName(i));
                 fieldEqualOrdinalFilters[i] = new DiffEqualOrdinalFilter(equalityMapping.getEqualOrdinalMap(unionSchema.getReferencedType(i)));
-                if(refFromState == null || refToState == null || equalityMapping.requiresMissingFieldTraversal(unionSchema.getReferencedType(i)))
+                if(refFromState == null || refToState == null || equalityMapping.requiresMissingFieldTraversal(unionSchema.getReferencedType(i))) {
                     fieldRequiresMissingFieldTraversal[i] = true;
+                }
             } else {
                 HollowDiffNodeIdentifier childNodeId = new HollowDiffNodeIdentifier(nodeId, unionSchema.getFieldName(i), unionSchema.getFieldType(i).toString());
 
@@ -115,8 +117,9 @@ public class HollowDiffObjectCountingNode extends HollowDiffCountingNode {
                     for(int j=0;j<fromOrdinals.size();j++) {
                         int fromOrdinal = fromOrdinals.get(j);
                         int refOrdinal = fromState.readOrdinal(fromOrdinal, fromFieldIdx);
-                        if(refOrdinal != -1)
+                        if(refOrdinal != -1) {
                             traversalFromOrdinals.add(refOrdinal);
+                        }
                     }
                 }
 
@@ -124,28 +127,33 @@ public class HollowDiffObjectCountingNode extends HollowDiffCountingNode {
                     for(int j=0;j<toOrdinals.size();j++) {
                         int toOrdinal = toOrdinals.get(j);
                         int refOrdinal = toState.readOrdinal(toOrdinal, toFieldIdx);
-                        if(refOrdinal != -1)
+                        if(refOrdinal != -1) {
                             traversalToOrdinals.add(refOrdinal);
+                        }
                     }
                 }
 
                 if(traversalFromOrdinals.size() != 0 || traversalToOrdinals.size() != 0) {
                     fieldEqualOrdinalFilters[i].filter(traversalFromOrdinals, traversalToOrdinals);
 
-                    if(fieldEqualOrdinalFilters[i].getUnmatchedFromOrdinals().size() != 0 || fieldEqualOrdinalFilters[i].getUnmatchedToOrdinals().size() != 0)
+                    if(fieldEqualOrdinalFilters[i].getUnmatchedFromOrdinals().size() != 0 || fieldEqualOrdinalFilters[i].getUnmatchedToOrdinals().size() != 0) {
                         score += fieldNodes[i].traverseDiffs(fieldEqualOrdinalFilters[i].getUnmatchedFromOrdinals(), fieldEqualOrdinalFilters[i].getUnmatchedToOrdinals());
-                    if(fieldRequiresMissingFieldTraversal[i])
-                        if(fieldEqualOrdinalFilters[i].getMatchedFromOrdinals().size() != 0 || fieldEqualOrdinalFilters[i].getMatchedToOrdinals().size() != 0)
+                    }
+                    if(fieldRequiresMissingFieldTraversal[i]) {
+                        if(fieldEqualOrdinalFilters[i].getMatchedFromOrdinals().size() != 0 || fieldEqualOrdinalFilters[i].getMatchedToOrdinals().size() != 0) {
                             score += fieldNodes[i].traverseMissingFields(fieldEqualOrdinalFilters[i].getMatchedFromOrdinals(), fieldEqualOrdinalFilters[i].getMatchedToOrdinals());
+                        }
+                    }
                 }
 
             } else {
-                if(fromFieldIdx == -1)
+                if(fromFieldIdx == -1) {
                     score += fieldNodes[i].traverseDiffs(EMPTY_ORDINAL_LIST, toOrdinals);
-                else if(toFieldIdx == -1)
+                } else if(toFieldIdx == -1) {
                     score += fieldNodes[i].traverseDiffs(fromOrdinals, EMPTY_ORDINAL_LIST);
-                else
+                } else {
                     score += fieldNodes[i].traverseDiffs(fromOrdinals, toOrdinals);
+                }
             }
         }
         
@@ -163,16 +171,18 @@ public class HollowDiffObjectCountingNode extends HollowDiffCountingNode {
                 if(fromFieldMapping[i] != -1) {
                     for(int j=0;j<fromOrdinals.size();j++) {
                         int fromOrdinal = fromState.readOrdinal(fromOrdinals.get(j), fromFieldMapping[i]);
-                        if(fromOrdinal != -1)
+                        if(fromOrdinal != -1) {
                             traversalFromOrdinals.add(fromOrdinal);
+                        }
                     }
                 }
 
                 if(toFieldMapping[i] != -1) {
                     for(int j=0;j<toOrdinals.size();j++) {
                         int toOrdinal = toState.readOrdinal(toOrdinals.get(j), toFieldMapping[i]);
-                        if(toOrdinal != -1)
+                        if(toOrdinal != -1) {
                             traversalToOrdinals.add(toOrdinal);
+                        }
                     }
                 }
 
@@ -186,7 +196,7 @@ public class HollowDiffObjectCountingNode extends HollowDiffCountingNode {
     }
 
     private int[] createFieldMapping(HollowObjectSchema unionSchema, HollowObjectSchema individualSchema) {
-        int mapping[] = new int[unionSchema.numFields()];
+        int[] mapping = new int[unionSchema.numFields()];
         for(int i=0;i<unionSchema.numFields();i++) {
             String fieldName = unionSchema.getFieldName(i);
             mapping[i] = individualSchema.getPosition(fieldName);
@@ -196,7 +206,7 @@ public class HollowDiffObjectCountingNode extends HollowDiffCountingNode {
 
     @Override
     public List<HollowFieldDiff> getFieldDiffs() {
-        List<HollowFieldDiff> list = new ArrayList<HollowFieldDiff>();
+        List<HollowFieldDiff> list = new ArrayList<>();
 
         for(HollowDiffCountingNode node : fieldNodes) {
             list.addAll(node.getFieldDiffs());

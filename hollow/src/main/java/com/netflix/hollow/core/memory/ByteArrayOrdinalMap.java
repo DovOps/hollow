@@ -89,7 +89,7 @@ public class ByteArrayOrdinalMap {
         x = x | (x >> 4);
         x = x | (x >> 8);
         x = x | (x >> 16);
-        return (x < 256) ? 256 : (x >= 1 << 30) ? 1 << 30 : x + 1;
+        return x < 256 ? 256 : x >= 1 << 30 ? 1 << 30 : x + 1;
     }
 
     public int getOrAssignOrdinal(ByteDataArray serializedRepresentation) {
@@ -399,10 +399,11 @@ public class ByteArrayOrdinalMap {
 
         byteData.setPosition(currentCopyPointer);
 
-        if(focusHoleFillInFewestShards && numShards > 1)
+        if(focusHoleFillInFewestShards && numShards > 1) {
             freeOrdinalTracker.sort(numShards);
-        else
+        } else {
             freeOrdinalTracker.sort();
+        }
 
         // Reset the array then fill with compacted values
         // Volatile store not required, could use plain store

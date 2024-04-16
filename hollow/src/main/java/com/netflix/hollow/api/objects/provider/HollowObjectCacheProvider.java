@@ -53,17 +53,19 @@ public class HollowObjectCacheProvider<T> extends HollowObjectProvider<T> implem
             BitSet previousOrdinals = listener.getPreviousOrdinals();
 
             int length = Math.max(populatedOrdinals.length(), previousOrdinals.length());
-            List<T> arr = new ArrayList<T>(length);
+            List<T> arr = new ArrayList<>(length);
 
             for(int ordinal = 0; ordinal < length; ordinal++) {
-                while(ordinal >= arr.size())
+                while (ordinal >= arr.size()) {
                     arr.add(null);
+                }
 
                 if(previous != null && previousOrdinals.get(ordinal) && populatedOrdinals.get(ordinal)) {
                     T cached = previous.getHollowObject(ordinal);
                     arr.set(ordinal, cached);
-                    if(cached instanceof HollowRecord)
+                    if(cached instanceof HollowRecord) {
                         ((HollowCachedDelegate)((HollowRecord)cached).getDelegate()).updateTypeAPI(typeAPI);
+                    }
                 } else if(populatedOrdinals.get(ordinal)){
                     arr.set(ordinal, instantiateCachedObject(factory, typeDataAccess, typeAPI, ordinal));
                 }
@@ -108,8 +110,9 @@ public class HollowObjectCacheProvider<T> extends HollowObjectProvider<T> implem
             return;
         }
 
-        for (int i = cachedItems.size(); i <= ordinal; ++i)
+        for (int i = cachedItems.size();i <= ordinal;++i) {
             cachedItems.add(null);
+        }
         cachedItems.set(ordinal, instantiateCachedObject(factory, typeReadState, typeAPI, ordinal));
     }
 

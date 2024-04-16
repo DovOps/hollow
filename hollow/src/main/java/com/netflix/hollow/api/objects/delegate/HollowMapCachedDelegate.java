@@ -33,7 +33,7 @@ import java.util.Map.Entry;
  */
 public class HollowMapCachedDelegate<K, V> implements HollowMapDelegate<K, V>, HollowCachedDelegate {
 
-    private final int ordinals[];
+    private final int[] ordinals;
     private final int hashMask;
     private final int size;
     protected HollowMapTypeAPI typeAPI;
@@ -50,7 +50,7 @@ public class HollowMapCachedDelegate<K, V> implements HollowMapDelegate<K, V>, H
     private HollowMapCachedDelegate(HollowMapTypeDataAccess dataAccess, HollowMapTypeAPI typeAPI, int ordinal) {
         int size = dataAccess.size(ordinal);
 
-        int ordinals[] = new int[HashCodes.hashTableSize(size) * 2];
+        int[] ordinals = new int[HashCodes.hashTableSize(size) * 2];
 
         for(int i=0;i<ordinals.length;i+=2) {
             long bucketData = dataAccess.relativeBucket(ordinal, i/2);
@@ -75,8 +75,9 @@ public class HollowMapCachedDelegate<K, V> implements HollowMapDelegate<K, V>, H
     public V get(HollowMap<K, V> map, int ordinal, Object key) {
         if(getSchema().getHashKey() != null) {
             for(int i=0;i<ordinals.length;i+=2) {
-                if(ordinals[i] != -1 && map.equalsKey(ordinals[i], key))
-                    return map.instantiateValue(ordinals[i+1]);
+                if(ordinals[i] != -1 && map.equalsKey(ordinals[i], key)) {
+                    return map.instantiateValue(ordinals[i + 1]);
+                }
             }
         } else {
             int hashCode = dataAccess.getDataAccess().getHashCodeFinder().hashCode(key);
@@ -99,8 +100,9 @@ public class HollowMapCachedDelegate<K, V> implements HollowMapDelegate<K, V>, H
     public boolean containsKey(HollowMap<K, V> map, int ordinal, Object key) {
         if(getSchema().getHashKey() != null) {
             for(int i=0;i<ordinals.length;i+=2) {
-                if(ordinals[i] != -1 && map.equalsKey(ordinals[i], key))
+                if(ordinals[i] != -1 && map.equalsKey(ordinals[i], key)) {
                     return true;
+                }
             }
         } else {
             int hashCode = dataAccess.getDataAccess().getHashCodeFinder().hashCode(key);
@@ -123,8 +125,9 @@ public class HollowMapCachedDelegate<K, V> implements HollowMapDelegate<K, V>, H
     public boolean containsValue(HollowMap<K, V> map, int ordinal, Object value) {
         HollowMapEntryOrdinalIterator iter = iterator(ordinal);
         while(iter.next()) {
-            if(map.equalsValue(iter.getValue(), value))
+            if(map.equalsValue(iter.getValue(), value)) {
                 return true;
+            }
         }
         return false;
     }
@@ -132,23 +135,25 @@ public class HollowMapCachedDelegate<K, V> implements HollowMapDelegate<K, V>, H
     @Override
     public K findKey(HollowMap<K, V> map, int ordinal, Object... hashKey) {
         int keyOrdinal = dataAccess.findKey(ordinal, hashKey);
-        if(keyOrdinal != -1)
+        if(keyOrdinal != -1) {
             return map.instantiateKey(keyOrdinal);
+        }
         return null;
     }
 
     @Override
     public V findValue(HollowMap<K, V> map, int ordinal, Object... hashKey) {
         int valueOrdinal = dataAccess.findValue(ordinal, hashKey);
-        if(valueOrdinal != -1)
+        if(valueOrdinal != -1) {
             return map.instantiateValue(valueOrdinal);
+        }
         return null;
     }
 
     @Override
     public Entry<K, V> findEntry(final HollowMap<K, V> map, int ordinal, Object... hashKey) {
         final long entryOrdinals = dataAccess.findEntry(ordinal, hashKey);
-        if(entryOrdinals != -1L)
+        if(entryOrdinals != -1L) {
             return new Map.Entry<K, V>() {
                 @Override
                 public K getKey() {
@@ -165,6 +170,7 @@ public class HollowMapCachedDelegate<K, V> implements HollowMapDelegate<K, V>, H
                     throw new UnsupportedOperationException();
                 }
             };
+        }
         
         return null;
     }

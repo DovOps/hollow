@@ -38,8 +38,8 @@ public class RecordDiffTreeNode {
         this.historicalState = historicalState;
         this.recordNamer = recordNamer;
         this.groupName = groupName;
-        this.childNodes = new HashMap<Object, RecordDiffTreeNode>();
-        this.recordDiffs = new ArrayList<RecordDiff>();
+        this.childNodes = new HashMap<>();
+        this.recordDiffs = new ArrayList<>();
     }
     
     public String getHierarchicalFieldName() {

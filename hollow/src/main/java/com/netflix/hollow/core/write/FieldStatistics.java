@@ -24,12 +24,12 @@ public class FieldStatistics {
 
     private final HollowObjectSchema schema;
 
-    private final int maxBitsForField[];
-    private final long nullValueForField[];
-    private final long totalSizeOfVarLengthField[];
+    private final int[] maxBitsForField;
+    private final long[] nullValueForField;
+    private final long[] totalSizeOfVarLengthField;
 
     private int numBitsPerRecord;
-    private final int bitOffsetForField[];
+    private final int[] bitOffsetForField;
 
     public FieldStatistics(HollowObjectSchema schema) {
         this.schema = schema;
@@ -56,8 +56,9 @@ public class FieldStatistics {
     }
 
     public void addFixedLengthFieldRequiredBits(int fieldIndex, int numberOfBits) {
-        if(numberOfBits > maxBitsForField[fieldIndex])
+        if(numberOfBits > maxBitsForField[fieldIndex]) {
             maxBitsForField[fieldIndex] = numberOfBits;
+        }
     }
 
     public void addVarLengthFieldSize(int fieldIndex, int fieldSize) {
@@ -79,8 +80,9 @@ public class FieldStatistics {
     
     public long getTotalSizeOfAllVarLengthData() {
         long totalVarLengthDataSize = 0;
-        for(int i=0;i<totalSizeOfVarLengthField.length;i++) 
+        for (int i = 0;i < totalSizeOfVarLengthField.length;i++) {
             totalVarLengthDataSize += totalSizeOfVarLengthField[i];
+        }
         return totalVarLengthDataSize;
     }
 

@@ -624,7 +624,7 @@ public class HollowProducer extends AbstractHollowProducer {
         }
     }
 
-    public static abstract class HeaderBlob implements PublishArtifact{
+    public abstract static class HeaderBlob implements PublishArtifact{
         protected final long version;
 
         protected HeaderBlob(long version) {
@@ -636,7 +636,7 @@ public class HollowProducer extends AbstractHollowProducer {
         }
     }
 
-    public static abstract class Blob implements PublishArtifact {
+    public abstract static class Blob implements PublishArtifact {
 
         protected final long fromVersion;
         protected final long toVersion;
@@ -717,17 +717,17 @@ public class HollowProducer extends AbstractHollowProducer {
         Announcer announcer;
         List<HollowProducerEventListener> eventListeners = new ArrayList<>();
         VersionMinter versionMinter = new VersionMinterWithCounter();
-        Executor snapshotPublishExecutor = null;
-        int numStatesBetweenSnapshots = 0;
-        boolean focusHoleFillInFewestShards = false;
-        boolean allowTypeResharding = false;
+        Executor snapshotPublishExecutor;
+        int numStatesBetweenSnapshots;
+        boolean focusHoleFillInFewestShards;
+        boolean allowTypeResharding;
         long targetMaxTypeShardSize = DEFAULT_TARGET_MAX_TYPE_SHARD_SIZE;
         HollowMetricsCollector<HollowProducerMetrics> metricsCollector;
         BlobStorageCleaner blobStorageCleaner = new DummyBlobStorageCleaner();
         SingleProducerEnforcer singleProducerEnforcer = new BasicSingleProducerEnforcer();
-        HollowObjectHashCodeFinder hashCodeFinder = null;
+        HollowObjectHashCodeFinder hashCodeFinder;
         boolean doIntegrityCheck = true;
-        ProducerOptionalBlobPartConfig optionalPartConfig = null;
+        ProducerOptionalBlobPartConfig optionalPartConfig;
 
         public B withBlobStager(HollowProducer.BlobStager stager) {
             this.stager = stager;
@@ -907,10 +907,10 @@ public class HollowProducer extends AbstractHollowProducer {
         }
 
         protected void checkArguments() {
-            if (allowTypeResharding == true && doIntegrityCheck == false) { // type resharding feature rollout
+            if (allowTypeResharding && !doIntegrityCheck) { // type resharding feature rollout
                 throw new IllegalArgumentException("Enabling type re-sharding requires integrity check to also be enabled");
             }
-            if (allowTypeResharding == true && focusHoleFillInFewestShards == true) { // type re-sharding feature rollout
+            if (allowTypeResharding && focusHoleFillInFewestShards) { // type re-sharding feature rollout
                 // More thorough testing required before enabling these features to work in tandem
                 // simple test case for when features are allowed to work together passes, see {@code testReshardingWithFocusHoleFillInFewestShards}
                 throw new IllegalArgumentException("Producer does not yet support using both re-sharding and focusHoleFillInFewestShards features in tandem");
@@ -961,7 +961,7 @@ public class HollowProducer extends AbstractHollowProducer {
      * Provides the opportunity to clean the blob storage.
      * It allows users to implement logic base on Blob Type.
      */
-    public static abstract class BlobStorageCleaner {
+    public abstract static class BlobStorageCleaner {
         public void clean(Blob.Type blobType) {
             switch (blobType) {
                 case SNAPSHOT:

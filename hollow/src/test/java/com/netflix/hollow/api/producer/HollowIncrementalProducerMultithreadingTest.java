@@ -19,7 +19,7 @@ import org.junit.rules.ExpectedException;
 public class HollowIncrementalProducerMultithreadingTest {
 
     private static final int ELEMENTS = 20000;
-    private static final double THREADS = 4.0d;
+    private static final double THREADS = 4.0D;
     private static final int ITERATIONS = 10;
 
     private InMemoryBlobStore blobStore;

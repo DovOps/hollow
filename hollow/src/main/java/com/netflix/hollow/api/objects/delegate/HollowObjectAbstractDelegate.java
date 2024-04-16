@@ -32,8 +32,9 @@ public abstract class HollowObjectAbstractDelegate implements HollowObjectDelega
             HollowObjectTypeDataAccess dataAccess = getTypeDataAccess();
             int fieldIndex = getSchema().getPosition(fieldName);
 
-            if(fieldIndex == -1)
+            if(fieldIndex == -1) {
                 return missingDataHandler().handleIsNull(getSchema().getName(), ordinal, fieldName);
+            }
 
             return dataAccess.isNull(ordinal, fieldIndex);
         } catch(Exception ex) {
@@ -46,7 +47,7 @@ public abstract class HollowObjectAbstractDelegate implements HollowObjectDelega
         HollowObjectTypeDataAccess dataAccess = getTypeDataAccess();
         int fieldIndex = getSchema().getPosition(fieldName);
 
-        Boolean bool = (fieldIndex != -1) ?
+        Boolean bool = fieldIndex != -1 ?
                 dataAccess.readBoolean(ordinal, fieldIndex)
                 : missingDataHandler().handleBoolean(getSchema().getName(), ordinal, fieldName);
 
@@ -58,8 +59,9 @@ public abstract class HollowObjectAbstractDelegate implements HollowObjectDelega
         HollowObjectTypeDataAccess dataAccess = getTypeDataAccess();
         int fieldIndex = getSchema().getPosition(fieldName);
 
-        if(fieldIndex == -1)
+        if(fieldIndex == -1) {
             return missingDataHandler().handleReferencedOrdinal(getSchema().getName(), ordinal, fieldName);
+        }
 
         return dataAccess.readOrdinal(ordinal, fieldIndex);
     }
@@ -69,8 +71,9 @@ public abstract class HollowObjectAbstractDelegate implements HollowObjectDelega
         HollowObjectTypeDataAccess dataAccess = getTypeDataAccess();
         int fieldIndex = getSchema().getPosition(fieldName);
 
-        if(fieldIndex == -1)
+        if(fieldIndex == -1) {
             return missingDataHandler().handleInt(getSchema().getName(), ordinal, fieldName);
+        }
 
         return dataAccess.readInt(ordinal, fieldIndex);
     }
@@ -80,8 +83,9 @@ public abstract class HollowObjectAbstractDelegate implements HollowObjectDelega
         HollowObjectTypeDataAccess dataAccess = getTypeDataAccess();
         int fieldIndex = getSchema().getPosition(fieldName);
 
-        if(fieldIndex == -1)
+        if(fieldIndex == -1) {
             return missingDataHandler().handleLong(getSchema().getName(), ordinal, fieldName);
+        }
 
         return dataAccess.readLong(ordinal, fieldIndex);
     }
@@ -91,8 +95,9 @@ public abstract class HollowObjectAbstractDelegate implements HollowObjectDelega
         HollowObjectTypeDataAccess dataAccess = getTypeDataAccess();
         int fieldIndex = getSchema().getPosition(fieldName);
 
-        if(fieldIndex == -1)
+        if(fieldIndex == -1) {
             return missingDataHandler().handleFloat(getSchema().getName(), ordinal, fieldName);
+        }
 
         return dataAccess.readFloat(ordinal, fieldIndex);
     }
@@ -102,8 +107,9 @@ public abstract class HollowObjectAbstractDelegate implements HollowObjectDelega
         HollowObjectTypeDataAccess dataAccess = getTypeDataAccess();
         int fieldIndex = getSchema().getPosition(fieldName);
 
-        if(fieldIndex == -1)
+        if(fieldIndex == -1) {
             return missingDataHandler().handleDouble(getSchema().getName(), ordinal, fieldName);
+        }
 
         return dataAccess.readDouble(ordinal, fieldIndex);
     }
@@ -113,8 +119,9 @@ public abstract class HollowObjectAbstractDelegate implements HollowObjectDelega
         HollowObjectTypeDataAccess dataAccess = getTypeDataAccess();
         int fieldIndex = getSchema().getPosition(fieldName);
 
-        if(fieldIndex == -1)
+        if(fieldIndex == -1) {
             return missingDataHandler().handleString(getSchema().getName(), ordinal, fieldName);
+        }
 
         return dataAccess.readString(ordinal, fieldIndex);
     }

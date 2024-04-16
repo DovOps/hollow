@@ -20,7 +20,7 @@ public class HollowObjectTypeDataElementsSplitter {
         final int toOrdinalShift = 31 - Integer.numberOfLeadingZeros(numSplits);
         final long[][] currentWriteVarLengthDataPointers;
 
-        if (numSplits<=0 || !((numSplits&(numSplits-1))==0)) {
+        if (numSplits<=0 || (numSplits&(numSplits-1))!=0) {
             throw new IllegalStateException("Must split by power of 2");
         }
 
@@ -83,7 +83,7 @@ public class HollowObjectTypeDataElementsSplitter {
                 } else {
                     to[toIndex].bitsPerField[fieldIdx] = (64 - Long.numberOfLeadingZeros(varLengthSizes[toIndex][fieldIdx] + 1)) + 1;
                 }
-                to[toIndex].nullValueForField[fieldIdx] = (to[toIndex].bitsPerField[fieldIdx] == 64) ? -1L : (1L << to[toIndex].bitsPerField[fieldIdx]) - 1;
+                to[toIndex].nullValueForField[fieldIdx] = to[toIndex].bitsPerField[fieldIdx] == 64 ? -1L : (1L << to[toIndex].bitsPerField[fieldIdx]) - 1;
                 to[toIndex].bitOffsetPerField[fieldIdx] = to[toIndex].bitsPerRecord;
                 to[toIndex].bitsPerRecord += to[toIndex].bitsPerField[fieldIdx];
 

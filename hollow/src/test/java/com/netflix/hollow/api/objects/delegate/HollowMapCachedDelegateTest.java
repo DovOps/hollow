@@ -34,7 +34,7 @@ public class HollowMapCachedDelegateTest extends AbstractStateEngineTest {
 
         roundTripSnapshot();
 
-        HollowMapCachedDelegate<Integer, Integer> delegate = new HollowMapCachedDelegate<Integer, Integer>((HollowMapTypeReadState)readStateEngine.getTypeState("TestMap"), 0);
+        HollowMapCachedDelegate<Integer, Integer> delegate = new HollowMapCachedDelegate<>((HollowMapTypeReadState)readStateEngine.getTypeState("TestMap"), 0);
         HollowMap<Integer, Integer> map = new HollowMap<Integer, Integer>(delegate, 0) {
             public Integer instantiateKey(int keyOrdinal) {
                 return keyOrdinal;

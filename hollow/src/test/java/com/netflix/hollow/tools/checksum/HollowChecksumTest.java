@@ -68,10 +68,12 @@ public class HollowChecksumTest {
             rec.reset();
             rec.setInt("a1", i);
             rec.setFloat("a4", (float)i);
-            if(schema.getPosition("a2") != -1)
+            if(schema.getPosition("a2") != -1) {
                 rec.setString("a2", String.valueOf(i));
-            if(schema.getPosition("a3") != -1)
+            }
+            if(schema.getPosition("a3") != -1) {
                 rec.setLong("a3", i);
+            }
             
             writeState.add(schema.getName(), rec);
         }

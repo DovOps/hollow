@@ -151,9 +151,11 @@ public class SegmentedByteArray implements VariableLengthData {
      * @return
      */
     public boolean rangeEquals(long rangeStart, SegmentedByteArray compareTo, long cmpStart, int length) {
-    	for(int i=0;i<length;i++)
-    		if(get(rangeStart + i) != compareTo.get(cmpStart + i))
-    			return false;
+        for (int i = 0;i < length;i++) {
+            if(get(rangeStart + i) != compareTo.get(cmpStart + i)) {
+                return false;
+            }
+        }
     	return true;
     }
 
@@ -214,7 +216,7 @@ public class SegmentedByteArray implements VariableLengthData {
         int segmentSize = 1 << log2OfSegmentSize;
         int segment = 0;
 
-        byte scratch[] = new byte[segmentSize];
+        byte[] scratch = new byte[segmentSize];
 
         while(length > 0) {
             ensureCapacity(segment);
@@ -278,8 +280,9 @@ public class SegmentedByteArray implements VariableLengthData {
 
     public void destroy() {
         for(int i=0;i<segments.length;i++) {
-            if(segments[i] != null)
+            if(segments[i] != null) {
                 memoryRecycler.recycleByteArray(segments[i]);
+            }
         }
     }
 
@@ -287,8 +290,9 @@ public class SegmentedByteArray implements VariableLengthData {
     public long size() {
         long size = 0;
         for(int i=0;i<segments.length;i++) {
-            if(segments[i] != null)
+            if(segments[i] != null) {
                 size += segments[i].length;
+            }
         }
 
         return size;

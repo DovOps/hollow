@@ -106,7 +106,7 @@ public class HollowAPIGenerator {
         /**
          * Parameterizes all methods that return a HollowObject.
          */
-        parameterizeAllClassNames;
+        parameterizeAllClassNames
     }
 
     protected final String apiClassname;
@@ -463,8 +463,10 @@ public class HollowAPIGenerator {
     protected void generateFilesForHollowSchemas(File directory) throws IOException {
         for(HollowSchema schema : dataset.getSchemas()) {
             String type = schema.getName();
-            if (config.isUseHollowPrimitiveTypes() && HollowCodeGenerationUtils.isPrimitiveType(type)) continue; // skip if using hollow primitive type
+            if(config.isUseHollowPrimitiveTypes() && HollowCodeGenerationUtils.isPrimitiveType(type)) {
+                continue; // skip if using hollow primitive type
 
+            }
             generateFile(directory, getStaticAPIGenerator(schema));
             generateFile(directory, getHollowObjectGenerator(schema));
             generateFile(directory, getHollowFactoryGenerator(schema));
@@ -472,22 +474,22 @@ public class HollowAPIGenerator {
             if(schema.getSchemaType() == SchemaType.OBJECT) {
                 HollowObjectSchema objSchema = (HollowObjectSchema)schema;
                 generateFile(directory, new HollowObjectDelegateInterfaceGenerator(packageName, objSchema,
-                        ergonomicShortcuts, dataset, config));
+                ergonomicShortcuts, dataset, config));
                 generateFile(directory, new HollowObjectDelegateCachedImplGenerator(packageName, objSchema,
-                        ergonomicShortcuts, dataset, config));
+                ergonomicShortcuts, dataset, config));
                 generateFile(directory, new HollowObjectDelegateLookupImplGenerator(packageName, objSchema,
-                        ergonomicShortcuts, dataset, config));
+                ergonomicShortcuts, dataset, config));
 
                 generateFile(directory, new HollowDataAccessorGenerator(packageName, apiClassname, objSchema,
-                        dataset, config));
-                if (!config.isReservePrimaryKeyIndexForTypeWithPrimaryKey()) {
+                dataset, config));
+                if(!config.isReservePrimaryKeyIndexForTypeWithPrimaryKey()) {
                     generateFile(directory, new LegacyHollowPrimaryKeyIndexGenerator(packageName, apiClassname,
-                            objSchema, dataset, config));
-                } else if ((objSchema).getPrimaryKey() != null) {
+                    objSchema, dataset, config));
+                } else if(objSchema.getPrimaryKey() != null) {
                     generateFile(directory, new HollowPrimaryKeyIndexGenerator(dataset, packageName, apiClassname,
-                            objSchema, config));
+                    objSchema, config));
                     generateFile(directory, new HollowUniqueKeyIndexGenerator(packageName, apiClassname, objSchema,
-                            dataset, config));
+                    dataset, config));
                 }
             }
         }
@@ -507,10 +509,14 @@ public class HollowAPIGenerator {
         // create sub folder if not using default package and sub packages are enabled
         if ((packageName!=null && !packageName.trim().isEmpty()) && config.isUsePackageGrouping() && (generator instanceof HollowConsumerJavaFileGenerator)) {
             HollowConsumerJavaFileGenerator consumerCodeGenerator = (HollowConsumerJavaFileGenerator)generator;
-            if (hasCollectionsInDataSet) consumerCodeGenerator.useCollectionsImport();
+            if(hasCollectionsInDataSet) {
+                consumerCodeGenerator.useCollectionsImport();
+            }
             directory = new File(directory, consumerCodeGenerator.getSubPackageName());
         }
-        if (!directory.exists()) directory.mkdirs();
+        if(!directory.exists()) {
+            directory.mkdirs();
+        }
 
         FileWriter writer = new FileWriter(new File(directory, generator.getClassName() + ".java"));
         writer.write(generator.generate());
@@ -523,7 +529,9 @@ public class HollowAPIGenerator {
         }
 
         File metaInfoDir = config.getMetaInfoPath().toFile();
-        if (!metaInfoDir.exists()) metaInfoDir.mkdirs();
+        if(!metaInfoDir.exists()) {
+            metaInfoDir.mkdirs();
+        }
 
         // top-level types first
         List<HollowSchema> schemas = HollowSchemaSorter.dependencyOrderedSchemaList(dataset);

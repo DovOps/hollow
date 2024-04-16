@@ -51,8 +51,9 @@ public abstract class HollowObjectTypePerfAPI extends HollowTypePerfAPI {
             Arrays.fill(refMaskedTypeIdx, Ref.toTypeMasked(Ref.TYPE_ABSENT));
         }
 
-        if(typeAccess == null)
+        if(typeAccess == null) {
             typeAccess = new HollowObjectMissingDataAccess(dataAccess, typeName);
+        }
         this.typeAccess = typeAccess;
     }
 

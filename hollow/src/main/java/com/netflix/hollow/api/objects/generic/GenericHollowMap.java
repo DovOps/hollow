@@ -39,7 +39,7 @@ public class GenericHollowMap extends HollowMap<HollowRecord, HollowRecord>{
     }
     
     public GenericHollowMap(HollowMapTypeDataAccess dataAccess, int ordinal) {
-        this(new HollowMapLookupDelegate<HollowRecord, HollowRecord>(dataAccess), ordinal);
+        this(new HollowMapLookupDelegate<>(dataAccess), ordinal);
     }
 
     public GenericHollowMap(HollowMapDelegate<HollowRecord, HollowRecord> typeState, int ordinal) {

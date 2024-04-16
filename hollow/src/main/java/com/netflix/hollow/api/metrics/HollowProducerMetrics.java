@@ -23,17 +23,17 @@ import com.netflix.hollow.core.read.engine.HollowReadStateEngine;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class HollowProducerMetrics extends HollowMetrics {
-    private int cyclesCompleted = 0;
-    private int cyclesSucceeded = 0;
-    private int cycleFailed = 0;
+    private int cyclesCompleted;
+    private int cyclesSucceeded;
+    private int cycleFailed;
     // Snapshots can be published asynchronously resulting concurrent
     // access to the snapshot metrics
-    private AtomicInteger snapshotsCompleted = new AtomicInteger();
-    private AtomicInteger snapshotsFailed = new AtomicInteger();
-    private int deltasCompleted = 0;
-    private int deltasFailed = 0;
-    private int reverseDeltasCompleted = 0;
-    private int reverseDeltasFailed = 0;
+    private final AtomicInteger snapshotsCompleted = new AtomicInteger();
+    private final AtomicInteger snapshotsFailed = new AtomicInteger();
+    private int deltasCompleted;
+    private int deltasFailed;
+    private int reverseDeltasCompleted;
+    private int reverseDeltasFailed;
 
     /**
      * Updates the producer metrics:
@@ -83,22 +83,25 @@ public class HollowProducerMetrics extends HollowMetrics {
         HollowProducer.Blob.Type blobType = blob.getType();
         switch (blobType) {
             case SNAPSHOT:
-                if(status.getType() == Status.StatusType.SUCCESS)
+                if(status.getType() == Status.StatusType.SUCCESS) {
                     snapshotsCompleted.incrementAndGet();
-                else
+                } else {
                     snapshotsFailed.incrementAndGet();
+                }
                 break;
             case DELTA:
-                if(status.getType() == Status.StatusType.SUCCESS)
+                if(status.getType() == Status.StatusType.SUCCESS) {
                     deltasCompleted++;
-                else
+                } else {
                     deltasFailed++;
+                }
                 break;
             case REVERSE_DELTA:
-                if(status.getType() == Status.StatusType.SUCCESS)
+                if(status.getType() == Status.StatusType.SUCCESS) {
                     reverseDeltasCompleted++;
-                else
+                } else {
                     reverseDeltasFailed++;
+                }
                 break;
         }
     }

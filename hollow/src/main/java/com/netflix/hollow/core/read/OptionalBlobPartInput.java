@@ -50,8 +50,9 @@ public class OptionalBlobPartInput implements Closeable {
 
     public File getFile(String partName) {
         Object f = inputsByPartName.get(partName);
-        if(f instanceof File)
+        if(f instanceof File) {
             return (File)f;
+        }
         throw new UnsupportedOperationException();
     }
     
@@ -100,9 +101,10 @@ public class OptionalBlobPartInput implements Closeable {
                 thrownException = ex;
             }
         }
-        
-        if(thrownException != null)
+
+        if(thrownException != null) {
             throw thrownException;
+        }
     }
 
 }

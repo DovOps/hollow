@@ -65,8 +65,9 @@ public abstract class HollowTypeReadState implements HollowTypeDataAccess {
      * @param listener the listener to remove
      */
     public void removeListener(HollowTypeStateListener listener) {
-        if (stateListeners.length == 0)
+        if(stateListeners.length == 0) {
             return;
+        }
 
         stateListeners = Stream.of(stateListeners)
                 .filter(l -> l != listener)

@@ -25,7 +25,7 @@ public class ArgumentParserTest {
         orderCoffee,
         drinkCoffee,
         tossCoffee,
-        writeArgumentParserClass;
+        writeArgumentParserClass
     };
 
     @Test(expected = IllegalArgumentException.class)

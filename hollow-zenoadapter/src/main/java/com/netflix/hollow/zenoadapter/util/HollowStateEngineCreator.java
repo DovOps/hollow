@@ -37,7 +37,7 @@ public class HollowStateEngineCreator {
     private final FastBlobStateEngine stateEngine;
     private final HollowSerializationFramework hollowFramework;
 
-    private final Map<String, int[]> ordinalMappings = new ConcurrentHashMap<String, int[]>();
+    private final Map<String, int[]> ordinalMappings = new ConcurrentHashMap<>();
 
 
     public HollowStateEngineCreator(FastBlobStateEngine stateEngine, SerializerFactory serializerFactory, HollowObjectHashCodeFinder hashCodeFinder) {
@@ -64,7 +64,7 @@ public class HollowStateEngineCreator {
                     FastBlobTypeDeserializationState<Object> state = stateEngine.getTypeDeserializationState(serializer.getName());
 
                     int maxOrdinal = state.maxOrdinal();
-                    int mapping[] = new int[maxOrdinal + 1];
+                    int[] mapping = new int[maxOrdinal + 1];
                     Arrays.fill(mapping, -1);
 
                     for (int i = 0; i <= maxOrdinal; i++) {

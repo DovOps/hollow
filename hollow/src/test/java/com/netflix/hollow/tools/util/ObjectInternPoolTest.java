@@ -60,10 +60,10 @@ public class ObjectInternPoolTest {
 
     @Test
     public void testFloat() {
-        Float floatObj1 = 130.0f;
-        Float floatObj2 = 130.0f;
-        Float floatObj3 = 1900.0f;
-        Float floatObj4 = 1900.0f;
+        Float floatObj1 = 130.0F;
+        Float floatObj2 = 130.0F;
+        Float floatObj3 = 1900.0F;
+        Float floatObj4 = 1900.0F;
 
         int float1Ordinal = internPool.writeAndGetOrdinal(floatObj1);
         int float2Ordinal = internPool.writeAndGetOrdinal(floatObj2);

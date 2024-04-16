@@ -234,12 +234,12 @@ public class HollowHistoryHashKeyTest {
         
         public TestTopLevelObject(int id, Obj... elements) {
             this.id = id;
-            this.setById = new HashSet<Obj>();
-            this.setByIdCountry = new HashSet<Obj>();
-            this.intSet = new HashSet<Integer>();
-            this.mapById = new HashMap<Obj, Integer>();
-            this.mapByIdCountry = new HashMap<Obj, Integer>();
-            this.intMap = new HashMap<Integer, Integer>();
+            this.setById = new HashSet<>();
+            this.setByIdCountry = new HashSet<>();
+            this.intSet = new HashSet<>();
+            this.mapById = new HashMap<>();
+            this.mapByIdCountry = new HashMap<>();
+            this.intMap = new HashMap<>();
             
             for(int i=0;i<elements.length;i++) {
                 setById.add(elements[i]);

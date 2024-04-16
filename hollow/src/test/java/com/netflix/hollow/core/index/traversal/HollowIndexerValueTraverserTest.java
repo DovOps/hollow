@@ -113,10 +113,13 @@ public class HollowIndexerValueTraverserTest extends AbstractStateEngineTest {
         for(int i=0;i<traverser.getNumMatches();i++) {
             boolean allMatched = true;
             for(int j=0;j<traverser.getNumFieldPaths();j++) {
-                if(!values[j].equals(traverser.getMatchedValue(i, j)))
+                if(!values[j].equals(traverser.getMatchedValue(i, j))) {
                     allMatched = false;
+                }
             }
-            if(allMatched) return;
+            if(allMatched) {
+                return;
+            }
         }
         Assert.fail("entry not found");
     }

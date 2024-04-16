@@ -177,23 +177,24 @@ public class HollowHistoryUI extends HollowUIRouter implements HollowRecordDiffU
         resp.setContentType("text/html");
 
         if("resource".equals(pageName)) {
-            if(serveResource(req, resp, getResourceName(target)))
+            if(serveResource(req, resp, getResourceName(target))) {
                 return true;
+            }
         } else if("".equals(pageName) || "overview".equals(pageName)) {
-            if(req.getParameter("format") != null && req.getParameter("format").equals("json")) {
+            if("json".equals(req.getParameter("format"))) {
                 overviewPage.sendJson(req, resp);
                 return true;
             }
             overviewPage.render(req, getSession(req, resp), resp.getWriter());
         } else if("state".equals(pageName)) {
-            if(req.getParameter("format") != null && req.getParameter("format").equals("json")) {
+            if("json".equals(req.getParameter("format"))) {
                 statePage.sendJson(req, resp);
                 return true;
             }
             statePage.render(req, getSession(req, resp), resp.getWriter());
             return true;
         } else if("statetype".equals(pageName)) {
-            if(req.getParameter("format") != null && req.getParameter("format").equals("json")) {
+            if("json".equals(req.getParameter("format"))) {
                 stateTypePage.sendJson(req, getSession(req, resp),  resp);
                 return true;
             }
@@ -244,8 +245,9 @@ public class HollowHistoryUI extends HollowUIRouter implements HollowRecordDiffU
     
     public HollowHistoryRecordNamer getHistoryRecordNamer(String typeName) {
          HollowHistoryRecordNamer recordNamer = customHollowRecordNamers.get(typeName);
-         if(recordNamer == null)
-             return HollowHistoryRecordNamer.DEFAULT_RECORD_NAMER;
+        if(recordNamer == null) {
+            return HollowHistoryRecordNamer.DEFAULT_RECORD_NAMER;
+        }
          return recordNamer;
     }
     

@@ -37,7 +37,7 @@ public interface ByteData {
         longBits |= (long) (get(position++) & 0xFF) << 24;
         longBits |= (get(position++) & 0xFF) << 16;
         longBits |= (get(position++) & 0xFF) << 8;
-        longBits |= (get(position) & 0xFF);
+        longBits |= get(position) & 0xFF;
         return longBits;
     }
 
@@ -45,7 +45,7 @@ public interface ByteData {
         int intBits = (get(position++) & 0xFF) << 24;
         intBits |= (get(position++) & 0xFF) << 16;
         intBits |= (get(position++) & 0xFF) << 8;
-        intBits |= (get(position) & 0xFF);
+        intBits |= get(position) & 0xFF;
         return intBits;
     }
 

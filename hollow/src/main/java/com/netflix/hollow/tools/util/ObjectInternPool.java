@@ -12,8 +12,8 @@ import java.util.Optional;
 // This class memoizes types by returning references to existing objects, or storing
 // Objects if they are not currently in the pool
 public class ObjectInternPool {
-    final private ByteArrayOrdinalMap ordinalMap;
-    private boolean isReadyToRead = false;
+    private final ByteArrayOrdinalMap ordinalMap;
+    private boolean isReadyToRead;
     HashSet<Integer> ordinalsInCycle;
 
     public ObjectInternPool() {

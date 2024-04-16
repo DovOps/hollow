@@ -36,8 +36,9 @@ public class SampleResult implements Comparable<SampleResult> {
 
     @Override
     public int compareTo(SampleResult o) {
-        if(o.numSamples == numSamples)
+        if(o.numSamples == numSamples) {
             return identifier.compareTo(o.identifier);
+        }
         return Long.compare(o.numSamples, numSamples);
     }
 

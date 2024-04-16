@@ -75,7 +75,7 @@ public class CustomConsumerBuilderTest {
 
     private static class AugmentedBuilder extends HollowConsumer.Builder<AugmentedBuilder> {
         enum Augmentation {
-            none, deprecatedConstructor, builderConstructor;
+            none, deprecatedConstructor, builderConstructor
         }
         private Augmentation augmentation = Augmentation.none;
 

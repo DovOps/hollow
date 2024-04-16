@@ -39,8 +39,8 @@ public class BooleanDataAccessorTest extends AbstractPrimitiveTypeDataAccessorTe
 
     @Test
     public void test() throws IOException {
-        addRecord(new Boolean(true));
-        addRecord(new Boolean(false));
+        addRecord(Boolean.valueOf(true));
+        addRecord(Boolean.valueOf(false));
 
         roundTripSnapshot();
         {
@@ -53,7 +53,7 @@ public class BooleanDataAccessorTest extends AbstractPrimitiveTypeDataAccessorTe
 
         writeStateEngine.prepareForNextCycle(); /// not necessary to call, but needs to be a no-op.
 
-        addRecord(new Boolean(true));
+        addRecord(Boolean.valueOf(true));
         // addRecord(new Boolean(false)); // removed
 
         roundTripDelta();
@@ -85,8 +85,8 @@ public class BooleanDataAccessorTest extends AbstractPrimitiveTypeDataAccessorTe
 
         Assert.assertEquals(0, typeState.maxOrdinal());
 
-        addRecord(new Boolean(false));
-        addRecord(new Boolean(true));
+        addRecord(Boolean.valueOf(false));
+        addRecord(Boolean.valueOf(true));
 
         roundTripDelta();
         {

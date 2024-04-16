@@ -30,8 +30,9 @@ public class HashCodes {
     }
 
     public static int hashCode(final String data) {
-        if(data == null)
+        if(data == null) {
             return -1;
+        }
         
         int arrayLen = calculateByteArrayLength(data);
         
@@ -56,14 +57,15 @@ public class HashCodes {
     private static int calculateByteArrayLength(String data) {
         int length = data.length();
         for(int i=0;i<data.length();i++) {
-            if(data.charAt(i) > 0x7F)
+            if(data.charAt(i) > 0x7F) {
                 length += VarInt.sizeOfVInt(data.charAt(i)) - 1;
+            }
         }
         return length;
     }
 
     private static byte[] createByteArrayFromString(String data, int arrayLen) {
-        byte array[] = new byte[arrayLen];
+        byte[] array = new byte[arrayLen];
 
         int pos = 0;
         for(int i=0;i<data.length();i++) {
@@ -131,7 +133,7 @@ public class HashCodes {
             k1 |= (data.get(roundedEnd + 1) & 0xff) << 8;
             // fallthrough
         case 1:
-            k1 |= (data.get(roundedEnd) & 0xff);
+            k1 |= data.get(roundedEnd) & 0xff;
             k1 *= c1;
             k1 = (k1 << 15) | (k1 >>> 17); // ROTL32(k1,15);
             k1 *= c2;
@@ -153,11 +155,11 @@ public class HashCodes {
 
     public static int hashLong(long key) {
         key = (~key) + (key << 18);
-        key ^= (key >>> 31);
+        key ^= key >>> 31;
         key *= 21;
-        key ^= (key >>> 11);
-        key += (key << 6);
-        key ^= (key >>> 22);
+        key ^= key >>> 11;
+        key += key << 6;
+        key ^= key >>> 22;
         return (int) key;
     }
 
@@ -187,10 +189,12 @@ public class HashCodes {
             throw new IllegalArgumentException("exceeds maximum number of buckets; numElements="+numElements);
         }
 
-        if (numElements == 0)
+        if(numElements == 0) {
             return 1;
-        if (numElements < 3)
+        }
+        if(numElements < 3) {
             return numElements * 2;
+        }
 
         // Apply load factor to number of elements and determine next
         // largest power of 2 that fits in an int

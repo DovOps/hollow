@@ -74,10 +74,10 @@ public class HollowProducerTest {
     private HollowObjectSchema schema;
     private HollowConsumer.BlobRetriever blobRetriever;
 
-    private Map<Long, Blob> blobMap = new HashMap<>();
-    private Map<Long, File> blobFileMap = new HashMap<>();
-    private Map<Long, HeaderBlob> headerBlobMap = new HashMap<>();
-    private Map<Long, File> headerFileMap = new HashMap<>();
+    private final Map<Long, Blob> blobMap = new HashMap<>();
+    private final Map<Long, File> blobFileMap = new HashMap<>();
+    private final Map<Long, HeaderBlob> headerBlobMap = new HashMap<>();
+    private final Map<Long, File> headerFileMap = new HashMap<>();
     private ProducerStatus lastProducerStatus;
     private RestoreStatus lastRestoreStatus;
 
@@ -112,18 +112,15 @@ public class HollowProducerTest {
     @Test
     public void testPopulateNoChangesVersion() {
         HollowProducer producer = createProducer(tmpFolder);
-        long v1 = producer.runCycle(ws -> {
-            ws.add(1);
-        });
+        long v1 = producer.runCycle(ws ->
+            ws.add(1));
         assertEquals(producer.getCycleCountWithPrimaryStatus(), 1);
         // Run cycle with no changes
-        long v2 = producer.runCycle(ws -> {
-            ws.add(1);
-        });
+        long v2 = producer.runCycle(ws ->
+            ws.add(1));
         assertEquals(producer.getCycleCountWithPrimaryStatus(), 2);
-        long v3 = producer.runCycle(ws -> {
-            ws.add(2);
-        });
+        long v3 = producer.runCycle(ws ->
+            ws.add(2));
         assertEquals(producer.getCycleCountWithPrimaryStatus(), 3);
 
         assertEquals(v1, v2);
@@ -139,21 +136,18 @@ public class HollowProducerTest {
                 .build();
         producer.addListener(new FakeProducerListener());
 
-        long v1 = producer.runCycle(ws -> {
-            ws.add(1);
-        });
+        long v1 = producer.runCycle(ws ->
+            ws.add(1));
 
         enforcer.disable();
         // Run cycle as not the primary producer
-        long v2 = producer.runCycle(ws -> {
-            ws.add(1);
-        });
+        long v2 = producer.runCycle(ws ->
+            ws.add(1));
         assertEquals(producer.getCycleCountWithPrimaryStatus(), 0);
         // Run cycle as the primary producer
         enforcer.enable();
-        long v3 = producer.runCycle(ws -> {
-            ws.add(2);
-        });
+        long v3 = producer.runCycle(ws ->
+            ws.add(2));
 
         assertEquals(v1, v2);
         assertTrue(v3 > v2);
@@ -169,15 +163,13 @@ public class HollowProducerTest {
                 .withAnnouncer(new HollowFilesystemAnnouncer(tmpFolder.toPath()))
                 .build();
 
-        producer.runCycle(ws -> {
-            ws.add(1);
-        });
+        producer.runCycle(ws ->
+            ws.add(1));
 
         producer.addListener(new ProducerYieldsPrimaryBeforePublish(enforcer));
         try {
-            producer.runCycle(ws -> {
-                ws.add(2);
-            });
+            producer.runCycle(ws ->
+                ws.add(2));
         } catch (IllegalStateException e) {
             assertTrue(e instanceof HollowProducer.NotPrimaryMidCycleException);
             assertEquals("Publish failed primary (aka leader) check", e.getMessage());
@@ -197,9 +189,8 @@ public class HollowProducerTest {
                 .build();
         producer.addListener(new ProducerYieldsPrimaryBeforeAnnounce(enforcer));
         try {
-            producer.runCycle(ws -> {
-                ws.add(1);
-            });
+            producer.runCycle(ws ->
+                ws.add(1));
         } catch (HollowProducer.NotPrimaryMidCycleException e) {
             assertEquals("Announcement failed primary (aka leader) check", e.getMessage());
             assertEquals(producer.getCycleCountWithPrimaryStatus(), 1); // counted as cycle ran for producer with primary status
@@ -429,8 +420,9 @@ public class HollowProducerTest {
     public void testReshardingObjectTypes() {
         for (boolean allowResharding : Arrays.asList(true, false)) {
             HollowProducer.Builder producerBuilder = HollowProducer.withPublisher(new FakeBlobPublisher()).withAnnouncer(new HollowFilesystemAnnouncer(tmpFolder.toPath()));
-            if (allowResharding)
-                    producerBuilder = producerBuilder.withTypeResharding(true);
+            if(allowResharding) {
+                producerBuilder = producerBuilder.withTypeResharding(true);
+            }
             HollowProducer producer = producerBuilder.withTargetMaxTypeShardSize(32).build();
             producer.runCycle(ws -> {
                 // causes 2 shards for Integer at shard size 32
@@ -510,8 +502,9 @@ public class HollowProducerTest {
                     state.add(new TestPojoV1(i, i));
                 }
             });
-            if (n == 0)
+            if(n == 0) {
                 startVersion = v;
+            }
 
             c.triggerRefreshTo(v);
 
@@ -533,7 +526,7 @@ public class HollowProducerTest {
         HollowInMemoryBlobStager blobStager = new HollowInMemoryBlobStager();
         HollowProducer nonReshardingProducer1 = HollowProducer.withPublisher(blobStore).withBlobStager(blobStager)
                 .withTypeResharding(false).withTargetMaxTypeShardSize(32).build();
-        long v1_1 = nonReshardingProducer1.runCycle(ws -> {
+        long v11 = nonReshardingProducer1.runCycle(ws -> {
             // causes 2 shards for Integer at shard size 32
             for (int i=0;i<50;i++) {
                 ws.add(new TestPojoV1(i, i));
@@ -542,14 +535,14 @@ public class HollowProducerTest {
         assertEquals(4, nonReshardingProducer1.getWriteEngine().getTypeState("TestPojo").getNumShards());
 
         try {
-            long v1_2 = nonReshardingProducer1.runCycle(ws -> {
+            long v12 = nonReshardingProducer1.runCycle(ws -> {
                 throw new RuntimeException("failed population");
             });
             fail("exception expected");
         } catch (Exception e){
         }
 
-        long v1_3 = nonReshardingProducer1.runCycle(ws -> {
+        long v13 = nonReshardingProducer1.runCycle(ws -> {
             for (int i=0;i<100;i++) {
                 ws.add(new TestPojoV1(i, i));
             }
@@ -560,7 +553,7 @@ public class HollowProducerTest {
                 .withTypeResharding(false).withTargetMaxTypeShardSize(32).build();
         nonReshardingProducer2.initializeDataModel(TestPojoV1.class);
         assertEquals(-1, nonReshardingProducer2.getWriteEngine().getTypeState("TestPojo").getNumShards());
-        nonReshardingProducer2.restore(v1_1, blobStore);
+        nonReshardingProducer2.restore(v11, blobStore);
         assertEquals(4, nonReshardingProducer2.getWriteEngine().getTypeState("TestPojo").getNumShards());
         try {
             nonReshardingProducer2.runCycle(ws -> {
@@ -659,8 +652,9 @@ public class HollowProducerTest {
         Set<Integer> removeSet = new HashSet<>(Arrays.asList(13, 21, 25, 29, 6, 14, 18, 26, 30, 11, 19, 24));
         long v2 = producer.runCycle(state -> {
             for(int i=1;i<=36;i++) {
-                if(!removeSet.contains(i))
+                if(!removeSet.contains(i)) {
                     add(state, "val" + i, i);
+                }
             }
 
             add(state, "newval37", 37);
@@ -670,8 +664,9 @@ public class HollowProducerTest {
 
         long v3 = producer.runCycle(state -> {
             for(int i=1;i<=36;i++) {
-                if(!removeSet.contains(i))
+                if(!removeSet.contains(i)) {
                     add(state, "val" + i, i);
+                }
             }
             add(state, "newval37", 37);
             for(int i=1000;i<1005;i++) {
@@ -701,16 +696,14 @@ public class HollowProducerTest {
 
         // exercise resetToLastNumShards
         try {
-            producer.runCycle(state -> {
-                add(state, "newVal", 9999);
-            });
+            producer.runCycle(state ->
+                add(state, "newVal", 9999));
             fail("Cycle expected to fail at validation");
         } catch (Exception e) {
         }
         try {
-            producer.runCycle(state -> {
-                add(state, "anotherNewVal", 9998);
-            });
+            producer.runCycle(state ->
+                add(state, "anotherNewVal", 9998));
             fail("Cycle expected to fail at validation");
         } catch (Exception e) {
         }
@@ -718,8 +711,9 @@ public class HollowProducerTest {
         producer.removeListener(cycleFailingListener);
         long v4 = producer.runCycle(state -> {
             for(int i=1;i<=36;i++) {
-                if(!removeSet.contains(i))
+                if(!removeSet.contains(i)) {
                     add(state, "val" + i, i);
+                }
             }
 
             add(state, "newval37", 37);
@@ -875,7 +869,9 @@ public class HollowProducerTest {
         }
 
         private File copyFile(File blobFile) {
-            if (!blobFile.exists()) throw new RuntimeException("File does not exists: " + blobFile);
+            if(!blobFile.exists()) {
+                throw new RuntimeException("File does not exists: " + blobFile);
+            }
 
             // Copy file
             File copiedFile = new File(tmpFolder, "copied_" + blobFile.getName());

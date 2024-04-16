@@ -80,14 +80,15 @@ public class FixedLengthElementArray extends SegmentedLongArray implements Fixed
         long whichLong = index >>> 6;
         int whichBit = (int) (index & 0x3F);
 
-        long mask = ((1L << bitsPerElement) - 1);
+        long mask = (1L << bitsPerElement) - 1;
 
         set(whichLong, get(whichLong) & ~(mask << whichBit));
 
         int bitsRemaining = 64 - whichBit;
 
-        if (bitsRemaining < bitsPerElement)
+        if(bitsRemaining < bitsPerElement) {
             set(whichLong + 1, get(whichLong + 1) & ~(mask >>> bitsRemaining));
+        }
     }
 
     @Override
@@ -99,8 +100,9 @@ public class FixedLengthElementArray extends SegmentedLongArray implements Fixed
 
         int bitsRemaining = 64 - whichBit;
 
-        if (bitsRemaining < bitsPerElement)
+        if(bitsRemaining < bitsPerElement) {
             set(whichLong + 1, get(whichLong + 1) | (value >>> bitsRemaining));
+        }
     }
 
     @Override
@@ -148,8 +150,9 @@ public class FixedLengthElementArray extends SegmentedLongArray implements Fixed
 
     @Override
     public void copyBits(FixedLengthData copyFrom, long sourceStartBit, long destStartBit, long numBits) {
-        if(numBits == 0)
+        if(numBits == 0) {
             return;
+        }
         
         if ((destStartBit & 63) != 0) {
             int fillBits = (int) Math.min(64 - (destStartBit & 63), numBits);

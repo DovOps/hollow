@@ -33,7 +33,7 @@ public abstract class HollowTestDataset {
     
     private HollowTestBlobRetriever blobRetriever;
     
-    private long currentState = 0L;
+    private long currentState;
     
     
     public HollowTestDataset() {

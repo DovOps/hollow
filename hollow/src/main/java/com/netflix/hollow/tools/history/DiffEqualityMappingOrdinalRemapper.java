@@ -28,7 +28,7 @@ public class DiffEqualityMappingOrdinalRemapper implements OrdinalRemapper {
 
     DiffEqualityMappingOrdinalRemapper(DiffEqualityMapping mapping) {
         this.equalityMapping = mapping;
-        this.unmatchedOrdinalRemapping = new HashMap<String, IntMap>();
+        this.unmatchedOrdinalRemapping = new HashMap<>();
     }
 
     @Override
@@ -37,8 +37,9 @@ public class DiffEqualityMappingOrdinalRemapper implements OrdinalRemapper {
 
         if(remapping != null) {
             int remappedOrdinal = remapping.get(originalOrdinal);
-            if(remappedOrdinal != -1)
+            if(remappedOrdinal != -1) {
                 return remappedOrdinal;
+            }
         }
 
         int matchedOrdinal = equalityMapping.getEqualOrdinalMap(type).getIdentityFromOrdinal(originalOrdinal);
@@ -52,8 +53,9 @@ public class DiffEqualityMappingOrdinalRemapper implements OrdinalRemapper {
     @Override
     public void remapOrdinal(String type, int originalOrdinal, int mappedOrdinal) {
         IntMap remap = unmatchedOrdinalRemapping.get(type);
-        if(remap == null)
+        if(remap == null) {
             throw new IllegalStateException("Must call hintUnmatchedOrdinalCount for type " + type + " before attempting to remap unmatched ordinals");
+        }
         remap.put(originalOrdinal, mappedOrdinal);
     }
 

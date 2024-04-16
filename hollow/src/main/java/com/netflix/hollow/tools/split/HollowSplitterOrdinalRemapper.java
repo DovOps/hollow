@@ -26,14 +26,14 @@ import java.util.Map;
 public class HollowSplitterOrdinalRemapper implements OrdinalRemapper {
 
     private final HollowSplitterShardCopier shardCopier;
-    private final Map<String, int[]> typeMappings = new HashMap<String, int[]>();
+    private final Map<String, int[]> typeMappings = new HashMap<>();
 
     public HollowSplitterOrdinalRemapper(HollowReadStateEngine stateEngine, HollowSplitterShardCopier shardCopier) {
         this.shardCopier = shardCopier;
 
         for(HollowTypeReadState typeState : stateEngine.getTypeStates()) {
             String typeName = typeState.getSchema().getName();
-            int ordinalRemapping[] = new int[typeState.maxOrdinal() + 1];
+            int[] ordinalRemapping = new int[typeState.maxOrdinal() + 1];
             Arrays.fill(ordinalRemapping, -1);
             typeMappings.put(typeName, ordinalRemapping);
         }

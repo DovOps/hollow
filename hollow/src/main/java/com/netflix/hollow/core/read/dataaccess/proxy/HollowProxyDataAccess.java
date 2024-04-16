@@ -51,7 +51,7 @@ public class HollowProxyDataAccess implements HollowDataAccess {
     private final ConcurrentHashMap<String, HollowTypeProxyDataAccess> typeDataAccessMap;
 
     public HollowProxyDataAccess() {
-        this.typeDataAccessMap = new ConcurrentHashMap<String, HollowTypeProxyDataAccess>();
+        this.typeDataAccessMap = new ConcurrentHashMap<>();
     }
 
     public void setDataAccess(HollowDataAccess currentDataAccess) {

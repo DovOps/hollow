@@ -36,7 +36,7 @@ class HollowObjectTypePerfAPIClassGenerator {
     public String generate() {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("package " + packageName + ";\n\n");
+        builder.append("package ").append(packageName).append(";\n\n");
 
         builder.append("import com.netflix.hollow.api.perfapi.HollowObjectTypePerfAPI;\n" +
                 "import com.netflix.hollow.api.perfapi.HollowPerformanceAPI;\n" +
@@ -44,18 +44,19 @@ class HollowObjectTypePerfAPIClassGenerator {
                 "import com.netflix.hollow.core.read.dataaccess.HollowDataAccess;\n\n");
 
         builder.append("@SuppressWarnings(\"all\")\n");
-        builder.append("public class " + schema.getName() + "PerfAPI extends HollowObjectTypePerfAPI {\n\n");
+        builder.append("public class ").append(schema.getName()).append("PerfAPI extends HollowObjectTypePerfAPI {\n\n");
 
         builder.append("    public static final String fieldNames[] = { ");
         for(int i=0;i<schema.numFields();i++) {
-            if(i > 0)
+            if(i > 0) {
                 builder.append(", ");
-            builder.append("\"" + schema.getFieldName(i) + "\"");
+            }
+            builder.append("\"").append(schema.getFieldName(i)).append("\"");
         }
 
         builder.append(" };\n\n");
 
-        builder.append("    public " + schema.getName() + "PerfAPI(HollowDataAccess dataAccess, String typeName, HollowPerformanceAPI api) {\n");
+        builder.append("    public ").append(schema.getName()).append("PerfAPI(HollowDataAccess dataAccess, String typeName, HollowPerformanceAPI api) {\n");
         builder.append("        super(dataAccess, typeName, api, fieldNames);\n");
         builder.append("    }\n\n");
 
@@ -73,124 +74,122 @@ class HollowObjectTypePerfAPIClassGenerator {
 
     public void appendFieldMethod(StringBuilder builder, FieldType fieldType, String fieldName, int fieldIdx, String referencedType) {
         String type = fieldType.name();
-        if(fieldType == FieldType.REFERENCE)
+        if(fieldType == FieldType.REFERENCE) {
             type += " (" + referencedType + ")";
+        }
 
-        builder.append("    /**\n" +
-                "     * <i>"+schema.getName() + "." + fieldName +"</i><br/>\n" +
-                "     * <b>" + type + "</b>\n" +
-                "     */\n");
+        builder.append("    /**\n" + "     * <i>").append(schema.getName()).append(".").append(fieldName).append("</i><br/>\n" + "     * <b>").append(type).append("</b>\n" + "     */\n");
 
         switch(fieldType) {
             case INT:
-                builder.append("    public int get" + HollowCodeGenerationUtils.upperFirstChar(fieldName) + "(long ref) {\n");
-                builder.append("        if(fieldIdx[" + fieldIdx + "] == -1)\n");
+                builder.append("    public int get").append(HollowCodeGenerationUtils.upperFirstChar(fieldName)).append("(long ref) {\n");
+                builder.append("        if(fieldIdx[").append(fieldIdx).append("] == -1)\n");
                 builder.append("            return Integer.MIN_VALUE;\n");
-                builder.append("        return typeAccess.readInt(ordinal(ref), fieldIdx[" + fieldIdx + "]);\n");
+                builder.append("        return typeAccess.readInt(ordinal(ref), fieldIdx[").append(fieldIdx).append("]);\n");
                 builder.append("    }\n\n");
 
-                builder.append("    public Integer get" + HollowCodeGenerationUtils.upperFirstChar(fieldName) + "Boxed(long ref) {\n");
-                builder.append("        if(fieldIdx[" + fieldIdx + "] == -1)\n");
+                builder.append("    public Integer get").append(HollowCodeGenerationUtils.upperFirstChar(fieldName)).append("Boxed(long ref) {\n");
+                builder.append("        if(fieldIdx[").append(fieldIdx).append("] == -1)\n");
                 builder.append("            return null;\n");
-                builder.append("        int val = typeAccess.readInt(ordinal(ref), fieldIdx[" + fieldIdx + "]);\n");
+                builder.append("        int val = typeAccess.readInt(ordinal(ref), fieldIdx[").append(fieldIdx).append("]);\n");
                 builder.append("        if(val == Integer.MIN_VALUE)\n");
                 builder.append("            return null;\n");
                 builder.append("        return val;\n");
                 builder.append("    }\n\n");
                 break;
             case LONG:
-                builder.append("    public long get" + HollowCodeGenerationUtils.upperFirstChar(fieldName) + "(long ref) {\n");
-                builder.append("        if(fieldIdx[" + fieldIdx + "] == -1)\n");
+                builder.append("    public long get").append(HollowCodeGenerationUtils.upperFirstChar(fieldName)).append("(long ref) {\n");
+                builder.append("        if(fieldIdx[").append(fieldIdx).append("] == -1)\n");
                 builder.append("            return Long.MIN_VALUE;\n");
-                builder.append("        return typeAccess.readLong(ordinal(ref), fieldIdx[" + fieldIdx + "]);\n");
+                builder.append("        return typeAccess.readLong(ordinal(ref), fieldIdx[").append(fieldIdx).append("]);\n");
                 builder.append("    }\n\n");
 
-                builder.append("    public Long get" + HollowCodeGenerationUtils.upperFirstChar(fieldName) + "Boxed(long ref) {\n");
-                builder.append("        if(fieldIdx[" + fieldIdx + "] == -1)\n");
+                builder.append("    public Long get").append(HollowCodeGenerationUtils.upperFirstChar(fieldName)).append("Boxed(long ref) {\n");
+                builder.append("        if(fieldIdx[").append(fieldIdx).append("] == -1)\n");
                 builder.append("            return null;\n");
-                builder.append("        long val = typeAccess.readLong(ordinal(ref), fieldIdx[" + fieldIdx + "]);\n");
+                builder.append("        long val = typeAccess.readLong(ordinal(ref), fieldIdx[").append(fieldIdx).append("]);\n");
                 builder.append("        if(val == Long.MIN_VALUE)\n");
                 builder.append("            return null;\n");
                 builder.append("        return val;\n");
                 builder.append("    }\n\n");
                 break;
             case FLOAT:
-                builder.append("    public float get" + HollowCodeGenerationUtils.upperFirstChar(fieldName) + "(long ref) {\n");
-                builder.append("        if(fieldIdx[" + fieldIdx + "] == -1)\n");
+                builder.append("    public float get").append(HollowCodeGenerationUtils.upperFirstChar(fieldName)).append("(long ref) {\n");
+                builder.append("        if(fieldIdx[").append(fieldIdx).append("] == -1)\n");
                 builder.append("            return Float.NaN;\n");
-                builder.append("        return typeAccess.readFloat(ordinal(ref), fieldIdx[" + fieldIdx + "]);\n");
+                builder.append("        return typeAccess.readFloat(ordinal(ref), fieldIdx[").append(fieldIdx).append("]);\n");
                 builder.append("    }\n\n");
 
-                builder.append("    public Float get" + HollowCodeGenerationUtils.upperFirstChar(fieldName) + "Boxed(long ref) {\n");
-                builder.append("        if(fieldIdx[" + fieldIdx + "] == -1)\n");
+                builder.append("    public Float get").append(HollowCodeGenerationUtils.upperFirstChar(fieldName)).append("Boxed(long ref) {\n");
+                builder.append("        if(fieldIdx[").append(fieldIdx).append("] == -1)\n");
                 builder.append("            return null;\n");
-                builder.append("        float val = typeAccess.readFloat(ordinal(ref), fieldIdx[" + fieldIdx + "]);\n");
+                builder.append("        float val = typeAccess.readFloat(ordinal(ref), fieldIdx[").append(fieldIdx).append("]);\n");
                 builder.append("        if(Float.isNaN(val))\n");
                 builder.append("            return null;\n");
                 builder.append("        return val;\n");
                 builder.append("    }\n\n");
                 break;
             case DOUBLE:
-                builder.append("    public double get" + HollowCodeGenerationUtils.upperFirstChar(fieldName) + "(long ref) {\n");
-                builder.append("        if(fieldIdx[" + fieldIdx + "] == -1)\n");
+                builder.append("    public double get").append(HollowCodeGenerationUtils.upperFirstChar(fieldName)).append("(long ref) {\n");
+                builder.append("        if(fieldIdx[").append(fieldIdx).append("] == -1)\n");
                 builder.append("            return Double.NaN;\n");
-                builder.append("        return typeAccess.readDouble(ordinal(ref), fieldIdx[" + fieldIdx + "]);\n");
+                builder.append("        return typeAccess.readDouble(ordinal(ref), fieldIdx[").append(fieldIdx).append("]);\n");
                 builder.append("    }\n\n");
 
-                builder.append("    public Double get" + HollowCodeGenerationUtils.upperFirstChar(fieldName) + "Boxed(long ref) {\n");
-                builder.append("        if(fieldIdx[" + fieldIdx + "] == -1)\n");
+                builder.append("    public Double get").append(HollowCodeGenerationUtils.upperFirstChar(fieldName)).append("Boxed(long ref) {\n");
+                builder.append("        if(fieldIdx[").append(fieldIdx).append("] == -1)\n");
                 builder.append("            return null;\n");
-                builder.append("        double val = typeAccess.readDouble(ordinal(ref), fieldIdx[" + fieldIdx + "]);\n");
+                builder.append("        double val = typeAccess.readDouble(ordinal(ref), fieldIdx[").append(fieldIdx).append("]);\n");
                 builder.append("        if(Double.isNaN(val))\n");
                 builder.append("            return null;\n");
                 builder.append("        return val;\n");
                 builder.append("    }\n\n");
                 break;
             case BOOLEAN:
-                builder.append("    public boolean get" + HollowCodeGenerationUtils.upperFirstChar(fieldName) + "(long ref) {\n");
-                builder.append("        if(fieldIdx[" + fieldIdx + "] == -1)\n");
+                builder.append("    public boolean get").append(HollowCodeGenerationUtils.upperFirstChar(fieldName)).append("(long ref) {\n");
+                builder.append("        if(fieldIdx[").append(fieldIdx).append("] == -1)\n");
                 builder.append("            return false;\n");
-                builder.append("        return Boolean.TRUE.equals(typeAccess.readBoolean(ordinal(ref), fieldIdx[" + fieldIdx + "]));\n");
+                builder.append("        return Boolean.TRUE.equals(typeAccess.readBoolean(ordinal(ref), fieldIdx[").append(fieldIdx).append("]));\n");
                 builder.append("    }\n\n");
 
-                builder.append("    public Boolean get" + HollowCodeGenerationUtils.upperFirstChar(fieldName) + "Boxed(long ref) {\n");
-                builder.append("        if(fieldIdx[" + fieldIdx + "] == -1)\n");
+                builder.append("    public Boolean get").append(HollowCodeGenerationUtils.upperFirstChar(fieldName)).append("Boxed(long ref) {\n");
+                builder.append("        if(fieldIdx[").append(fieldIdx).append("] == -1)\n");
                 builder.append("            return null;\n");
-                builder.append("        return typeAccess.readBoolean(ordinal(ref), fieldIdx[" + fieldIdx + "]);\n");
+                builder.append("        return typeAccess.readBoolean(ordinal(ref), fieldIdx[").append(fieldIdx).append("]);\n");
                 builder.append("    }\n\n");
                 break;
             case STRING:
-                builder.append("    public String get" + HollowCodeGenerationUtils.upperFirstChar(fieldName) + "(long ref) {\n");
-                builder.append("        if(fieldIdx[" + fieldIdx + "] == -1)\n");
+                builder.append("    public String get").append(HollowCodeGenerationUtils.upperFirstChar(fieldName)).append("(long ref) {\n");
+                builder.append("        if(fieldIdx[").append(fieldIdx).append("] == -1)\n");
                 builder.append("            return null;\n");
-                builder.append("        return typeAccess.readString(ordinal(ref), fieldIdx[" + fieldIdx + "]);\n");
+                builder.append("        return typeAccess.readString(ordinal(ref), fieldIdx[").append(fieldIdx).append("]);\n");
                 builder.append("    }\n\n");
 
-                builder.append("    public boolean is" + HollowCodeGenerationUtils.upperFirstChar(fieldName) + "Equal(long ref, String testValue) {\n");
-                builder.append("        if(fieldIdx[" + fieldIdx + "] == -1)\n");
+                builder.append("    public boolean is").append(HollowCodeGenerationUtils.upperFirstChar(fieldName)).append("Equal(long ref, String testValue) {\n");
+                builder.append("        if(fieldIdx[").append(fieldIdx).append("] == -1)\n");
                 builder.append("            return false;\n");
-                builder.append("        return typeAccess.isStringFieldEqual(ordinal(ref), fieldIdx[" + fieldIdx + "], testValue);\n");
+                builder.append("        return typeAccess.isStringFieldEqual(ordinal(ref), fieldIdx[").append(fieldIdx).append("], testValue);\n");
                 builder.append("    }\n\n");
                 break;
             case BYTES:
-                builder.append("    public byte[] get" + HollowCodeGenerationUtils.upperFirstChar(fieldName) + "(long ref) {\n");
-                builder.append("        if(fieldIdx[" + fieldIdx + "] == -1)\n");
+                builder.append("    public byte[] get").append(HollowCodeGenerationUtils.upperFirstChar(fieldName)).append("(long ref) {\n");
+                builder.append("        if(fieldIdx[").append(fieldIdx).append("] == -1)\n");
                 builder.append("            return null;\n");
-                builder.append("        return typeAccess.readBytes(ordinal(ref), fieldIdx[" + fieldIdx + "]);\n");
+                builder.append("        return typeAccess.readBytes(ordinal(ref), fieldIdx[").append(fieldIdx).append("]);\n");
                 builder.append("    }\n\n");
                 break;
             case REFERENCE:
-                builder.append("    public long get" + HollowCodeGenerationUtils.upperFirstChar(fieldName) + "Ref(long ref) {\n");
-                builder.append("        if(fieldIdx[" + fieldIdx + "] == -1)\n");
+                builder.append("    public long get").append(HollowCodeGenerationUtils.upperFirstChar(fieldName)).append("Ref(long ref) {\n");
+                builder.append("        if(fieldIdx[").append(fieldIdx).append("] == -1)\n");
                 builder.append("            return Ref.NULL;\n");
-                builder.append("        return Ref.toRefWithTypeMasked(refMaskedTypeIdx[" + fieldIdx + "], typeAccess.readOrdinal(ordinal(ref), fieldIdx[" + fieldIdx + "]));\n");
+                builder.append("        return Ref.toRefWithTypeMasked(refMaskedTypeIdx[").append(fieldIdx).append("], typeAccess.readOrdinal(ordinal(ref), fieldIdx[").append(fieldIdx).append("]));\n");
                 builder.append("    }\n\n");
                 break;
         }
         
         if(checkFieldExistsMethods.contains(schema.getName() + "." + fieldName)) {
-            builder.append("    public boolean " + fieldName + "FieldExists() {\n");
-            builder.append("        return fieldIdx[" + fieldIdx + "] != -1;\n");
+            builder.append("    public boolean ").append(fieldName).append("FieldExists() {\n");
+            builder.append("        return fieldIdx[").append(fieldIdx).append("] != -1;\n");
             builder.append("    }\n\n");
         }
 

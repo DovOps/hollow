@@ -41,7 +41,7 @@ public class HollowStateEngineRecordPatcher {
 
     private final List<TypeMatchSpec> matchKeyPaths;
 
-    private String ignoredTypes[] = new String[0];
+    private String[] ignoredTypes = new String[0];
 
     public HollowStateEngineRecordPatcher(HollowReadStateEngine base, HollowReadStateEngine patchFrom) {
         this(base, patchFrom, true);
@@ -50,7 +50,7 @@ public class HollowStateEngineRecordPatcher {
     public HollowStateEngineRecordPatcher(HollowReadStateEngine base, HollowReadStateEngine patchFrom, boolean removeDetachedTransitiveReferences) {
         this.base = base;
         this.patchFrom = patchFrom;
-        this.matchKeyPaths = new ArrayList<TypeMatchSpec>();
+        this.matchKeyPaths = new ArrayList<>();
     }
 
     public void addTypeMatchSpec(TypeMatchSpec matchSpec) {
@@ -77,7 +77,7 @@ public class HollowStateEngineRecordPatcher {
     }
 
     private Map<String, BitSet> findMatches(HollowReadStateEngine stateEngine) {
-        Map<String, BitSet> matches = new HashMap<String, BitSet>();
+        Map<String, BitSet> matches = new HashMap<>();
         for(TypeMatchSpec spec : matchKeyPaths) {
             HollowTypeReadState typeState = stateEngine.getTypeState(spec.getTypeName());
             BitSet foundMatches = getOrCreateBitSet(matches, spec.getTypeName(), typeState.maxOrdinal());
@@ -119,8 +119,9 @@ public class HollowStateEngineRecordPatcher {
                 }
 
 
-                if(foundMatches.size() > 0)
+                if(foundMatches.size() > 0) {
                     matches.put(spec.getTypeName(), foundMatches);
+                }
             }
         }
 
@@ -128,8 +129,9 @@ public class HollowStateEngineRecordPatcher {
     }
 
     private BitSet getOrCreateBitSet(Map<String, BitSet> bitSets, String typeName, int numBitsRequired) {
-        if(numBitsRequired < 0)
+        if(numBitsRequired < 0) {
             return new BitSet(0);
+        }
 
         BitSet bs = bitSets.get(typeName);
         if(bs == null) {

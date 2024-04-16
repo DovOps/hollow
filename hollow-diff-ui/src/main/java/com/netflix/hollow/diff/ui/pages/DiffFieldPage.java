@@ -53,16 +53,18 @@ public class DiffFieldPage extends DiffPage {
         ctx.put("fieldDiff", fieldDiff);
         ctx.put("fieldIdx", fieldIdx);
 
-        if(diffPairBeginIdx > 0)
+        if(diffPairBeginIdx > 0) {
             ctx.put("previousDiffPairPageBeginIdx", diffPairBeginIdx - diffPairPageSize);
-        if((diffPairBeginIdx + diffPairPageSize) < fieldDiff.getNumDiffs())
+        }
+        if((diffPairBeginIdx + diffPairPageSize) < fieldDiff.getNumDiffs()) {
             ctx.put("nextDiffPairPageBeginIdx", diffPairBeginIdx + diffPairPageSize);
+        }
 
         ctx.put("breadcrumbs", getBreadcrumbs(typeDiff, fieldDiff));
     }
 
     private List<HollowObjectPairDiffScore> getObjectDiffScores(HollowTypeDiff typeDiff, HollowFieldDiff fieldDiff, int beginRecord, int pageSize) {
-        List<HollowObjectPairDiffScore> list = new ArrayList<HollowObjectPairDiffScore>();
+        List<HollowObjectPairDiffScore> list = new ArrayList<>();
 
         for(int i=0;i<fieldDiff.getNumDiffs();i++) {
             int fromOrdinal = fieldDiff.getFromOrdinal(i);
@@ -77,11 +79,11 @@ public class DiffFieldPage extends DiffPage {
     }
 
     private List<HollowDiffUIBreadcrumbs> getBreadcrumbs(HollowTypeDiff typeDiff, HollowFieldDiff fieldDiff) {
-        List<HollowDiffUIBreadcrumbs> breadcrumbs = new ArrayList<HollowDiffUIBreadcrumbs>();
+        List<HollowDiffUIBreadcrumbs> breadcrumbs = new ArrayList<>();
 
-        breadcrumbs.add(new HollowDiffUIBreadcrumbs((diffUI.getDiffUIPath() == null || diffUI.getDiffUIPath().length() == 0) ?
+        breadcrumbs.add(new HollowDiffUIBreadcrumbs(diffUI.getDiffUIPath() == null || diffUI.getDiffUIPath().length() == 0 ?
                 "/" : diffUI.getDiffUIPath(), "Overview"));
-        breadcrumbs.add(new HollowDiffUIBreadcrumbs((diffUI.getDiffUIPath() == null || diffUI.getDiffUIPath().length() == 0) ?
+        breadcrumbs.add(new HollowDiffUIBreadcrumbs(diffUI.getDiffUIPath() == null || diffUI.getDiffUIPath().length() == 0 ?
                 "typediff?type=" + typeDiff.getTypeName() : diffUI.getDiffUIPath() + "/typediff?type=" + typeDiff.getTypeName(), typeDiff.getTypeName()));
         breadcrumbs.add(new HollowDiffUIBreadcrumbs(null, fieldDiff.getFieldIdentifier().toString()));
 

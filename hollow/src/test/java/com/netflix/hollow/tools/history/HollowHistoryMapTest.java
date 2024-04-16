@@ -118,8 +118,9 @@ public class HollowHistoryMapTest extends AbstractStateEngineTest {
             HollowMapEntryOrdinalIterator iter = typeDataAccess.potentialMatchOrdinalIterator(ordinal, expectedEntries[i]);
 
             while(iter.next()) {
-                if(iter.getKey() == expectedEntries[i] && iter.getValue() == expectedEntries[i+1])
+                if(iter.getKey() == expectedEntries[i] && iter.getValue() == expectedEntries[i + 1]) {
                     continue test;
+                }
             }
 
             Assert.fail("Did not find expected entry (" + expectedEntries[i] + "," + expectedEntries[i+1] + ") for ordinal " + ordinal);

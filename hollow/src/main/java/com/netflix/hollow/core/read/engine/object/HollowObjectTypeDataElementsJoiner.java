@@ -22,7 +22,7 @@ class HollowObjectTypeDataElementsJoiner {
         final int fromOrdinalShift = 31 - Integer.numberOfLeadingZeros(from.length);
         long[] currentWriteVarLengthDataPointers;
 
-        if (from.length<=0 || !((from.length&(from.length-1))==0)) {
+        if (from.length<=0 || (from.length&(from.length-1))!=0) {
             throw new IllegalStateException("No. of DataElements to be joined must be a power of 2");
         }
 

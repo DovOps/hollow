@@ -24,7 +24,7 @@ import com.netflix.hollow.core.read.engine.HollowTypeReadState;
 import com.netflix.hollow.core.read.filter.HollowFilterConfig;
 import com.netflix.hollow.core.schema.HollowObjectSchema;
 
-public class HollowObjectDisabledDataAccess implements HollowObjectTypeDataAccess {
+public final class HollowObjectDisabledDataAccess implements HollowObjectTypeDataAccess {
 
     public static final HollowObjectDisabledDataAccess INSTANCE = new HollowObjectDisabledDataAccess();
 

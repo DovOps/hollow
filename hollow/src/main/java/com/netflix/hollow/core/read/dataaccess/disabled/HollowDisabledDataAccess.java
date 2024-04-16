@@ -31,7 +31,7 @@ import java.util.List;
  * a {@link HollowProxyDataAccess} if the {@link StaleHollowReferenceDetector} detects that stale references are
  * held but unused.
  */
-public class HollowDisabledDataAccess implements HollowDataAccess {
+public final class HollowDisabledDataAccess implements HollowDataAccess {
 
     public static final HollowDisabledDataAccess INSTANCE = new HollowDisabledDataAccess();
 

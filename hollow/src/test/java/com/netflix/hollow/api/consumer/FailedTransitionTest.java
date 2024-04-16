@@ -21,9 +21,8 @@ public class FailedTransitionTest {
                 .withBlobStager(new HollowInMemoryBlobStager())
                 .build();
 
-        long version = producer.runCycle(ws -> {
-            ws.add(1);
-        });
+        long version = producer.runCycle(ws ->
+            ws.add(1));
 
         AtomicBoolean failer = new AtomicBoolean();
         HollowConsumer consumer = HollowConsumer
@@ -60,9 +59,8 @@ public class FailedTransitionTest {
         }
 
 
-        version = producer.runCycle(ws -> {
-            ws.add(2);
-        });
+        version = producer.runCycle(ws ->
+            ws.add(2));
 
         // Pass for new transition
         // Consumer double snapshots
@@ -79,9 +77,8 @@ public class FailedTransitionTest {
                 .withBlobStager(new HollowInMemoryBlobStager())
                 .build();
 
-        long version = producer.runCycle(ws -> {
-            ws.add(1);
-        });
+        long version = producer.runCycle(ws ->
+            ws.add(1));
 
         AtomicBoolean failer = new AtomicBoolean();
         HollowConsumer consumer = HollowConsumer
@@ -92,9 +89,8 @@ public class FailedTransitionTest {
         consumer.triggerRefreshTo(version);
 
 
-        version = producer.runCycle(ws -> {
-            ws.add(2);
-        });
+        version = producer.runCycle(ws ->
+            ws.add(2));
 
         // Fail transitioning to delta
         failer.set(true);
@@ -125,9 +121,8 @@ public class FailedTransitionTest {
                 .withBlobStager(new HollowInMemoryBlobStager())
                 .build();
 
-        long version = producer.runCycle(ws -> {
-            ws.add(1);
-        });
+        long version = producer.runCycle(ws ->
+            ws.add(1));
 
         AtomicBoolean failer = new AtomicBoolean();
         HollowConsumer consumer = HollowConsumer
@@ -161,9 +156,8 @@ public class FailedTransitionTest {
                 .withBlobStager(new HollowInMemoryBlobStager())
                 .build();
 
-        long version = producer.runCycle(ws -> {
-            ws.add(1);
-        });
+        long version = producer.runCycle(ws ->
+            ws.add(1));
 
         AtomicBoolean failer = new AtomicBoolean();
         HollowConsumer consumer = HollowConsumer
@@ -175,9 +169,8 @@ public class FailedTransitionTest {
         consumer.triggerRefreshTo(version);
 
 
-        version = producer.runCycle(ws -> {
-            ws.add(2);
-        });
+        version = producer.runCycle(ws ->
+            ws.add(2));
 
         // Fail transitioning to delta
         failer.set(true);

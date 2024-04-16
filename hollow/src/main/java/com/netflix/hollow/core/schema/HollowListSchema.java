@@ -61,13 +61,16 @@ public class HollowListSchema extends HollowCollectionSchema {
     
     @Override
     public boolean equals(Object other) {
-        if (this == other)
+        if(this == other) {
             return true;
-        if(!(other instanceof HollowListSchema))
+        }
+        if(!(other instanceof HollowListSchema)) {
             return false;
+        }
         HollowListSchema otherSchema = (HollowListSchema)other;
-        if(!getName().equals(otherSchema.getName()))
+        if(!getName().equals(otherSchema.getName())) {
             return false;
+        }
         
         return getElementType().equals(otherSchema.getElementType());
     }

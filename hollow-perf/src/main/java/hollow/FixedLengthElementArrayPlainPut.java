@@ -56,7 +56,7 @@ public class FixedLengthElementArrayPlainPut extends SegmentedLongArrayPlainPut 
         long whichLong = index >>> 6;
         int whichBit = (int) (index & 0x3F);
 
-        long mask = ((1L << bitsPerElement) - 1);
+        long mask = (1L << bitsPerElement) - 1;
 
         set(whichLong, get(whichLong) & ~(mask << whichBit));
 

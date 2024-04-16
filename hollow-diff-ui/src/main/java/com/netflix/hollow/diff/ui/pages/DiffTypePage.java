@@ -41,9 +41,9 @@ public class DiffTypePage extends DiffPage {
 
     public DiffTypePage(HollowDiffUI diffUI) {
         super(diffUI, "diff-type.vm");
-        this.typeObjectPairScores = new ConcurrentHashMap<String, List<HollowObjectPairDiffScore>>();
-        this.unmatchedFromObjects = new ConcurrentHashMap<String, List<HollowUnmatchedObject>>();
-        this.unmatchedToObjects = new ConcurrentHashMap<String, List<HollowUnmatchedObject>>();
+        this.typeObjectPairScores = new ConcurrentHashMap<>();
+        this.unmatchedFromObjects = new ConcurrentHashMap<>();
+        this.unmatchedToObjects = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -70,36 +70,44 @@ public class DiffTypePage extends DiffPage {
         ctx.put("fieldDiffs", getDisplayDiffs(typeDiff));
         ctx.put("numObjectsDiff", pairs.size());
 
-        if(diffPairBeginIdx > 0)
+        if(diffPairBeginIdx > 0) {
             ctx.put("previousDiffPairPageBeginIdx", diffPairBeginIdx - diffPairPageSize);
-        if((diffPairBeginIdx + diffPairPageSize) < pairs.size())
+        }
+        if((diffPairBeginIdx + diffPairPageSize) < pairs.size()) {
             ctx.put("nextDiffPairPageBeginIdx", diffPairBeginIdx + diffPairPageSize);
-        if(unmatchedFromBeginIdx > 0)
+        }
+        if(unmatchedFromBeginIdx > 0) {
             ctx.put("previousUnmatchedFromPageBeginIdx", unmatchedFromBeginIdx - unmatchedPageSize);
-        if((unmatchedFromBeginIdx + unmatchedPageSize) < unmatchedFrom.size())
+        }
+        if((unmatchedFromBeginIdx + unmatchedPageSize) < unmatchedFrom.size()) {
             ctx.put("nextUnmatchedFromPageBeginIdx", unmatchedFromBeginIdx + unmatchedPageSize);
-        if(unmatchedToBeginIdx > 0)
+        }
+        if(unmatchedToBeginIdx > 0) {
             ctx.put("previousUnmatchedToPageBeginIdx", unmatchedToBeginIdx - unmatchedPageSize);
-        if((unmatchedToBeginIdx + unmatchedPageSize) < unmatchedTo.size())
+        }
+        if((unmatchedToBeginIdx + unmatchedPageSize) < unmatchedTo.size()) {
             ctx.put("nextUnmatchedToPageBeginIdx", unmatchedToBeginIdx + unmatchedPageSize);
+        }
         ctx.put("showFields", showFields);
 
         ctx.put("breadcrumbs", getBreadcrumbs(typeDiff));
     }
 
     private <T> List<T> sublist(List<T> list, int fromIndex, int pageSize) {
-        if(fromIndex >= list.size())
+        if(fromIndex >= list.size()) {
             fromIndex = 0;
+        }
 
-        if(fromIndex + pageSize >= list.size())
+        if(fromIndex + pageSize >= list.size()) {
             pageSize = list.size() - fromIndex;
+        }
 
         return list.subList(fromIndex, fromIndex + pageSize);
     }
 
     private List<HollowFieldDiffScore> getDisplayDiffs(HollowTypeDiff typeDiff) {
         List<HollowFieldDiff> fieldDiffs = typeDiff.getFieldDiffs();
-        List<HollowFieldDiffScore> displayDiffs = new ArrayList<HollowFieldDiffScore>();
+        List<HollowFieldDiffScore> displayDiffs = new ArrayList<>();
 
         for(int i=0;i<fieldDiffs.size();i++) {
             HollowFieldDiff fieldDiff = fieldDiffs.get(i);
@@ -134,7 +142,9 @@ public class DiffTypePage extends DiffPage {
 
     private List<HollowObjectPairDiffScore> aggregateFieldDiffScores(HollowTypeDiff typeDiff) {
         // Handle from State missing Type
-        if (typeDiff.getFromTypeState()==null) return Collections.emptyList();
+        if(typeDiff.getFromTypeState() == null) {
+            return Collections.emptyList();
+        }
 
         List<HollowObjectPairDiffScore> scores;
         int maxFromOrdinal = typeDiff.getFromTypeState().maxOrdinal();
@@ -153,11 +163,12 @@ public class DiffTypePage extends DiffPage {
             }
         }
 
-        scores = new ArrayList<HollowObjectPairDiffScore>(diffPairCounts);
+        scores = new ArrayList<>(diffPairCounts);
 
         for(HollowObjectPairDiffScore score : allDiffPairsIndexedByFromOrdinal) {
-            if(score != null)
+            if(score != null) {
                 scores.add(score);
+            }
         }
 
         Collections.sort(scores);
@@ -178,13 +189,16 @@ public class DiffTypePage extends DiffPage {
             HollowObjectTypeReadState typeState,
             IntList unmatchedOrdinals) {
         // Handle typeState missing from either from or to
-        if (typeState==null) return Collections.emptyList();
+        if(typeState == null) {
+            return Collections.emptyList();
+        }
 
         List<HollowUnmatchedObject> list = cache.get(typeDiff.getTypeName());
-        if(list != null)
+        if(list != null) {
             return list;
+        }
 
-        list = new ArrayList<HollowUnmatchedObject>();
+        list = new ArrayList<>();
         for(int i=0;i<unmatchedOrdinals.size();i++) {
             int ordinal = unmatchedOrdinals.get(i);
             String keyDisplay = typeDiff.getMatcher().getKeyDisplayString(typeState, ordinal);
@@ -196,9 +210,9 @@ public class DiffTypePage extends DiffPage {
     }
 
     private List<HollowDiffUIBreadcrumbs> getBreadcrumbs(HollowTypeDiff typeDiff) {
-        List<HollowDiffUIBreadcrumbs> breadcrumbs = new ArrayList<HollowDiffUIBreadcrumbs>();
+        List<HollowDiffUIBreadcrumbs> breadcrumbs = new ArrayList<>();
 
-        breadcrumbs.add(new HollowDiffUIBreadcrumbs((diffUI.getDiffUIPath() == null || diffUI.getDiffUIPath().length() == 0) ?
+        breadcrumbs.add(new HollowDiffUIBreadcrumbs(diffUI.getDiffUIPath() == null || diffUI.getDiffUIPath().length() == 0 ?
                 "/" : diffUI.getDiffUIPath(), "Overview"));
         breadcrumbs.add(new HollowDiffUIBreadcrumbs(null, typeDiff.getTypeName()));
 

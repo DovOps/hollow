@@ -186,8 +186,7 @@ public class TestHollowConsumer extends HollowConsumer {
         @Override
         public TestHollowConsumer build() {
             checkArguments();
-            TestHollowConsumer consumer = new TestHollowConsumer(this);
-            return consumer;
+            return new TestHollowConsumer(this);
         }
     }
 }

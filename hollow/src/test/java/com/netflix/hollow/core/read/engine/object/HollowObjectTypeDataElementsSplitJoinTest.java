@@ -99,7 +99,7 @@ public class HollowObjectTypeDataElementsSplitJoinTest extends AbstractHollowObj
     public void testSplittingAndJoiningWithSnapshotBlob() throws Exception {
 
         String blobPath = null; // dir where snapshot blob exists for e.g. "/tmp/";
-        long v = 0l; // snapshot version for e.g. 20230915162636001l;
+        long v = 0L; // snapshot version for e.g. 20230915162636001l;
         String objectTypeWithOneShard = null; // type name corresponding to an Object type with single shard for e.g. "Movie";
         int numSplits = 2;
 

@@ -166,11 +166,17 @@ public class HollowClientTest {
         @Override
         public HollowBlob retrieveDeltaBlob(long currentVersion) {
             byte[] data = null;
-            if(currentVersion == 1)  data = delta1.toByteArray();
-            if(currentVersion == 2)  data = delta2.toByteArray();
-            if(currentVersion == 3)  data = delta3.toByteArray();
+            if(currentVersion == 1) {
+                data = delta1.toByteArray();
+            }
+            if(currentVersion == 2) {
+                data = delta2.toByteArray();
+            }
+            if(currentVersion == 3) {
+                data = delta3.toByteArray();
+            }
 
-            final byte b[] = data;
+            final byte[] b = data;
 
             return new HollowBlob(currentVersion, currentVersion + 1) {
                 public InputStream getInputStream() throws IOException {

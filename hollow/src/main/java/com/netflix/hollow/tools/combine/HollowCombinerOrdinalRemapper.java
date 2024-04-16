@@ -40,13 +40,15 @@ public class HollowCombinerOrdinalRemapper implements OrdinalRemapper {
 
     @Override
     public int getMappedOrdinal(String type, int originalOrdinal) {
-        int typeMapping[] = typeMappings.get(type);
-        
-        if(typeMapping == null)
+        int[] typeMapping = typeMappings.get(type);
+
+        if(typeMapping == null) {
             return originalOrdinal;
-        
-        if(typeMapping[originalOrdinal] == -1)
+        }
+
+        if(typeMapping[originalOrdinal] == -1) {
             typeMapping[originalOrdinal] = combiner.copyOrdinal(type, originalOrdinal);
+        }
         
         return typeMapping[originalOrdinal];
     }
@@ -62,9 +64,9 @@ public class HollowCombinerOrdinalRemapper implements OrdinalRemapper {
     }
 
     private Map<String, int[]> initializeTypeMappings(HollowReadStateEngine inputStateEngine) {
-        Map<String, int[]> typeMappings = new HashMap<String, int[]>();
+        Map<String, int[]> typeMappings = new HashMap<>();
         for(HollowTypeReadState typeState : inputStateEngine.getTypeStates()) {
-            int mapping[] = new int[typeState.maxOrdinal() + 1];
+            int[] mapping = new int[typeState.maxOrdinal() + 1];
             Arrays.fill(mapping, -1);
             typeMappings.put(typeState.getSchema().getName(), mapping);
         }

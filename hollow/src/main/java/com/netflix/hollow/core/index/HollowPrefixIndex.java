@@ -108,8 +108,9 @@ public class HollowPrefixIndex implements HollowTypeStateListener {
         requireNonNull(readStateEngine, "Hollow Prefix Key Index creation for type [" + type
                 + "] failed because read state wasn't initialized");
 
-        if (fieldPath == null || fieldPath.isEmpty())
+        if(fieldPath == null || fieldPath.isEmpty()) {
             throw new IllegalArgumentException("fieldPath cannot be null or empty");
+        }
         if (estimatedMaxStringDuplicates < 1) {
             throw new IllegalArgumentException("estimatedMaxStringDuplicates cannot be < 1");
         }
@@ -119,8 +120,9 @@ public class HollowPrefixIndex implements HollowTypeStateListener {
         this.estimatedMaxStringDuplicates = estimatedMaxStringDuplicates;
         this.caseSensitive = caseSensitive;
         this.fieldPath = new FieldPath(readStateEngine, type, fieldPath);
-        if (!this.fieldPath.getLastFieldType().equals(HollowObjectSchema.FieldType.STRING))
+        if(!this.fieldPath.getLastFieldType().equals(HollowObjectSchema.FieldType.STRING)) {
             throw new IllegalArgumentException("Field path should lead to a string type");
+        }
 
         // create memory recycle for using shared memory pools.
         memoryRecycle = WastefulRecycler.DEFAULT_INSTANCE;
@@ -155,11 +157,15 @@ public class HollowPrefixIndex implements HollowTypeStateListener {
 
     private void build() {
 
-        if (!buildIndexOnUpdate) return;
+        if(!buildIndexOnUpdate) {
+            return;
+        }
         // tell memory recycler to use current tst's long arrays next time when long array is requested.
         // note reuse only happens once swap is called and bits are reset
         TST current = prefixIndexVolatile;
-        if (current != null) current.recycleMemory(memoryRecycle);
+        if(current != null) {
+            current.recycleMemory(memoryRecycle);
+        }
 
         // This is a hard limit, and currently assumes worst case unbalanced tree i.e. the total length of all words
         long estimatedMaxNodes = estimateNumNodes(totalWords, averageWordLen);
@@ -295,7 +301,9 @@ public class HollowPrefixIndex implements HollowTypeStateListener {
      * @return {@code true} if the key exists, otherwise {@code false}
      */
     public boolean contains(String key) {
-        if (key == null) throw new IllegalArgumentException("key cannot be null");
+        if(key == null) {
+            throw new IllegalArgumentException("key cannot be null");
+        }
         TST current;
         boolean result;
         do {

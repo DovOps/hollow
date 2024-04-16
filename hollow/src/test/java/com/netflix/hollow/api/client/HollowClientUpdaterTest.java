@@ -192,7 +192,8 @@ public class HollowClientUpdaterTest {
     public void testDoubleSnapshotOnSchemaChange() throws Exception {
         HollowWriteStateEngine stateEngine = new HollowWriteStateEngine();
         TestHollowConsumer testHollowConsumer = schemaChangeSubject(stateEngine, true, false, true, true);
-        Map<String, String> v2Metadata = new HashMap<String, String>() {{ put(HollowStateEngine.HEADER_TAG_SCHEMA_HASH, (new HollowSchemaHash(stateEngine)).getHash()); }};
+        Map<String, String> v2Metadata = new HashMap<>();
+        v2Metadata.put(HollowStateEngine.HEADER_TAG_SCHEMA_HASH, (new HollowSchemaHash(stateEngine)).getHash());
         testHollowConsumer.triggerRefreshTo(new HollowConsumer.VersionInfo(2, Optional.of(v2Metadata), Optional.empty()));
     }
 
@@ -200,7 +201,8 @@ public class HollowClientUpdaterTest {
     public void testDoubleSnapshotOnSchemaChange_flagDisabled() throws Exception {
         HollowWriteStateEngine stateEngine = new HollowWriteStateEngine();
         TestHollowConsumer testHollowConsumer = schemaChangeSubject(stateEngine, false, true, false, true);
-        Map<String, String> v2Metadata = new HashMap<String, String>() {{ put(HollowStateEngine.HEADER_TAG_SCHEMA_HASH, (new HollowSchemaHash(stateEngine)).getHash()); }};
+        Map<String, String> v2Metadata = new HashMap<>();
+        v2Metadata.put(HollowStateEngine.HEADER_TAG_SCHEMA_HASH, (new HollowSchemaHash(stateEngine)).getHash());
         testHollowConsumer.triggerRefreshTo(new HollowConsumer.VersionInfo(2, Optional.of(v2Metadata), Optional.empty()));
     }
 
@@ -237,13 +239,14 @@ public class HollowClientUpdaterTest {
 
     @Test
     public void testDoubleSnapshotOnSchemaChange_prohibitDoubleSnapshot_logsWarning() throws Exception {
-        WarnLogHandler logHandler = (WarnLogHandler) configureLogger(HollowClientUpdater.class.getName(), Level.WARNING,
-                "Auto double snapshots on schema changes are enabled but double snapshots on consumer " +
-                        "are prohibited by doubleSnapshotConfig. This refresh will not be able to reflect any schema changes.");
+        WarnLogHandler logHandler = (WarnLogHandler)configureLogger(HollowClientUpdater.class.getName(), Level.WARNING,
+        "Auto double snapshots on schema changes are enabled but double snapshots on consumer " +
+        "are prohibited by doubleSnapshotConfig. This refresh will not be able to reflect any schema changes.");
 
         HollowWriteStateEngine stateEngine = new HollowWriteStateEngine();
         TestHollowConsumer testHollowConsumer = schemaChangeSubject(stateEngine, true, true, false, false);
-        Map<String, String> v2Metadata = new HashMap<String, String>() {{ put(HollowStateEngine.HEADER_TAG_SCHEMA_HASH, (new HollowSchemaHash(stateEngine)).getHash()); }};
+        Map<String, String> v2Metadata = new HashMap<>();
+        v2Metadata.put(HollowStateEngine.HEADER_TAG_SCHEMA_HASH, (new HollowSchemaHash(stateEngine)).getHash());
         testHollowConsumer.triggerRefreshTo(new HollowConsumer.VersionInfo(2, Optional.of(v2Metadata), Optional.empty()));
 
         assertTrue("Warning should be logged", logHandler.isContains());
@@ -303,10 +306,10 @@ public class HollowClientUpdaterTest {
         // v1
         addMovie(stateEngine, 1);
         stateEngine.prepareForWrite();
-        ByteArrayOutputStream baos_v1 = new ByteArrayOutputStream();
+        ByteArrayOutputStream baosV1 = new ByteArrayOutputStream();
         HollowBlobWriter writer = new HollowBlobWriter(stateEngine);
-        writer.writeSnapshot(baos_v1);
-        testBlobRetriever.addSnapshot(1, new TestBlob(1,new ByteArrayInputStream(baos_v1.toByteArray())));
+        writer.writeSnapshot(baosV1);
+        testBlobRetriever.addSnapshot(1, new TestBlob(1,new ByteArrayInputStream(baosV1.toByteArray())));
         TestHollowConsumer testHollowConsumer = (new TestHollowConsumer.Builder())
                 .withBlobRetriever(testBlobRetriever)
                 .withDoubleSnapshotConfig(supportsSchemaChange)
@@ -323,15 +326,15 @@ public class HollowClientUpdaterTest {
 
         addActor(stateEngine, 1);
         stateEngine.prepareForWrite();
-        ByteArrayOutputStream baos_v1_to_v2 = new ByteArrayOutputStream();
-        ByteArrayOutputStream baos_v2_to_v1 = new ByteArrayOutputStream();
-        ByteArrayOutputStream baos_v2 = new ByteArrayOutputStream();
-        writer.writeSnapshot(baos_v2);
-        writer.writeDelta(baos_v1_to_v2);
-        writer.writeReverseDelta(baos_v2_to_v1);
-        testBlobRetriever.addSnapshot(2, new TestBlob(2,new ByteArrayInputStream(baos_v2.toByteArray())));
-        testBlobRetriever.addDelta(1, new TestBlob(1, 2, new ByteArrayInputStream(baos_v1_to_v2.toByteArray())));
-        testBlobRetriever.addReverseDelta(2, new TestBlob(2, 1, new ByteArrayInputStream(baos_v2_to_v1.toByteArray())));
+        ByteArrayOutputStream baosV1ToV2 = new ByteArrayOutputStream();
+        ByteArrayOutputStream baosV2ToV1 = new ByteArrayOutputStream();
+        ByteArrayOutputStream baosV2 = new ByteArrayOutputStream();
+        writer.writeSnapshot(baosV2);
+        writer.writeDelta(baosV1ToV2);
+        writer.writeReverseDelta(baosV2ToV1);
+        testBlobRetriever.addSnapshot(2, new TestBlob(2,new ByteArrayInputStream(baosV2.toByteArray())));
+        testBlobRetriever.addDelta(1, new TestBlob(1, 2, new ByteArrayInputStream(baosV1ToV2.toByteArray())));
+        testBlobRetriever.addReverseDelta(2, new TestBlob(2, 1, new ByteArrayInputStream(baosV2ToV1.toByteArray())));
 
         return testHollowConsumer;
     }
@@ -347,7 +350,7 @@ public class HollowClientUpdaterTest {
 
     private class WarnLogHandler extends Handler {
         private final String msg;
-        private boolean contains = false;
+        private boolean contains;
 
         WarnLogHandler(String msg) {
             this.msg = msg;

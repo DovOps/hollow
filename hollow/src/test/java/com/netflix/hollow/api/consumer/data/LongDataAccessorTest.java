@@ -39,77 +39,77 @@ public class LongDataAccessorTest extends AbstractPrimitiveTypeDataAccessorTest<
 
     @Test
     public void test() throws IOException {
-        addRecord(new Long(1));
-        addRecord(new Long(2));
-        addRecord(new Long(3));
+        addRecord(Long.valueOf(1));
+        addRecord(Long.valueOf(2));
+        addRecord(Long.valueOf(3));
 
         roundTripSnapshot();
         {
             LongDataAccessor dAccessor = new LongDataAccessor(readStateEngine, new PrimitiveTypeTestAPI(readStateEngine));
             Assert.assertEquals(3, dAccessor.getAddedRecords().size());
-            assertList(dAccessor.getAddedRecords(), Arrays.<Long>asList(new Long(1), new Long(2), new Long(3)));
+            assertList(dAccessor.getAddedRecords(), Arrays.<Long>asList(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3)));
             Assert.assertTrue(dAccessor.getRemovedRecords().isEmpty());
             Assert.assertTrue(dAccessor.getUpdatedRecords().isEmpty());
         }
 
         writeStateEngine.prepareForNextCycle(); /// not necessary to call, but needs to be a no-op.
 
-        addRecord(new Long(1));
+        addRecord(Long.valueOf(1));
         // addRecord(new Long(2)); // removed
-        addRecord(new Long(3));
-        addRecord(new Long(1000)); // added
-        addRecord(new Long(0)); // added
+        addRecord(Long.valueOf(3));
+        addRecord(Long.valueOf(1000)); // added
+        addRecord(Long.valueOf(0)); // added
 
         roundTripDelta();
         {
             LongDataAccessor dAccessor = new LongDataAccessor(readStateEngine, new PrimitiveTypeTestAPI(readStateEngine));
             Assert.assertEquals(2, dAccessor.getAddedRecords().size());
-            assertList(dAccessor.getAddedRecords(), Arrays.asList(new Long(1000), new Long(0)));
+            assertList(dAccessor.getAddedRecords(), Arrays.asList(Long.valueOf(1000), Long.valueOf(0)));
             Assert.assertEquals(1, dAccessor.getRemovedRecords().size());
-            assertList(dAccessor.getRemovedRecords(), Arrays.asList(new Long(2)));
+            assertList(dAccessor.getRemovedRecords(), Arrays.asList(Long.valueOf(2)));
             Assert.assertEquals(0, dAccessor.getUpdatedRecords().size());
         }
 
         HollowObjectTypeReadState typeState = (HollowObjectTypeReadState) readStateEngine.getTypeState("Long");
         Assert.assertEquals(4, typeState.maxOrdinal());
 
-        assertObject(typeState, 0, new Long(1));
-        assertObject(typeState, 1, new Long(2)); /// this was "removed", but the data hangs around as a "ghost" until the following cycle.
-        assertObject(typeState, 2, new Long(3));
-        assertObject(typeState, 3, new Long(1000));
-        assertObject(typeState, 4, new Long(0));
+        assertObject(typeState, 0, Long.valueOf(1));
+        assertObject(typeState, 1, Long.valueOf(2)); /// this was "removed", but the data hangs around as a "ghost" until the following cycle.
+        assertObject(typeState, 2, Long.valueOf(3));
+        assertObject(typeState, 3, Long.valueOf(1000));
+        assertObject(typeState, 4, Long.valueOf(0));
 
         roundTripDelta(); // remove everything
         {
             LongDataAccessor dAccessor = new LongDataAccessor(readStateEngine, new PrimitiveTypeTestAPI(readStateEngine));
             Assert.assertEquals(0, dAccessor.getAddedRecords().size());
             Assert.assertEquals(4, dAccessor.getRemovedRecords().size());
-            assertList(dAccessor.getRemovedRecords(), Arrays.asList(new Long(1), new Long(3), new Long(1000), new Long(0)));
+            assertList(dAccessor.getRemovedRecords(), Arrays.asList(Long.valueOf(1), Long.valueOf(3), Long.valueOf(1000), Long.valueOf(0)));
             Assert.assertEquals(0, dAccessor.getUpdatedRecords().size());
         }
 
-        assertObject(typeState, 0, new Long(1)); /// all records were "removed", but again hang around until the following cycle.
+        assertObject(typeState, 0, Long.valueOf(1)); /// all records were "removed", but again hang around until the following cycle.
         // assertObject(typeState, 1, new Long(2)); /// this record should now be disappeared.
-        assertObject(typeState, 2, new Long(3)); /// "ghost"
-        assertObject(typeState, 3, new Long(1000)); /// "ghost"
-        assertObject(typeState, 4, new Long(0)); /// "ghost"
+        assertObject(typeState, 2, Long.valueOf(3)); /// "ghost"
+        assertObject(typeState, 3, Long.valueOf(1000)); /// "ghost"
+        assertObject(typeState, 4, Long.valueOf(0)); /// "ghost"
 
         Assert.assertEquals(4, typeState.maxOrdinal());
 
-        addRecord(new Long(634));
-        addRecord(new Long(0));
+        addRecord(Long.valueOf(634));
+        addRecord(Long.valueOf(0));
 
         roundTripDelta();
         {
             LongDataAccessor dAccessor = new LongDataAccessor(readStateEngine, new PrimitiveTypeTestAPI(readStateEngine));
             Assert.assertEquals(2, dAccessor.getAddedRecords().size());
-            assertList(dAccessor.getAddedRecords(), Arrays.asList(new Long(634), new Long(0)));
+            assertList(dAccessor.getAddedRecords(), Arrays.asList(Long.valueOf(634), Long.valueOf(0)));
             Assert.assertEquals(0, dAccessor.getRemovedRecords().size());
             Assert.assertEquals(0, dAccessor.getUpdatedRecords().size());
         }
 
         Assert.assertEquals(1, typeState.maxOrdinal());
-        assertObject(typeState, 0, new Long(634)); /// now, since all records were removed, we can recycle the ordinal "0", even though it was a "ghost" in the last cycle.
-        assertObject(typeState, 1, new Long(0)); /// even though new Long(0) had an equivalent record in the previous cycle at ordinal "4", it is now assigned to recycled ordinal "1".
+        assertObject(typeState, 0, Long.valueOf(634)); /// now, since all records were removed, we can recycle the ordinal "0", even though it was a "ghost" in the last cycle.
+        assertObject(typeState, 1, Long.valueOf(0)); /// even though new Long(0) had an equivalent record in the previous cycle at ordinal "4", it is now assigned to recycled ordinal "1".
     }
 }

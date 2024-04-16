@@ -36,7 +36,7 @@ public class HollowPerformanceAPIGenerator {
     private String apiClassname;
     private String packageName;
     private Path destinationPath;
-    private Set<String> checkFieldExistsMethods = new HashSet<>();
+    private final Set<String> checkFieldExistsMethods = new HashSet<>();
     
     public static Builder newBuilder() {
         HollowPerformanceAPIGenerator gen = new HollowPerformanceAPIGenerator();

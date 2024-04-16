@@ -40,9 +40,9 @@ public class HollowObjectMapper {
     private final ConcurrentHashMap<Type, String> typeNameMappers;
     private final ConcurrentHashMap<String, HollowTypeMapper> typeMappers;
 
-    private AtomicInteger unassignedTypeCounter = new AtomicInteger(0);
+    private final AtomicInteger unassignedTypeCounter = new AtomicInteger(0);
 
-    private boolean ignoreListOrdering = false;
+    private boolean ignoreListOrdering;
     private boolean useDefaultHashKeys = true;
 
     public HollowObjectMapper(HollowWriteStateEngine stateEngine) {

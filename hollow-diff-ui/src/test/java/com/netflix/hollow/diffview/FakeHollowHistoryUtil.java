@@ -48,10 +48,10 @@ public class FakeHollowHistoryUtil {
         addMovie(stateEngine, 2, "movie2-added-in-v1");
         addMovie(stateEngine, 3, "movie3-added-in-v1-removed-in-v2");
         stateEngine.prepareForWrite();
-        ByteArrayOutputStream baos_v1 = new ByteArrayOutputStream();
+        ByteArrayOutputStream baosV1 = new ByteArrayOutputStream();
         HollowBlobWriter writer = new HollowBlobWriter(stateEngine);
-        writer.writeSnapshot(baos_v1);
-        testBlobRetriever.addSnapshot(1, new TestBlob(1,new ByteArrayInputStream(baos_v1.toByteArray())));
+        writer.writeSnapshot(baosV1);
+        testBlobRetriever.addSnapshot(1, new TestBlob(1,new ByteArrayInputStream(baosV1.toByteArray())));
 
         // v2
         stateEngine.prepareForNextCycle();
@@ -60,15 +60,15 @@ public class FakeHollowHistoryUtil {
         addMovie(stateEngine, 2, "movie2-added-in-v1-modified-in-v2-removed-in-v5");
         addMovie(stateEngine, 4, "movie4-added-in-v2");
         stateEngine.prepareForWrite();
-        ByteArrayOutputStream baos_v1_to_v2 = new ByteArrayOutputStream();
-        ByteArrayOutputStream baos_v2_to_v1 = new ByteArrayOutputStream();
-        ByteArrayOutputStream baos_v2 = new ByteArrayOutputStream();
-        writer.writeSnapshot(baos_v2);
-        writer.writeDelta(baos_v1_to_v2);
-        writer.writeReverseDelta(baos_v2_to_v1);
-        testBlobRetriever.addSnapshot(2, new TestBlob(2,new ByteArrayInputStream(baos_v2.toByteArray())));
-        testBlobRetriever.addDelta(1, new TestBlob(1, 2, new ByteArrayInputStream(baos_v1_to_v2.toByteArray())));
-        testBlobRetriever.addReverseDelta(2, new TestBlob(2, 1, new ByteArrayInputStream(baos_v2_to_v1.toByteArray())));
+        ByteArrayOutputStream baosV1ToV2 = new ByteArrayOutputStream();
+        ByteArrayOutputStream baosV2ToV1 = new ByteArrayOutputStream();
+        ByteArrayOutputStream baosV2 = new ByteArrayOutputStream();
+        writer.writeSnapshot(baosV2);
+        writer.writeDelta(baosV1ToV2);
+        writer.writeReverseDelta(baosV2ToV1);
+        testBlobRetriever.addSnapshot(2, new TestBlob(2,new ByteArrayInputStream(baosV2.toByteArray())));
+        testBlobRetriever.addDelta(1, new TestBlob(1, 2, new ByteArrayInputStream(baosV1ToV2.toByteArray())));
+        testBlobRetriever.addReverseDelta(2, new TestBlob(2, 1, new ByteArrayInputStream(baosV2ToV1.toByteArray())));
 
         // v3
         stateEngine.prepareForNextCycle();
@@ -78,15 +78,15 @@ public class FakeHollowHistoryUtil {
         addMovie(stateEngine, 4, "movie4-added-in-v2");
         addMovie(stateEngine, 5, "movie5-added-in-v3-removed-in-v5");
         stateEngine.prepareForWrite();
-        ByteArrayOutputStream baos_v2_to_v3 = new ByteArrayOutputStream();
-        ByteArrayOutputStream baos_v3_to_v2 = new ByteArrayOutputStream();
-        ByteArrayOutputStream baos_v3 = new ByteArrayOutputStream();
-        writer.writeSnapshot(baos_v3);
-        writer.writeDelta(baos_v2_to_v3);
-        writer.writeReverseDelta(baos_v3_to_v2);
-        testBlobRetriever.addSnapshot(3, new TestBlob(3,new ByteArrayInputStream(baos_v3.toByteArray())));
-        testBlobRetriever.addDelta(2, new TestBlob(2, 3, new ByteArrayInputStream(baos_v2_to_v3.toByteArray())));
-        testBlobRetriever.addReverseDelta(3, new TestBlob(3, 2, new ByteArrayInputStream(baos_v3_to_v2.toByteArray())));
+        ByteArrayOutputStream baosV2ToV3 = new ByteArrayOutputStream();
+        ByteArrayOutputStream baosV3ToV2 = new ByteArrayOutputStream();
+        ByteArrayOutputStream baosV3 = new ByteArrayOutputStream();
+        writer.writeSnapshot(baosV3);
+        writer.writeDelta(baosV2ToV3);
+        writer.writeReverseDelta(baosV3ToV2);
+        testBlobRetriever.addSnapshot(3, new TestBlob(3,new ByteArrayInputStream(baosV3.toByteArray())));
+        testBlobRetriever.addDelta(2, new TestBlob(2, 3, new ByteArrayInputStream(baosV2ToV3.toByteArray())));
+        testBlobRetriever.addReverseDelta(3, new TestBlob(3, 2, new ByteArrayInputStream(baosV3ToV2.toByteArray())));
 
         // v4
         stateEngine.prepareForNextCycle();
@@ -97,15 +97,15 @@ public class FakeHollowHistoryUtil {
         addMovie(stateEngine, 6, "movie6-added-in-v4");
 
         stateEngine.prepareForWrite();
-        ByteArrayOutputStream baos_v4 = new ByteArrayOutputStream();
-        ByteArrayOutputStream baos_v3_to_v4 = new ByteArrayOutputStream();
-        ByteArrayOutputStream baos_v4_to_v3 = new ByteArrayOutputStream();
-        writer.writeSnapshot(baos_v4);
-        writer.writeDelta(baos_v3_to_v4);
-        writer.writeReverseDelta(baos_v4_to_v3);
-        testBlobRetriever.addSnapshot(4, new TestBlob(4,new ByteArrayInputStream(baos_v4.toByteArray())));
-        testBlobRetriever.addDelta(3, new TestBlob(3, 4, new ByteArrayInputStream(baos_v3_to_v4.toByteArray())));
-        testBlobRetriever.addReverseDelta(4, new TestBlob(4, 3, new ByteArrayInputStream(baos_v4_to_v3.toByteArray())));
+        ByteArrayOutputStream baosV4 = new ByteArrayOutputStream();
+        ByteArrayOutputStream baosV3ToV4 = new ByteArrayOutputStream();
+        ByteArrayOutputStream baosV4ToV3 = new ByteArrayOutputStream();
+        writer.writeSnapshot(baosV4);
+        writer.writeDelta(baosV3ToV4);
+        writer.writeReverseDelta(baosV4ToV3);
+        testBlobRetriever.addSnapshot(4, new TestBlob(4,new ByteArrayInputStream(baosV4.toByteArray())));
+        testBlobRetriever.addDelta(3, new TestBlob(3, 4, new ByteArrayInputStream(baosV3ToV4.toByteArray())));
+        testBlobRetriever.addReverseDelta(4, new TestBlob(4, 3, new ByteArrayInputStream(baosV4ToV3.toByteArray())));
 
         // v5
         stateEngine.prepareForNextCycle();
@@ -114,15 +114,15 @@ public class FakeHollowHistoryUtil {
         addMovie(stateEngine, 6, "movie6-added-in-v4-modified-in-v5");
         addMovie(stateEngine, 7, "movie7-added-in-v5-removed-in-v6");
         stateEngine.prepareForWrite();
-        ByteArrayOutputStream baos_v5 = new ByteArrayOutputStream();
-        ByteArrayOutputStream baos_v4_to_v5 = new ByteArrayOutputStream();
-        ByteArrayOutputStream baos_v5_to_v4 = new ByteArrayOutputStream();
-        writer.writeSnapshot(baos_v5);
-        writer.writeDelta(baos_v4_to_v5);
-        writer.writeReverseDelta(baos_v5_to_v4);
-        testBlobRetriever.addSnapshot(5, new TestBlob(5,new ByteArrayInputStream(baos_v5.toByteArray())));
-        testBlobRetriever.addDelta(4, new TestBlob(4, 5, new ByteArrayInputStream(baos_v4_to_v5.toByteArray())));
-        testBlobRetriever.addReverseDelta(5, new TestBlob(5, 4, new ByteArrayInputStream(baos_v5_to_v4.toByteArray())));
+        ByteArrayOutputStream baosV5 = new ByteArrayOutputStream();
+        ByteArrayOutputStream baosV4ToV5 = new ByteArrayOutputStream();
+        ByteArrayOutputStream baosV5ToV4 = new ByteArrayOutputStream();
+        writer.writeSnapshot(baosV5);
+        writer.writeDelta(baosV4ToV5);
+        writer.writeReverseDelta(baosV5ToV4);
+        testBlobRetriever.addSnapshot(5, new TestBlob(5,new ByteArrayInputStream(baosV5.toByteArray())));
+        testBlobRetriever.addDelta(4, new TestBlob(4, 5, new ByteArrayInputStream(baosV4ToV5.toByteArray())));
+        testBlobRetriever.addReverseDelta(5, new TestBlob(5, 4, new ByteArrayInputStream(baosV5ToV4.toByteArray())));
 
         // v6 - only snapshot artifact, also contains new type in schema- to test double snapshots
         stateEngine.prepareForNextCycle();
@@ -130,9 +130,9 @@ public class FakeHollowHistoryUtil {
         addMovie(stateEngine, 4, "movie4-added-in-v2-modified-in-v4-also-modified-in-v6");
         addMovie(stateEngine, 8, "movie8-added-in-v6");
         stateEngine.prepareForWrite();
-        ByteArrayOutputStream baos_v6 = new ByteArrayOutputStream();
-        writer.writeSnapshot(baos_v6);
-        testBlobRetriever.addSnapshot(6, new TestBlob(6,new ByteArrayInputStream(baos_v6.toByteArray())));
+        ByteArrayOutputStream baosV6 = new ByteArrayOutputStream();
+        writer.writeSnapshot(baosV6);
+        testBlobRetriever.addSnapshot(6, new TestBlob(6,new ByteArrayInputStream(baosV6.toByteArray())));
 
 
         // v7 - introduces schema change
@@ -144,31 +144,37 @@ public class FakeHollowHistoryUtil {
         addMovie(stateEngine, 4, "movie4-added-in-v2-modified-in-v4-also-modified-in-v6");
         addActor(stateEngine, 1);
         stateEngine.prepareForWrite();
-        ByteArrayOutputStream baos_v7 = new ByteArrayOutputStream();
-        ByteArrayOutputStream baos_v6_to_v7 = new ByteArrayOutputStream();
-        ByteArrayOutputStream baos_v7_to_v6 = new ByteArrayOutputStream();
-        writer.writeSnapshot(baos_v7);
-        writer.writeDelta(baos_v6_to_v7);
-        writer.writeReverseDelta(baos_v7_to_v6);
-        testBlobRetriever.addSnapshot(7, new TestBlob(7, new ByteArrayInputStream(baos_v7.toByteArray())));
-        testBlobRetriever.addDelta(6, new TestBlob(6, 7, new ByteArrayInputStream(baos_v6_to_v7.toByteArray())));
-        testBlobRetriever.addReverseDelta(7, new TestBlob(7, 6, new ByteArrayInputStream(baos_v7_to_v6.toByteArray())));
+        ByteArrayOutputStream baosV7 = new ByteArrayOutputStream();
+        ByteArrayOutputStream baosV6ToV7 = new ByteArrayOutputStream();
+        ByteArrayOutputStream baosV7ToV6 = new ByteArrayOutputStream();
+        writer.writeSnapshot(baosV7);
+        writer.writeDelta(baosV6ToV7);
+        writer.writeReverseDelta(baosV7ToV6);
+        testBlobRetriever.addSnapshot(7, new TestBlob(7, new ByteArrayInputStream(baosV7.toByteArray())));
+        testBlobRetriever.addDelta(6, new TestBlob(6, 7, new ByteArrayInputStream(baosV6ToV7.toByteArray())));
+        testBlobRetriever.addReverseDelta(7, new TestBlob(7, 6, new ByteArrayInputStream(baosV7ToV6.toByteArray())));
 
         // v0 - snapshot only - just to test that double snapshot can not be applied in reverse direction
         HollowWriteStateEngine stateEngineV0 = new HollowWriteStateEngine();
         stateEngineV0.addTypeState(new HollowObjectTypeWriteState(movieSchema));
         addMovie(stateEngineV0, 0, "movie0-never-shows-up-in-ui");
         stateEngineV0.prepareForWrite();
-        ByteArrayOutputStream baos_v0 = new ByteArrayOutputStream();
-        writer.writeSnapshot(baos_v0);
-        testBlobRetriever.addSnapshot(0, new TestBlob(0,new ByteArrayInputStream(baos_v0.toByteArray())));
+        ByteArrayOutputStream baosV0 = new ByteArrayOutputStream();
+        writer.writeSnapshot(baosV0);
+        testBlobRetriever.addSnapshot(0, new TestBlob(0,new ByteArrayInputStream(baosV0.toByteArray())));
     }
 
     public static void assertUiParity(HollowHistoryUI hui1, HollowHistoryUI hui2) {
         HollowHistory h1 = hui1.getHistory();
         HollowHistory h2 = hui2.getHistory();
-        List<RecordDiff> addedDiffs1, addedDiffs2, removedDiffs1, removedDiffs2, modifiedDiffs1, modifiedDiffs2;
-        HollowHistoricalState state1, state2;
+        List<RecordDiff> addedDiffs1;
+        List<RecordDiff> addedDiffs2;
+        List<RecordDiff> removedDiffs1;
+        List<RecordDiff> removedDiffs2;
+        List<RecordDiff> modifiedDiffs1;
+        List<RecordDiff> modifiedDiffs2;
+        HollowHistoricalState state1;
+        HollowHistoricalState state2;
 
         //OverviewPage
         assertEquals("Should have same number of Historical States", h1.getHistoricalStates().length, h2.getHistoricalStates().length);
@@ -270,8 +276,9 @@ public class FakeHollowHistoryUtil {
     }
 
     private static long getNextStateVersion(HollowHistoricalState currentHistoricalState) {
-        if (currentHistoricalState.getNextState() != null)
+        if(currentHistoricalState.getNextState() != null) {
             return currentHistoricalState.getNextState().getVersion();
+        }
         return -1;
     }
 

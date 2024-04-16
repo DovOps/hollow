@@ -61,8 +61,9 @@ public abstract class HollowEffigyFieldPairer {
             if (from.getValue() == null || to.getValue() == null) {
                 return from.getValue() != to.getValue();
             }
-            if(isLeafNode())
+            if(isLeafNode()) {
                 return !from.getValue().equals(to.getValue());
+            }
             return false;
         }
 
@@ -79,7 +80,7 @@ public abstract class HollowEffigyFieldPairer {
             return toIdx;
         }
         public boolean isLeafNode() {
-            return (from != null && from.getValue() != null) ? from.isLeafNode() : to == null ? true : to.isLeafNode();
+            return from != null && from.getValue() != null ? from.isLeafNode() : to == null ? true : to.isLeafNode();
         }
         public boolean isDiff() {
             return isDiff;
@@ -90,11 +91,13 @@ public abstract class HollowEffigyFieldPairer {
     }
 
     public static List<EffigyFieldPair> pair(HollowEffigy from, HollowEffigy to, Map<String, PrimaryKey> matchHints) {
-        if(from == null || to == null)
+        if(from == null || to == null) {
             return new HollowEffigyNullPartnerPairer(from, to).pair();
+        }
 
-        if(from.getDataAccess() == null)
+        if(from.getDataAccess() == null) {
             return new HollowEffigyObjectPairer(from, to).pair();
+        }
         
         HollowSchema schema = from.getDataAccess().getSchema();
         

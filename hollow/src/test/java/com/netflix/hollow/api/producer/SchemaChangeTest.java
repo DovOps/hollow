@@ -44,9 +44,8 @@ public class SchemaChangeTest {
                 .withBlobStager(new HollowInMemoryBlobStager())
                 .build();
 
-        long v1 = producer.runCycle(ws -> {
-            ws.add(new V1.A(1));
-        });
+        long v1 = producer.runCycle(ws ->
+            ws.add(new V1.A(1)));
 
         testChangeHeader(bs, Long.MIN_VALUE, v1, false);
 
@@ -57,9 +56,8 @@ public class SchemaChangeTest {
         producer.initializeDataModel(V2.A.class);
         producer.restore(v1, bs);
 
-        long v2 = producer.runCycle(ws -> {
-            ws.add(new V2.A(1, "1"));
-        });
+        long v2 = producer.runCycle(ws ->
+            ws.add(new V2.A(1, "1")));
 
         HollowConsumer.Blob blob = bs.retrieveSnapshotBlob(v2);
         HollowBlobHeaderReader r = new HollowBlobHeaderReader();

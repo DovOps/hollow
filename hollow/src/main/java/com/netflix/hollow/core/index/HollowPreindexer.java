@@ -101,8 +101,9 @@ public class HollowPreindexer {
                     HollowTypeDataAccess typeDataAccess = originalDataAccess.getDataAccess().getTypeDataAccess(objectSegment.getEnclosingSchema().getName());
                     fieldPathIndexes[i] = new FieldPathSegment(fieldPosition, (HollowObjectTypeDataAccess) typeDataAccess);
 
-                    if(!truncate)
+                    if(!truncate) {
                         baseFieldPathIdx = i + 1;
+                    }
                     break;
                 case SET:
                 case LIST:

@@ -61,28 +61,34 @@ public class HollowFactoryJavaGenerator extends HollowConsumerJavaFileGenerator 
         StringBuilder builder = new StringBuilder();
         appendPackageAndCommonImports(builder, null, Arrays.asList(schema));
 
-        builder.append("import " + HollowFactory.class.getName() + ";\n");
-        builder.append("import " + HollowTypeDataAccess.class.getName() + ";\n");
-        builder.append("import " + HollowTypeAPI.class.getName() + ";\n");
+        builder.append("import ").append(HollowFactory.class.getName()).append(";\n");
+        builder.append("import ").append(HollowTypeDataAccess.class.getName()).append(";\n");
+        builder.append("import ").append(HollowTypeAPI.class.getName()).append(";\n");
 
-        if(schema instanceof HollowListSchema)
-            builder.append("import " + HollowListCachedDelegate.class.getName() + ";\n");
-        if(schema instanceof HollowSetSchema)
-            builder.append("import " + HollowSetCachedDelegate.class.getName() + ";\n");
-        if(schema instanceof HollowMapSchema)
-            builder.append("import " + HollowMapCachedDelegate.class.getName() + ";\n");
+        if(schema instanceof HollowListSchema) {
+            
+            builder.append("import ").append(HollowListCachedDelegate.class.getName()).append(";\n");
+        }
+        if(schema instanceof HollowSetSchema) {
+            
+            builder.append("import ").append(HollowSetCachedDelegate.class.getName()).append(";\n");
+        }
+        if(schema instanceof HollowMapSchema) {
+            
+            builder.append("import ").append(HollowMapCachedDelegate.class.getName()).append(";\n");
+        }
 
         builder.append("\n@SuppressWarnings(\"all\")\n");
-        builder.append("public class " + className + "<T extends " + objectClassName + "> extends HollowFactory<T> {\n\n");
+        builder.append("public class ").append(className).append("<T extends ").append(objectClassName).append("> extends HollowFactory<T> {\n\n");
 
         builder.append("    @Override\n");
         builder.append("    public T newHollowObject(HollowTypeDataAccess dataAccess, HollowTypeAPI typeAPI, int ordinal) {\n");
-        builder.append("        return (T)new " + objectClassName + "(((" + typeAPIClassname(schema.getName()) + ")typeAPI).getDelegateLookupImpl(), ordinal);\n");
+        builder.append("        return (T)new ").append(objectClassName).append("(((").append(typeAPIClassname(schema.getName())).append(")typeAPI).getDelegateLookupImpl(), ordinal);\n");
         builder.append("    }\n\n");
 
         builder.append("    @Override\n");
         builder.append("    public T newCachedHollowObject(HollowTypeDataAccess dataAccess, HollowTypeAPI typeAPI, int ordinal) {\n");
-        builder.append("        return (T)new " + objectClassName + "(new " + delegateCachedClassname(schema) + "((" + typeAPIClassname(schema.getName()) + ")typeAPI, ordinal), ordinal);\n");
+        builder.append("        return (T)new ").append(objectClassName).append("(new ").append(delegateCachedClassname(schema)).append("((").append(typeAPIClassname(schema.getName())).append(")typeAPI, ordinal), ordinal);\n");
         builder.append("    }\n\n");
 
         builder.append("}");

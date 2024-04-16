@@ -39,7 +39,7 @@ public class HollowUpdatePlan implements Iterable<HollowConsumer.Blob> {
     }
 
     public HollowUpdatePlan() {
-        this.transitions = new ArrayList<HollowConsumer.Blob>();
+        this.transitions = new ArrayList<>();
     }
 
     public boolean isSnapshotPlan() {
@@ -47,14 +47,16 @@ public class HollowUpdatePlan implements Iterable<HollowConsumer.Blob> {
     }
 
     public HollowConsumer.Blob getSnapshotTransition() {
-        if(!isSnapshotPlan())
+        if(!isSnapshotPlan()) {
             return null;
+        }
         return transitions.get(0);
     }
 
     public List<HollowConsumer.Blob> getDeltaTransitions() {
-        if(!isSnapshotPlan())
+        if(!isSnapshotPlan()) {
             return transitions;
+        }
         return transitions.subList(1, transitions.size());
     }
 
@@ -68,7 +70,7 @@ public class HollowUpdatePlan implements Iterable<HollowConsumer.Blob> {
 
     public List<HollowConsumer.Blob.BlobType> getTransitionSequence() {
         return transitions.stream()
-                .map(t -> t.getBlobType())
+                .map(HollowConsumer.Blob::getBlobType)
                 .collect(toList());
     }
 

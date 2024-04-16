@@ -60,17 +60,17 @@ public class HollowDataAccessorGenerator extends HollowConsumerJavaFileGenerator
         StringBuilder builder = new StringBuilder();
         appendPackageAndCommonImports(builder, apiclassName, Arrays.<HollowSchema>asList(schema));
 
-        builder.append("import " + HollowConsumer.class.getName() + ";\n");
-        builder.append("import " + AbstractHollowDataAccessor.class.getName() + ";\n");
-        builder.append("import " + PrimaryKey.class.getName() + ";\n");
-        builder.append("import " + HollowReadStateEngine.class.getName() + ";\n");
+        builder.append("import ").append(HollowConsumer.class.getName()).append(";\n");
+        builder.append("import ").append(AbstractHollowDataAccessor.class.getName()).append(";\n");
+        builder.append("import ").append(PrimaryKey.class.getName()).append(";\n");
+        builder.append("import ").append(HollowReadStateEngine.class.getName()).append(";\n");
 
         builder.append("\n");
         builder.append("@SuppressWarnings(\"all\")\n");
-        builder.append("public class " + className + " extends " + AbstractHollowDataAccessor.class.getSimpleName() + "<" + type  +"> {\n\n");
+        builder.append("public class ").append(className).append(" extends ").append(AbstractHollowDataAccessor.class.getSimpleName()).append("<").append(type).append("> {\n\n");
 
-        builder.append("    public static final String TYPE = \"" + schema.getName() + "\";\n");
-        builder.append("    private " + apiclassName + " api;\n\n");
+        builder.append("    public static final String TYPE = \"").append(schema.getName()).append("\";\n");
+        builder.append("    private ").append(apiclassName).append(" api;\n\n");
 
         genConstructors(builder);
         genPublicAPIs(builder);
@@ -81,30 +81,30 @@ public class HollowDataAccessorGenerator extends HollowConsumerJavaFileGenerator
     }
 
     protected void genConstructors(StringBuilder builder) {
-        builder.append("    public " + className + "(HollowConsumer consumer) {\n");
+        builder.append("    public ").append(className).append("(HollowConsumer consumer) {\n");
         builder.append("        super(consumer, TYPE);\n");
-        builder.append("        this.api = (" + apiclassName + ")consumer.getAPI();\n");
+        builder.append("        this.api = (").append(apiclassName).append(")consumer.getAPI();\n");
         builder.append("    }\n\n");
 
-        builder.append("    public " + className + "(HollowReadStateEngine rStateEngine, " + apiclassName + " api) {\n");
+        builder.append("    public ").append(className).append("(HollowReadStateEngine rStateEngine, ").append(apiclassName).append(" api) {\n");
         builder.append("        super(rStateEngine, TYPE);\n");
         builder.append("        this.api = api;\n");
         builder.append("    }\n\n");
 
-        builder.append("    public " + className + "(HollowReadStateEngine rStateEngine, " + apiclassName + " api, String ... fieldPaths) {\n");
+        builder.append("    public ").append(className).append("(HollowReadStateEngine rStateEngine, ").append(apiclassName).append(" api, String ... fieldPaths) {\n");
         builder.append("        super(rStateEngine, TYPE, fieldPaths);\n");
         builder.append("        this.api = api;\n");
         builder.append("    }\n\n");
 
-        builder.append("    public " + className + "(HollowReadStateEngine rStateEngine, " + apiclassName + " api, PrimaryKey primaryKey) {\n");
+        builder.append("    public ").append(className).append("(HollowReadStateEngine rStateEngine, ").append(apiclassName).append(" api, PrimaryKey primaryKey) {\n");
         builder.append("        super(rStateEngine, TYPE, primaryKey);\n");
         builder.append("        this.api = api;\n");
         builder.append("    }\n\n");
     }
 
     protected void genPublicAPIs(StringBuilder builder) {
-        builder.append("    @Override public " + type + " getRecord(int ordinal){\n");
-        builder.append("        return api.get" + type + "(ordinal);\n");
+        builder.append("    @Override public ").append(type).append(" getRecord(int ordinal){\n");
+        builder.append("        return api.get").append(type).append("(ordinal);\n");
         builder.append("    }\n\n");
     }
 }

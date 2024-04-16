@@ -42,8 +42,9 @@ public class HollowSetOrdinalIterator implements HollowOrdinalIterator {
         bucketValue = ORDINAL_NONE;
         while(bucketValue == ORDINAL_NONE) {
             currentBucket++;
-            if(currentBucket >= numBuckets)
+            if(currentBucket >= numBuckets) {
                 return NO_MORE_ORDINALS;
+            }
 
             bucketValue = dataAccess.relativeBucketValue(setOrdinal, currentBucket);
         }

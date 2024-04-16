@@ -40,8 +40,9 @@ public class DiffObjectPage extends DiffPage {
         int toOrdinal = Integer.parseInt(req.getParameter("toOrdinal"));
 
         int fieldIdx = -1;
-        if(req.getParameter("fieldIdx") != null)
+        if(req.getParameter("fieldIdx") != null) {
             fieldIdx = Integer.parseInt(req.getParameter("fieldIdx"));
+        }
 
         ctx.put("typeName", type);
         ctx.put("fromOrdinal", fromOrdinal);
@@ -60,14 +61,14 @@ public class DiffObjectPage extends DiffPage {
     private List<HollowDiffUIBreadcrumbs> getBreadcrumbs(String type, int fieldIdx, int fromOrdinal, int toOrdinal) {
         HollowTypeDiff typeDiff = getTypeDiff(type);
 
-        List<HollowDiffUIBreadcrumbs> breadcrumbs = new ArrayList<HollowDiffUIBreadcrumbs>();
+        List<HollowDiffUIBreadcrumbs> breadcrumbs = new ArrayList<>();
 
-        breadcrumbs.add(new HollowDiffUIBreadcrumbs((diffUI.getDiffUIPath() == null || diffUI.getDiffUIPath().length() == 0) ?
+        breadcrumbs.add(new HollowDiffUIBreadcrumbs(diffUI.getDiffUIPath() == null || diffUI.getDiffUIPath().length() == 0 ?
                 "/" : diffUI.getDiffUIPath(), "Overview"));
-        breadcrumbs.add(new HollowDiffUIBreadcrumbs((diffUI.getDiffUIPath() == null || diffUI.getDiffUIPath().length() == 0) ?
+        breadcrumbs.add(new HollowDiffUIBreadcrumbs(diffUI.getDiffUIPath() == null || diffUI.getDiffUIPath().length() == 0 ?
                 "typediff?type=" + type : diffUI.getDiffUIPath() + "/typediff?type=" + type, type));
         if(fieldIdx != -1) {
-            breadcrumbs.add(new HollowDiffUIBreadcrumbs((diffUI.getDiffUIPath() == null || diffUI.getDiffUIPath().length() == 0) ?
+            breadcrumbs.add(new HollowDiffUIBreadcrumbs(diffUI.getDiffUIPath() == null || diffUI.getDiffUIPath().length() == 0 ?
                     "fielddiff?type=" + type + "&fieldIdx=" + fieldIdx : diffUI.getDiffUIPath() + "/fielddiff?type=" + type + "&fieldIdx=" + fieldIdx, typeDiff.getFieldDiffs().get(fieldIdx).getFieldIdentifier().toString()));
         }
 

@@ -30,12 +30,12 @@ import org.junit.Test;
 
 public class HollowBlobRandomizedTagTest {
 
-    byte snapshot[];
-    byte delta1[];
-    byte delta2[];
-    byte reversedelta1[];
-    byte reversedelta2[];
-    byte snapshot2[];
+    byte[] snapshot;
+    byte[] delta1;
+    byte[] delta2;
+    byte[] reversedelta1;
+    byte[] reversedelta2;
+    byte[] snapshot2;
 
 
     @Before

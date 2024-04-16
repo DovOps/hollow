@@ -29,11 +29,11 @@ public class HollowOrdinalMappingLoader {
 
         int size = dis.readShort();
 
-        Map<String, int[]> idx = new HashMap<String, int[]>(size);
+        Map<String, int[]> idx = new HashMap<>(size);
 
         for (int i = 0; i < size; i++) {
             String type = dis.readUTF();
-            int typeIdx[] = new int[dis.readInt()];
+            int[] typeIdx = new int[dis.readInt()];
             for (int j = 0; j < typeIdx.length; j++) {
                 typeIdx[j] = dis.readInt();
             }

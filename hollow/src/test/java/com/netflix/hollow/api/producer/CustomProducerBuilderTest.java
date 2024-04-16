@@ -31,7 +31,7 @@ public class CustomProducerBuilderTest {
     }
 
     private static class AugmentedBuilder extends HollowProducer.Builder<AugmentedBuilder> {
-        private boolean shouldAugment = false;
+        private boolean shouldAugment;
         AugmentedBuilder withAugmentation() {
             shouldAugment = true;
             return this;
@@ -41,10 +41,11 @@ public class CustomProducerBuilderTest {
         public HollowProducer build() {
             checkArguments();
             HollowProducer producer;
-            if(shouldAugment)
+            if(shouldAugment) {
                 producer = new AugmentedProducer(null, null);
-            else
+            } else {
                 producer = super.build();
+            }
             return producer;
         }
     }

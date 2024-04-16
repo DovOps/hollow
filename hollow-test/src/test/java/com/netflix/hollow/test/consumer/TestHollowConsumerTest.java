@@ -111,7 +111,7 @@ public class TestHollowConsumerTest {
 
     @Test
     public void testDelta_versionTransition() throws Exception {
-        long snapshotVersion = 1l;
+        long snapshotVersion = 1L;
         TestHollowConsumer consumer = new TestHollowConsumer.Builder()
                 .withBlobRetriever(new TestBlobRetriever())
                 .build();
@@ -122,7 +122,7 @@ public class TestHollowConsumerTest {
         consumer.triggerRefreshTo(snapshotVersion);
         assertEquals("Should be at snapshot version", snapshotVersion, consumer.getCurrentVersionId());
 
-        long deltaToVersion = 2l;
+        long deltaToVersion = 2L;
         HollowWriteStateEngine state2 = new HollowWriteStateEngineBuilder().build();
         consumer.addDelta(snapshotVersion, deltaToVersion, state2);
         assertEquals("Should still be at snapshot version", snapshotVersion, consumer.getCurrentVersionId());
@@ -212,7 +212,7 @@ public class TestHollowConsumerTest {
         public int hashCode() {
             int result = 1;
             result = 31 * result + id;
-            result = 31 * result + ((name == null) ? 0 : name.hashCode());
+            result = 31 * result + (name == null ? 0 : name.hashCode());
             return result;
         }
     }

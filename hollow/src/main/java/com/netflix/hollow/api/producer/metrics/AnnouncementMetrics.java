@@ -19,14 +19,14 @@ package com.netflix.hollow.api.producer.metrics;
 import java.util.Map;
 import java.util.OptionalLong;
 
-public class AnnouncementMetrics {
+public final class AnnouncementMetrics {
 
-    private long dataSizeBytes;                             // Heap footprint of announced blob in bytes
-    private Map<String, Integer> numShardsPerType;
-    private Map<String, Long> shardSizePerType;
-    private long announcementDurationMillis;                // Announcement duration in ms, only applicable to completed cycles (skipped cycles dont announce)
-    private boolean isAnnouncementSuccess;                  // true if announcement was successful, false if announcement failed
-    private OptionalLong lastAnnouncementSuccessTimeNano;   // monotonic time of last successful announcement (no relation to wall clock), N/A until first successful announcement
+    private final long dataSizeBytes;                             // Heap footprint of announced blob in bytes
+    private final Map<String, Integer> numShardsPerType;
+    private final Map<String, Long> shardSizePerType;
+    private final long announcementDurationMillis;                // Announcement duration in ms, only applicable to completed cycles (skipped cycles dont announce)
+    private final boolean isAnnouncementSuccess;                  // true if announcement was successful, false if announcement failed
+    private final OptionalLong lastAnnouncementSuccessTimeNano;   // monotonic time of last successful announcement (no relation to wall clock), N/A until first successful announcement
 
 
     public long getDataSizeBytes() {

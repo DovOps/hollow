@@ -40,8 +40,9 @@ public class HollowHistoricalListDataAccess extends HollowHistoricalTypeDataAcce
         sampler().recordGet();
         recordStackTrace();
 
-        if(!ordinalIsPresent(ordinal))
+        if(!ordinalIsPresent(ordinal)) {
             return ((HollowListTypeDataAccess)dataAccess.getTypeDataAccess(getSchema().getName(), ordinal)).getElementOrdinal(ordinal, listIndex);
+        }
 
         return removedRecords().getElementOrdinal(getMappedOrdinal(ordinal), listIndex);
     }
@@ -51,8 +52,9 @@ public class HollowHistoricalListDataAccess extends HollowHistoricalTypeDataAcce
         sampler().recordSize();
         recordStackTrace();
 
-        if(!ordinalIsPresent(ordinal))
+        if(!ordinalIsPresent(ordinal)) {
             return ((HollowListTypeDataAccess)dataAccess.getTypeDataAccess(getSchema().getName(), ordinal)).size(ordinal);
+        }
 
         return removedRecords().size(getMappedOrdinal(ordinal));
     }
@@ -62,8 +64,9 @@ public class HollowHistoricalListDataAccess extends HollowHistoricalTypeDataAcce
         sampler().recordIterator();
         recordStackTrace();
 
-        if(!ordinalIsPresent(ordinal))
+        if(!ordinalIsPresent(ordinal)) {
             return ((HollowListTypeDataAccess)dataAccess.getTypeDataAccess(getSchema().getName(), ordinal)).ordinalIterator(ordinal);
+        }
 
         return removedRecords().ordinalIterator(getMappedOrdinal(ordinal));
     }

@@ -32,7 +32,7 @@ public class PartialOrdinalRemapper implements OrdinalRemapper {
     private final Map<String, IntMap> ordinalMappings;
     
     public PartialOrdinalRemapper() {
-        this.ordinalMappings = new HashMap<String, IntMap>();
+        this.ordinalMappings = new HashMap<>();
     }
     
     public void addOrdinalRemapping(String typeName, IntMap mapping) {
@@ -48,8 +48,9 @@ public class PartialOrdinalRemapper implements OrdinalRemapper {
         IntMap mapping = ordinalMappings.get(type);
         if(mapping != null) {
             int remappedOrdinal = mapping.get(originalOrdinal);
-            if(remappedOrdinal != -1)
+            if(remappedOrdinal != -1) {
                 return remappedOrdinal;
+            }
         }
         return originalOrdinal;
     }

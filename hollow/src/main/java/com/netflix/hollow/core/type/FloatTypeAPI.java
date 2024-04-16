@@ -33,8 +33,9 @@ public class FloatTypeAPI extends HollowObjectTypeAPI {
     }
 
     public float getValue(int ordinal) {
-        if(fieldIndex[0] == -1)
+        if(fieldIndex[0] == -1) {
             return missingDataHandler().handleFloat("Float", ordinal, "value");
+        }
         return getTypeDataAccess().readFloat(ordinal, fieldIndex[0]);
     }
 

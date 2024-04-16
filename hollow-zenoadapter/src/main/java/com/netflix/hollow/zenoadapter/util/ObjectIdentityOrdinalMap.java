@@ -73,11 +73,11 @@ public class ObjectIdentityOrdinalMap {
         // dense, it should be increased
         private static final int LOAD_FACTOR_PERCENT = 75;
         private static final int MINIMUM_CAPACITY = 256;
-        private static final int MAXIMUM_CAPACITY = (1<<30);
+        private static final int MAXIMUM_CAPACITY = 1<<30;
 
-        private int count = 0;
-        private int maxThreshold = 0;
-        private int minThreshold = 0;
+        private int count;
+        private int maxThreshold;
+        private int minThreshold;
         private Entry[] entries;
 
         public Segment(){
@@ -108,7 +108,6 @@ public class ObjectIdentityOrdinalMap {
             entries[index] = entry;
             entry.next = first;
             checkSize();
-            return;
         }
 
         public synchronized Entry get(Object object, int hashCode) {
@@ -165,8 +164,8 @@ public class ObjectIdentityOrdinalMap {
                     }
                 }
             }
-            minThreshold = (newEntries.length == MINIMUM_CAPACITY) ? 0 : (newEntries.length * LOAD_FACTOR_PERCENT / 200);
-            maxThreshold = (newEntries.length == MAXIMUM_CAPACITY) ? Integer.MAX_VALUE : newEntries.length * LOAD_FACTOR_PERCENT / 100;
+            minThreshold = newEntries.length == MINIMUM_CAPACITY ? 0 : (newEntries.length * LOAD_FACTOR_PERCENT / 200);
+            maxThreshold = newEntries.length == MAXIMUM_CAPACITY ? Integer.MAX_VALUE : newEntries.length * LOAD_FACTOR_PERCENT / 100;
             entries = newEntries;
         }
 

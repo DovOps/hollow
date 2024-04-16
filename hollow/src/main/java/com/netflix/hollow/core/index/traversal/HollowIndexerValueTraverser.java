@@ -30,11 +30,11 @@ import java.util.BitSet;
  */
 public class HollowIndexerValueTraverser {
 
-    private final String fieldPaths[];
+    private final String[] fieldPaths;
     private final HollowIndexerTraversalNode rootNode;
-    private final IntList fieldMatchLists[];
-    private final HollowTypeDataAccess fieldTypeDataAccess[];
-    private final int fieldSchemaPosition[];
+    private final IntList[] fieldMatchLists;
+    private final HollowTypeDataAccess[] fieldTypeDataAccess;
+    private final int[] fieldSchemaPosition;
     
     public HollowIndexerValueTraverser(HollowDataAccess dataAccess, String type, String... fieldPaths) {
         this.fieldPaths = fieldPaths;
@@ -48,8 +48,9 @@ public class HollowIndexerValueTraverser {
     }
     
     public void traverse(int ordinal) {
-        for(int i=0;i<fieldMatchLists.length;i++)
+        for (int i = 0;i < fieldMatchLists.length;i++) {
             fieldMatchLists[i].clear();
+        }
         
         rootNode.traverse(ordinal);
     }
@@ -108,8 +109,9 @@ public class HollowIndexerValueTraverser {
     public boolean isMatchEqual(int matchIdx, HollowIndexerValueTraverser otherTraverser, int otherMatchIdx) {
         for(int i=0;i<getNumFieldPaths();i++) {
             if(!HollowReadFieldUtils.fieldsAreEqual((HollowObjectTypeDataAccess)fieldTypeDataAccess[i], fieldMatchLists[i].get(matchIdx), fieldSchemaPosition[i],
-                    (HollowObjectTypeDataAccess)otherTraverser.fieldTypeDataAccess[i], otherTraverser.fieldMatchLists[i].get(otherMatchIdx), otherTraverser.fieldSchemaPosition[i]))
+            (HollowObjectTypeDataAccess)otherTraverser.fieldTypeDataAccess[i], otherTraverser.fieldMatchLists[i].get(otherMatchIdx), otherTraverser.fieldSchemaPosition[i])) {
                 return false;
+            }
         }
         return true;
     }
@@ -118,8 +120,9 @@ public class HollowIndexerValueTraverser {
         for(int i=0;i<getNumFieldPaths();i++) {
             if(fields.get(i)) {
                 if(!HollowReadFieldUtils.fieldsAreEqual((HollowObjectTypeDataAccess)fieldTypeDataAccess[i], fieldMatchLists[i].get(matchIdx), fieldSchemaPosition[i],
-                        (HollowObjectTypeDataAccess)otherTraverser.fieldTypeDataAccess[i], otherTraverser.fieldMatchLists[i].get(otherMatchIdx), otherTraverser.fieldSchemaPosition[i]))
+                (HollowObjectTypeDataAccess)otherTraverser.fieldTypeDataAccess[i], otherTraverser.fieldMatchLists[i].get(otherMatchIdx), otherTraverser.fieldSchemaPosition[i])) {
                     return false;
+                }
             }
         }
         return true;

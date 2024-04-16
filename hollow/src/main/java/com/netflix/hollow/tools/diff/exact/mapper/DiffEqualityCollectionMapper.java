@@ -57,10 +57,12 @@ public class DiffEqualityCollectionMapper extends DiffEqualityTypeMapper {
             private final IntList toIntList = new IntList();
 
             public boolean recordsAreEqual(int fromOrdinal, int toOrdinal) {
-                if(!populateIntList(fromIntList, fromState().ordinalIterator(fromOrdinal), referencedTypeEqualOrdinalMap.getFromOrdinalIdentityTranslator()))
+                if(!populateIntList(fromIntList, fromState().ordinalIterator(fromOrdinal), referencedTypeEqualOrdinalMap.getFromOrdinalIdentityTranslator())) {
                     return false;
-                if(!populateIntList(toIntList, toState().ordinalIterator(toOrdinal), referencedTypeEqualOrdinalMap.getToOrdinalIdentityTranslator()))
+                }
+                if(!populateIntList(toIntList, toState().ordinalIterator(toOrdinal), referencedTypeEqualOrdinalMap.getToOrdinalIdentityTranslator())) {
                     return false;
+                }
 
                 return fromIntList.equals(toIntList);
             }
@@ -73,16 +75,18 @@ public class DiffEqualityCollectionMapper extends DiffEqualityTypeMapper {
                 while(nextOrdinal != HollowOrdinalIterator.NO_MORE_ORDINALS) {
                     int identityOrdinal = identityTranslator.getIdentityOrdinal(nextOrdinal);
 
-                    if(identityOrdinal == -1 && nextOrdinal != -1)
+                    if(identityOrdinal == -1 && nextOrdinal != -1) {
                         return false;
+                    }
 
                     list.add(identityOrdinal);
 
                     nextOrdinal = iter.next();
                 }
 
-                if(!orderingIsImportant)
+                if(!orderingIsImportant) {
                     list.sort();
+                }
                 return true;
             }
         };
@@ -106,12 +110,14 @@ public class DiffEqualityCollectionMapper extends DiffEqualityTypeMapper {
         while(elementOrdinal != HollowOrdinalIterator.NO_MORE_ORDINALS) {
             int identityElementOrdinal = identityTranslator.getIdentityOrdinal(elementOrdinal);
 
-            if(identityElementOrdinal == -1 && elementOrdinal != -1)
+            if(identityElementOrdinal == -1 && elementOrdinal != -1) {
                 return -1;
+            }
 
             hashCode ^= HashCodes.hashInt(identityElementOrdinal);
-            if(hashCode == 0)
+            if(hashCode == 0) {
                 hashCode ^= HashCodes.hashInt(identityElementOrdinal);
+            }
 
             elementOrdinal = iter.next();
         }

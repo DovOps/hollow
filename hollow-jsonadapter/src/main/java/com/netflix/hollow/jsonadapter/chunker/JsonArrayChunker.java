@@ -67,12 +67,14 @@ public class JsonArrayChunker {
     @SuppressWarnings("resource")
     public Reader nextChunk() throws IOException {
         while(!currentSegment.nextSpecialCharacter()) {
-            if(!nextSegment())
+            if(!nextSegment()) {
                 return null;
+            }
         }
-        
-        if(currentSegment.specialCharacter() != '{')
+
+        if(currentSegment.specialCharacter() != '{') {
             throw new IllegalStateException("Bad json");
+        }
         
         int nestedObjectCount = 1;
         JsonArrayChunkReader chunkReader = new JsonArrayChunkReader(currentSegment, currentSegment.specialCharacterIteratorPosition());
@@ -82,19 +84,22 @@ public class JsonArrayChunker {
 
         while(nestedObjectCount > 0) {
             while(!currentSegment.nextSpecialCharacter()) {
-                if(!nextSegment())
+                if(!nextSegment()) {
                     throw new IllegalStateException("Bad json");
+                }
                 chunkReader.addSegment(currentSegment);
             }
             
             switch(currentSegment.specialCharacter()) {
             case '{':
-                if(!insideQuotes)
+                if(!insideQuotes) {
                     nestedObjectCount++;
+                }
                 break;
             case '}':
-                if(!insideQuotes)
+                if(!insideQuotes) {
                     nestedObjectCount--;
+                }
                 break;
             case '\"':
                 long currentLocation = currentSegmentStartOffset + currentSegment.specialCharacterIteratorPosition();
@@ -104,8 +109,9 @@ public class JsonArrayChunker {
                 break;
             case '\\':
                 currentLocation = currentSegmentStartOffset + currentSegment.specialCharacterIteratorPosition();
-                if(lastEscapeCharacterLocation != (currentLocation - 1))
+                if(lastEscapeCharacterLocation != (currentLocation - 1)) {
                     lastEscapeCharacterLocation = currentLocation;
+                }
                 break;
             }
         }

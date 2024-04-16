@@ -26,7 +26,7 @@ import com.netflix.hollow.core.schema.HollowObjectSchema;
 
 class HollowWriteStateEnginePrimaryKeyHasher {
 
-    private final HollowObjectTypeWriteState typeStates[][];
+    private final HollowObjectTypeWriteState[][] typeStates;
     private final int[][] fieldPathIndexes;
 
     public HollowWriteStateEnginePrimaryKeyHasher(PrimaryKey primaryKey, HollowWriteStateEngine writeEngine) {
@@ -114,14 +114,16 @@ class HollowWriteStateEnginePrimaryKeyHasher {
     private int fieldHashCode(HollowObjectSchema schema, int fieldIdx, SegmentedByteArray data, long offset) {
         switch(schema.getFieldType(fieldIdx)) {
         case INT:
-            if(VarInt.readVNull(data, offset))
+            if(VarInt.readVNull(data, offset)) {
                 return 0;
+            }
             int intVal = VarInt.readVInt(data, offset);
             intVal = ZigZag.decodeInt(intVal);
             return intVal;
         case LONG:
-            if(VarInt.readVNull(data, offset))
+            if(VarInt.readVNull(data, offset)) {
                 return 0;
+            }
             long longVal = VarInt.readVLong(data, offset);
             longVal = ZigZag.decodeLong(longVal);
             return (int)(longVal ^ (longVal >>> 32));
@@ -136,8 +138,9 @@ class HollowWriteStateEnginePrimaryKeyHasher {
             offset += VarInt.sizeOfVInt(strByteLen);
             return getNaturalStringHashCode(data, offset, strByteLen);
         case BOOLEAN:
-            if(VarInt.readVNull(data, offset))
+            if(VarInt.readVNull(data, offset)) {
                 return 0;
+            }
             return data.get(offset) == 1 ? 1231 : 1237;
         case DOUBLE:
             long longBits = data.readLongBits(offset);

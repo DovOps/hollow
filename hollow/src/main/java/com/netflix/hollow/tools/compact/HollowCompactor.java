@@ -106,7 +106,7 @@ public class HollowCompactor {
     public void compact() {
         Set<String> compactionTargets = findCompactionTargets();
         
-        Map<String, BitSet> relocatedOrdinals = new HashMap<String, BitSet>();
+        Map<String, BitSet> relocatedOrdinals = new HashMap<>();
         PartialOrdinalRemapper remapper = new PartialOrdinalRemapper();
         
         for(String compactionTarget : compactionTargets) {
@@ -134,7 +134,8 @@ public class HollowCompactor {
             try {
                 
                 for(int i=0;i<numRelocations;i++) {
-                    while(!populatedOrdinals.get(--ordinalToRelocate));
+                    while (!populatedOrdinals.get(--ordinalToRelocate)) {
+                    }
                     relocatePosition = populatedOrdinals.nextClearBit(relocatePosition + 1);
                     typeRelocatedOrdinals.set(ordinalToRelocate);
                     writeState.removeOrdinalFromThisCycle(ordinalToRelocate);
@@ -191,12 +192,13 @@ public class HollowCompactor {
      */
     private Set<String> findCompactionTargets() {
         List<HollowSchema> schemas = HollowSchemaSorter.dependencyOrderedSchemaList(readEngine.getSchemas());
-        Set<String> typesToCompact = new HashSet<String>();
+        Set<String> typesToCompact = new HashSet<>();
 
         for(HollowSchema schema : schemas) {
             if(isCompactionCandidate(schema.getName())) {
-                if(!candidateIsDependentOnAnyTargetedType(schema.getName(), typesToCompact))
+                if(!candidateIsDependentOnAnyTargetedType(schema.getName(), typesToCompact)) {
                     typesToCompact.add(schema.getName());
+                }
             }
         }
         
@@ -210,14 +212,14 @@ public class HollowCompactor {
         double numHoles = populatedOrdinals.length() - populatedOrdinals.cardinality();
         double holePercentage = numHoles / numOrdinals * 100d;
         long approximateHoleCostInBytes = typeState.getApproximateHoleCostInBytes();
-        boolean isCompactionCandidate = holePercentage > (double)minCandidateHolePercentage && approximateHoleCostInBytes > minCandidateHoleCostInBytes;
-        return isCompactionCandidate;
+        return holePercentage > (double)minCandidateHolePercentage && approximateHoleCostInBytes > minCandidateHoleCostInBytes;
     }
     
     private boolean candidateIsDependentOnAnyTargetedType(String type, Set<String> targetedTypes) {
         for(String targetedType : targetedTypes) {
-            if(HollowSchemaSorter.typeIsTransitivelyDependent(readEngine, type, targetedType))
+            if(HollowSchemaSorter.typeIsTransitivelyDependent(readEngine, type, targetedType)) {
                 return true;
+            }
         }
         
         return false;

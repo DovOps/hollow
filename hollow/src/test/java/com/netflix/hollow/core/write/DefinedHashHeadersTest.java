@@ -48,9 +48,9 @@ public class DefinedHashHeadersTest {
         
         String headerTag = readEngine.getHeaderTag(HollowObjectHashCodeFinder.DEFINED_HASH_CODES_HEADER_NAME);
         
-        String types[] = headerTag.split(",");
+        String[] types = headerTag.split(",");
         
-        Set<String> definedHashTypes = new HashSet<String>();
+        Set<String> definedHashTypes = new HashSet<>();
         
         for(String type : types) {
             definedHashTypes.add(type);

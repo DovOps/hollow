@@ -35,8 +35,8 @@ public class QueryResult {
     private long randomizedStateTag;
     
     public QueryResult(long randomizedStateTag) {
-        this.queryClauses = new ArrayList<QueryClause>();
-        this.queryMatches = new HashMap<String, BitSet>();
+        this.queryClauses = new ArrayList<>();
+        this.queryMatches = new HashMap<>();
         this.randomizedStateTag = randomizedStateTag;
     }
     
@@ -48,8 +48,9 @@ public class QueryResult {
         StringBuilder builder = new StringBuilder();
         
         for(int i=0;i<queryClauses.size();i++) {
-            if(i > 0)
+            if(i > 0) {
                 builder.append(" AND ");
+            }
             builder.append(queryClauses.get(i));
         }
         
@@ -63,7 +64,7 @@ public class QueryResult {
     public void recalculateIfNotCurrent(HollowReadStateEngine stateEngine) {
         if(stateEngine.getCurrentRandomizedTag() != randomizedStateTag) {        
             queryMatches.clear();
-            List<QueryClause> requeryClauses = new ArrayList<QueryClause>(this.queryClauses);
+            List<QueryClause> requeryClauses = new ArrayList<>(this.queryClauses);
             this.queryClauses.clear();
     
             for(QueryClause clause : requeryClauses)
@@ -77,11 +78,12 @@ public class QueryResult {
         HollowFieldMatchQuery query = new HollowFieldMatchQuery(stateEngine);
         Map<String, BitSet> clauseMatches = clause.getType() != null ? query.findMatchingRecords(clause.getType(), clause.getField(), clause.getValue()) : query.findMatchingRecords(clause.getField(), clause.getValue());
         TransitiveSetTraverser.addReferencingOutsideClosure(stateEngine, clauseMatches);
-                
-        if(queryClauses.isEmpty())
+
+        if(queryClauses.isEmpty()) {
             queryMatches.putAll(clauseMatches);
-        else
+        } else {
             booleanAndQueryMatches(clauseMatches);
+        }
         
         queryClauses.add(clause);
     }
@@ -100,12 +102,13 @@ public class QueryResult {
     }
     
     public List<QueryTypeMatches> getTypeMatches() {
-        List<QueryTypeMatches> list = new ArrayList<QueryTypeMatches>();
+        List<QueryTypeMatches> list = new ArrayList<>();
         
         for(Map.Entry<String, BitSet> entry : queryMatches.entrySet()) {
             int numTypeMatches = entry.getValue().cardinality();
-            if(numTypeMatches > 0)
+            if(numTypeMatches > 0) {
                 list.add(new QueryTypeMatches(entry.getKey(), numTypeMatches));
+            }
         }
         
         Collections.sort(list, new Comparator<QueryTypeMatches>() {
@@ -141,9 +144,10 @@ public class QueryResult {
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
-            
-            if(type != null)
+
+            if(type != null) {
                 builder.append(type).append(".");
+            }
             
             builder.append(field).append("=\"").append(value).append("\"");
             

@@ -25,9 +25,9 @@ import java.util.List;
 
 public class HollowObjectCreationSampler implements HollowSampler {
 
-    private final String typeNames[];
-    private final long creationSamples[];
-    private final HollowSamplingDirector typeDirectors[];
+    private final String[] typeNames;
+    private final long[] creationSamples;
+    private final HollowSamplingDirector[] typeDirectors;
 
     public HollowObjectCreationSampler(String... typeNames) {
         this.typeNames = typeNames;
@@ -40,8 +40,9 @@ public class HollowObjectCreationSampler implements HollowSampler {
     }
 
     public void recordCreation(int index) {
-        if(typeDirectors[index].shouldRecord())
+        if(typeDirectors[index].shouldRecord()) {
             creationSamples[index]++;
+        }
     }
 
     @Override
@@ -52,28 +53,32 @@ public class HollowObjectCreationSampler implements HollowSampler {
     @Override
     public void setFieldSpecificSamplingDirector(HollowFilterConfig fieldSpec, HollowSamplingDirector director) {
         for(int i=0;i<typeNames.length;i++) {
-            if(fieldSpec.doesIncludeType(typeNames[i]))
+            if(fieldSpec.doesIncludeType(typeNames[i])) {
                 typeDirectors[i] = director;
+            }
         }
     }
     
     @Override
     public void setUpdateThread(Thread t) {
-        for(int i=0;i<typeDirectors.length;i++)
+        for (int i = 0;i < typeDirectors.length;i++) {
             typeDirectors[i].setUpdateThread(t);
+        }
     }
 
     @Override
     public boolean hasSampleResults() {
-        for(int i=0;i<creationSamples.length;i++)
-            if(creationSamples[i] > 0)
+        for (int i = 0;i < creationSamples.length;i++) {
+            if(creationSamples[i] > 0) {
                 return true;
+            }
+        }
         return false;
     }
 
     @Override
     public Collection<SampleResult> getSampleResults() {
-        List<SampleResult> results = new ArrayList<SampleResult>(typeNames.length);
+        List<SampleResult> results = new ArrayList<>(typeNames.length);
 
         for(int i=0;i<typeNames.length;i++) {
             results.add(new SampleResult(typeNames[i], creationSamples[i]));

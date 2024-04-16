@@ -56,16 +56,19 @@ public class HollowListJavaGenerator extends HollowCollectionsGenerator {
         StringBuilder builder = new StringBuilder();
         appendPackageAndCommonImports(builder, apiClassname, Arrays.<HollowSchema>asList(schema));
 
-        builder.append("import " + HollowList.class.getName() + ";\n");
-        builder.append("import " + HollowListSchema.class.getName() + ";\n");
-        builder.append("import " + HollowListDelegate.class.getName() + ";\n");
-        builder.append("import " + GenericHollowRecordHelper.class.getName() + ";\n\n");
+        builder.append("import ").append(HollowList.class.getName()).append(";\n");
+        builder.append("import ").append(HollowListSchema.class.getName()).append(";\n");
+        builder.append("import ").append(HollowListDelegate.class.getName()).append(";\n");
+        builder.append("import ").append(GenericHollowRecordHelper.class.getName()).append(";\n\n");
 
         builder.append("@SuppressWarnings(\"all\")\n");
-        if(parameterize)
-            builder.append("public class " + className + "<T> extends HollowList<T> {\n\n");
-        else
-            builder.append("public class " + className + " extends HollowList<" + elementClassName + "> {\n\n");
+        if(parameterize) {
+            
+            builder.append("public class ").append(className).append("<T> extends HollowList<T> {\n\n");
+        } else {
+            
+            builder.append("public class ").append(className).append(" extends HollowList<").append(elementClassName).append("> {\n\n");
+        }
 
         appendConstructor(builder);
         appendInstantiateMethod(builder);
@@ -79,7 +82,7 @@ public class HollowListJavaGenerator extends HollowCollectionsGenerator {
     }
 
     private void appendConstructor(StringBuilder classBuilder) {
-        classBuilder.append("    public " + className + "(HollowListDelegate delegate, int ordinal) {\n");
+        classBuilder.append("    public ").append(className).append("(HollowListDelegate delegate, int ordinal) {\n");
         classBuilder.append("        super(delegate, ordinal);\n");
         classBuilder.append("    }\n\n");
     }
@@ -101,14 +104,14 @@ public class HollowListJavaGenerator extends HollowCollectionsGenerator {
     }
 
     private void appendAPIAccessor(StringBuilder classBuilder) {
-        classBuilder.append("    public " + apiClassname + " api() {\n");
+        classBuilder.append("    public ").append(apiClassname).append(" api() {\n");
         classBuilder.append("        return typeApi().getAPI();\n");
         classBuilder.append("    }\n\n");
     }
 
     private void appendTypeAPIAccessor(StringBuilder classBuilder) {
         String typeAPIClassname = typeAPIClassname(schema.getName());
-        classBuilder.append("    public " + typeAPIClassname + " typeApi() {\n");
+        classBuilder.append("    public ").append(typeAPIClassname).append(" typeApi() {\n");
         classBuilder.append("        return (").append(typeAPIClassname).append(") delegate.getTypeAPI();\n");
         classBuilder.append("    }\n\n");
     }

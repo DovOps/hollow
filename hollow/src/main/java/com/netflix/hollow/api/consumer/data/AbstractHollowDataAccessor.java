@@ -45,7 +45,7 @@ public abstract class AbstractHollowDataAccessor<T> {
     private BitSet addedOrdinals = new BitSet();
     private List<UpdatedRecord<T>> updatedRecords = Collections.emptyList();
 
-    private boolean isDataChangeComputed = false;
+    private boolean isDataChangeComputed;
 
     public AbstractHollowDataAccessor(HollowConsumer consumer, String type) {
         this(consumer.getStateEngine(), type);
@@ -68,13 +68,14 @@ public abstract class AbstractHollowDataAccessor<T> {
             this.type = type;
 
             if (primaryKey == null) {
-                HollowObjectSchema oSchema = ((HollowObjectSchema) schema);
+                HollowObjectSchema oSchema = (HollowObjectSchema) schema;
                 this.primaryKey = oSchema.getPrimaryKey();
             } else {
                 this.primaryKey = primaryKey;
             }
-            if (this.primaryKey == null)
+            if(this.primaryKey == null) {
                 throw new RuntimeException(String.format("Unsupported DataType=%s with SchemaType=%s : %s", type, schema.getSchemaType(), "PrimaryKey is missing"));
+            }
 
         } else {
             throw new RuntimeException(String.format("Unsupported DataType=%s with SchemaType=%s : %s", type, schema.getSchemaType(), "Only supported type=" + SchemaType.OBJECT));
@@ -96,7 +97,9 @@ public abstract class AbstractHollowDataAccessor<T> {
      * Compute Data Change
      */
     public synchronized void computeDataChange() {
-        if (isDataChangeComputed) return;
+        if(isDataChangeComputed) {
+            return;
+        }
 
         computeDataChange(type, rStateEngine, primaryKey);
         isDataChangeComputed = true;
@@ -186,7 +189,9 @@ public abstract class AbstractHollowDataAccessor<T> {
      * @see #getUpdatedRecords()
      */
     public Collection<T> getAddedRecords() {
-        if (!isDataChangeComputed) computeDataChange();
+        if(!isDataChangeComputed) {
+            computeDataChange();
+        }
 
         return new HollowRecordCollection<T>(addedOrdinals) { @Override protected T getForOrdinal(int ordinal) {
                 return getRecord(ordinal);
@@ -198,7 +203,9 @@ public abstract class AbstractHollowDataAccessor<T> {
      * @see #getUpdatedRecords()
      */
     public Collection<T> getRemovedRecords() {
-        if (!isDataChangeComputed) computeDataChange();
+        if(!isDataChangeComputed) {
+            computeDataChange();
+        }
         return new HollowRecordCollection<T>(removedOrdinals) { @Override protected T getForOrdinal(int ordinal) {
             return getRecord(ordinal);
         }};
@@ -209,11 +216,13 @@ public abstract class AbstractHollowDataAccessor<T> {
      * @see UpdatedRecord
      */
     public Collection<UpdatedRecord<T>> getUpdatedRecords() {
-        if (!isDataChangeComputed) computeDataChange();
+        if(!isDataChangeComputed) {
+            computeDataChange();
+        }
         return updatedRecords;
     }
 
-    private class UpdatedRecordOrdinal extends UpdatedRecord<T>{
+    private final class UpdatedRecordOrdinal extends UpdatedRecord<T> {
         private final int before;
         private final int after;
 
@@ -231,9 +240,15 @@ public abstract class AbstractHollowDataAccessor<T> {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            if (!super.equals(o)) return false;
+            if(this == o) {
+                return true;
+            }
+            if(o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            if(!super.equals(o)) {
+                return false;
+            }
             UpdatedRecordOrdinal that = (UpdatedRecordOrdinal) o;
             return before == that.before &&
                     after == that.after;
@@ -269,30 +284,37 @@ public abstract class AbstractHollowDataAccessor<T> {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((after == null) ? 0 : after.hashCode());
-            result = prime * result + ((before == null) ? 0 : before.hashCode());
+            result = prime * result + (after == null ? 0 : after.hashCode());
+            result = prime * result + (before == null ? 0 : before.hashCode());
             return result;
         }
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj)
+            if(this == obj) {
                 return true;
-            if (obj == null)
+            }
+            if(obj == null) {
                 return false;
-            if (getClass() != obj.getClass())
+            }
+            if(getClass() != obj.getClass()) {
                 return false;
+            }
             UpdatedRecord<?> other = (UpdatedRecord<?>) obj;
             if (after == null) {
-                if (other.after != null)
+                if(other.after != null) {
                     return false;
-            } else if (!after.equals(other.after))
+                }
+            } else if(!after.equals(other.after)) {
                 return false;
+            }
             if (before == null) {
-                if (other.before != null)
+                if(other.before != null) {
                     return false;
-            } else if (!before.equals(other.before))
+                }
+            } else if(!before.equals(other.before)) {
                 return false;
+            }
             return true;
         }
 

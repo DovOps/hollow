@@ -25,7 +25,7 @@ public class HollowObjectTypeReadStateTest extends AbstractHollowObjectTypeDataE
         int minRecordLocationsPerShard = (maxOrdinal + 1) / numShards;
         int[][] shardOrdinals = new int[numShards][];
         for(int i=0;i<numShards;i++) {
-            int maxShardOrdinal = (i < ((maxOrdinal + 1) & (numShards - 1))) ? minRecordLocationsPerShard : minRecordLocationsPerShard - 1;
+            int maxShardOrdinal = i < ((maxOrdinal + 1) & (numShards - 1)) ? minRecordLocationsPerShard : minRecordLocationsPerShard - 1;
             shardOrdinals[i] = new int[maxShardOrdinal + 1];
         }
 
@@ -192,16 +192,16 @@ public class HollowObjectTypeReadStateTest extends AbstractHollowObjectTypeDataE
 
                 int newNumShards = originalNumShards / shardingFactor;
                 for (int i=0; i<newNumShards; i++) {
-                    HollowObjectTypeDataElements dataElementsToJoin[] = new HollowObjectTypeDataElements[shardingFactor];
+                    HollowObjectTypeDataElements[] dataElementsToJoin = new HollowObjectTypeDataElements[shardingFactor];
                     for (int j=0; j<shardingFactor; j++) {
                         dataElementsToJoin[j] = originalShardsHolder.shards[i + (newNumShards*j)].dataElements;
-                    };
+                    }
 
                     typeState.shardsVolatile = typeState.joinDataElementsForOneShard(typeState.shardsVolatile, i, shardingFactor);
 
                     for (int j = 0; j < shardingFactor; j ++) {
                         dataElementsToJoin[j].destroy();
-                    };
+                    }
 
                     assertEquals(originalNumShards, typeState.numShards()); // numShards remains unchanged
                     assertDataUnchanged(typeState, numRecords);   // as each original shard is processed

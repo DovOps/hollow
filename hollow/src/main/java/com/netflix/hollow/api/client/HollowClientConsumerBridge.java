@@ -38,8 +38,9 @@ class HollowClientConsumerBridge {
             @Override
             public Blob retrieveSnapshotBlob(long desiredVersion) {
                 final HollowBlob blob = blobRetriever.retrieveSnapshotBlob(desiredVersion);
-                if(blob == null)
+                if(blob == null) {
                     return null;
+                }
                 
                 return new HollowConsumer.Blob(blob.getFromVersion(), blob.getToVersion()) {
                     @Override
@@ -57,8 +58,9 @@ class HollowClientConsumerBridge {
             @Override
             public Blob retrieveDeltaBlob(long currentVersion) {
                 final HollowBlob blob = blobRetriever.retrieveDeltaBlob(currentVersion);
-                if(blob == null)
+                if(blob == null) {
                     return null;
+                }
                 
                 return new HollowConsumer.Blob(blob.getFromVersion(), blob.getToVersion()) {
                     @Override
@@ -76,8 +78,9 @@ class HollowClientConsumerBridge {
             @Override
             public Blob retrieveReverseDeltaBlob(long currentVersion) {
                 final HollowBlob blob = blobRetriever.retrieveReverseDeltaBlob(currentVersion);
-                if(blob == null)
+                if(blob == null) {
                     return null;
+                }
                 
                 return new HollowConsumer.Blob(blob.getFromVersion(), blob.getToVersion()) {
                     @Override
@@ -144,7 +147,7 @@ class HollowClientConsumerBridge {
         return new HollowClientDoubleSnapshotConfig(memoryConfig);
     }
 
-    static class HollowClientDoubleSnapshotConfig implements HollowConsumer.DoubleSnapshotConfig {
+    static final class HollowClientDoubleSnapshotConfig implements HollowConsumer.DoubleSnapshotConfig {
         
         private final HollowClientMemoryConfig clientMemCfg;
         private int maxDeltasBeforeDoubleSnapshot = 32;

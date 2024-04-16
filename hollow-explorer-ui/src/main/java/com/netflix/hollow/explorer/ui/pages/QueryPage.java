@@ -37,25 +37,28 @@ public class QueryPage extends HollowExplorerPage {
 
     @Override
     protected void setUpContext(HttpServletRequest req, HollowUISession session, VelocityContext ctx) {
-        if("true".equals(req.getParameter("clear")))
+        if("true".equals(req.getParameter("clear"))) {
             session.clearAttribute("query-result");
+        }
         
         String type = req.getParameter("type");
         String field = req.getParameter("field");
-        
-        if("ANY TYPE".equals(type))
+
+        if("ANY TYPE".equals(type)) {
             type = null;
+        }
         
         String queryValue = req.getParameter("queryValue");
         
-        List<String> allTypes = new ArrayList<String>();
+        List<String> allTypes = new ArrayList<>();
         for(HollowSchema schema : ui.getStateEngine().getSchemas())
             allTypes.add(schema.getName());
         Collections.sort(allTypes);
         
         QueryResult result = (QueryResult) session.getAttribute("query-result");
-        if(result != null)
+        if(result != null) {
             result.recalculateIfNotCurrent(ui.getStateEngine());
+        }
         
         if(field != null && queryValue != null) {
             HollowReadStateEngine stateEngine = ui.getStateEngine();

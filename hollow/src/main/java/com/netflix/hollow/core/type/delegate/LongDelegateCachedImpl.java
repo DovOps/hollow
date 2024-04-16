@@ -35,8 +35,9 @@ public class LongDelegateCachedImpl extends HollowObjectAbstractDelegate impleme
 
     @Override
     public long getValue(int ordinal) {
-        if(value == null)
+        if(value == null) {
             return Long.MIN_VALUE;
+        }
         return value.longValue();
     }
 

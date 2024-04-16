@@ -54,17 +54,19 @@ public class HollowDiffShortcutTypeCountingNode extends HollowDiffCountingNode {
     
     private int addResultToFieldDiff(IntList fromOrdinals, IntList toOrdinals) {
         int score = fromOrdinals.size() + toOrdinals.size();
-        
-        if(score != 0)
+
+        if(score != 0) {
             fieldDiff.addDiff(currentTopLevelFromOrdinal, currentTopLevelToOrdinal, score);
+        }
         
         return score;
     }
 
     @Override
     public List<HollowFieldDiff> getFieldDiffs() {
-        if(fieldDiff.getTotalDiffScore() > 0)
+        if(fieldDiff.getTotalDiffScore() > 0) {
             return Collections.singletonList(fieldDiff);
+        }
         return Collections.emptyList();
     }
 

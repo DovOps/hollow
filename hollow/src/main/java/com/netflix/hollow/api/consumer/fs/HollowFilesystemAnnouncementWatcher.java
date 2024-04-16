@@ -81,17 +81,6 @@ public class HollowFilesystemAnnouncementWatcher implements HollowConsumer.Annou
         this.watchFuture = setupWatch();
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-
-        watchFuture.cancel(true);
-
-        if (ownedExecutor) {
-            executor.shutdownNow();
-        }
-    }
-
     private ScheduledFuture setupWatch() {
         return executor.scheduleWithFixedDelay(new Watch(this), 0, 1, TimeUnit.SECONDS);
     }
@@ -107,8 +96,9 @@ public class HollowFilesystemAnnouncementWatcher implements HollowConsumer.Annou
     }
 
     private long readLatestVersion() {
-        if (!Files.isReadable(announcePath))
+        if(!Files.isReadable(announcePath)) {
             return NO_ANNOUNCEMENT_AVAILABLE;
+        }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(announcePath.toFile()))) {
             return Long.parseLong(reader.readLine());
@@ -130,7 +120,9 @@ public class HollowFilesystemAnnouncementWatcher implements HollowConsumer.Annou
             try {
                 HollowFilesystemAnnouncementWatcher watcher = ref.get();
                 if (watcher != null) {
-                    if (!Files.isReadable(watcher.announcePath)) return;
+                    if(!Files.isReadable(watcher.announcePath)) {
+                        return;
+                    }
 
                     FileTime lastModifiedTime = getLastModifiedTime(watcher.announcePath);
                     if (lastModifiedTime.compareTo(previousFileTime) > 0) {

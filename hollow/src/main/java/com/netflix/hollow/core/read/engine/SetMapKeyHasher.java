@@ -32,7 +32,7 @@ public class SetMapKeyHasher {
      * @param fieldType the respective FieldTypes of each key.
      * @return the hash code
      */
-    public static int hash(Object key[], FieldType fieldType[]) {
+    public static int hash(Object[] key, FieldType[] fieldType) {
         int hash = 0;
 
         for (int i = 0; i < key.length; i++) {

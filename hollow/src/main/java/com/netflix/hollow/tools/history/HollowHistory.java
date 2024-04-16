@@ -88,7 +88,7 @@ public class HollowHistory {
     private long oldestVersion = VERSION_NONE;
 
     private Map<String, String> latestHeaderEntries;
-    private boolean ignoreListOrderingOnDoubleSnapshot = false;
+    private boolean ignoreListOrderingOnDoubleSnapshot;
 
     /**
      * @param initialHollowStateEngine The HollowReadStateEngine at an initial (earliest) state.
@@ -177,7 +177,9 @@ public class HollowHistory {
             for (HollowSchema schema : fwdMovingHollowReadStateEngine.getSchemas()) {
                 if (schema instanceof HollowObjectSchema) {
                     PrimaryKey pKey = ((HollowObjectSchema) schema).getPrimaryKey();
-                    if (pKey == null) continue;
+                    if(pKey == null) {
+                        continue;
+                    }
 
                     keyIndex.addTypeIndex(pKey);
                     keyIndex.indexTypeField(pKey);
@@ -262,8 +264,9 @@ public class HollowHistory {
      * @return The {@link HollowHistoricalState} for the specified version, if it exists.
      */
     public HollowHistoricalState getHistoricalState(long version) {
-        if(latestVersion == version)
+        if(latestVersion == version) {
             return historicalStates.get(0);
+        }
         return historicalStateLookupMap.get(version);
     }
 
@@ -369,8 +372,9 @@ public class HollowHistory {
             throw new UnsupportedOperationException("Double snapshot only supports advancing the latest version");
         }
 
-        if(!keyIndex.isInitialized())
+        if(!keyIndex.isInitialized()) {
             keyIndex.update(latestHollowReadStateEngine, false);
+        }
 
         keyIndex.update(newHollowStateEngine, false);
 
@@ -453,7 +457,8 @@ public class HollowHistory {
 
             PopulatedOrdinalListener listener = typeState.getListener(PopulatedOrdinalListener.class);
 
-            RemovedOrdinalIterator additionsIterator, removalIterator;
+            RemovedOrdinalIterator additionsIterator;
+            RemovedOrdinalIterator removalIterator;
             if (reverse) {
                 removalIterator = new RemovedOrdinalIterator(listener.getPopulatedOrdinals(), listener.getPreviousOrdinals());
                 additionsIterator = new RemovedOrdinalIterator(listener);
@@ -503,16 +508,18 @@ public class HollowHistory {
 
             int fromOrdinal = fromOrdinals.nextSetBit(0);
             while(fromOrdinal != -1) {
-                if(equalOrdinalMap.getIdentityFromOrdinal(fromOrdinal) == -1)
+                if(equalOrdinalMap.getIdentityFromOrdinal(fromOrdinal) == -1) {
                     typeMapping.removed(fromTypeState, fromOrdinal, ordinalRemapper.getMappedOrdinal(keyType, fromOrdinal));
+                }
 
                 fromOrdinal = fromOrdinals.nextSetBit(fromOrdinal + 1);
             }
 
             int toOrdinal = toOrdinals.nextSetBit(0);
             while(toOrdinal != -1) {
-                if(equalOrdinalMap.getIdentityToOrdinal(toOrdinal) == -1)
+                if(equalOrdinalMap.getIdentityToOrdinal(toOrdinal) == -1) {
                     typeMapping.added(toTypeState, toOrdinal);
+                }
 
                 toOrdinal = toOrdinals.nextSetBit(toOrdinal + 1);
             }
@@ -527,8 +534,9 @@ public class HollowHistory {
         int count = 0;
         int ordinal = ordinals.nextSetBit(0);
         while(ordinal != -1) {
-            if(translator.getIdentityOrdinal(ordinal) == -1)
+            if(translator.getIdentityOrdinal(ordinal) == -1) {
                 count++;
+            }
             ordinal = ordinals.nextSetBit(ordinal + 1);
         }
         return count;
@@ -539,7 +547,7 @@ public class HollowHistory {
     // historicalStates is ordered like: V3 -> V2 -> V1
     // however internally the states are linked like: V1.nextState = V2; V2.nextState = V3; etc.
     private void addHistoricalState(HollowHistoricalState historicalState) {
-        if(historicalStates.size() > 0) {
+        if(!historicalStates.isEmpty()) {
             historicalStates.get(0).getDataAccess().setNextState(historicalState.getDataAccess());
             historicalStates.get(0).setNextState(historicalState);
         }
@@ -557,7 +565,7 @@ public class HollowHistory {
     // historicalStates is ordered like: V3 -> V2 -> V1
     // however internally the states are linked like: V1.nextState = V2; V2.nextState = V3; etc.
     private void addReverseHistoricalState(HollowHistoricalState historicalState) {
-        if (historicalStates.size() > 0) {
+        if (!historicalStates.isEmpty()) {
             historicalState.getDataAccess().setNextState(historicalStates.get(historicalStates.size()-1).getDataAccess());
             historicalState.setNextState(historicalStates.get(historicalStates.size()-1));
         } else { // if reverse delta occurs before any fwd deltas

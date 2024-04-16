@@ -83,17 +83,22 @@ public class HollowMapSchema extends HollowSchema {
 
     @Override
     public boolean equals(Object other) {
-        if (this == other)
+        if(this == other) {
             return true;
-        if(!(other instanceof HollowMapSchema))
+        }
+        if(!(other instanceof HollowMapSchema)) {
             return false;
+        }
         HollowMapSchema otherSchema = (HollowMapSchema)other;
-        if(!getName().equals(otherSchema.getName()))
+        if(!getName().equals(otherSchema.getName())) {
             return false;
-        if(!getKeyType().equals(otherSchema.getKeyType()))
+        }
+        if(!getKeyType().equals(otherSchema.getKeyType())) {
             return false;
-        if(!getValueType().equals(otherSchema.getValueType()))
+        }
+        if(!getValueType().equals(otherSchema.getValueType())) {
             return false;
+        }
 
         return isNullableObjectEquals(hashKey, otherSchema.getHashKey());
     }
@@ -132,10 +137,11 @@ public class HollowMapSchema extends HollowSchema {
     public void writeTo(OutputStream os) throws IOException {
         DataOutputStream dos = new DataOutputStream(os);
 
-        if(getHashKey() != null)
+        if(getHashKey() != null) {
             dos.write(SchemaType.MAP.getTypeIdWithPrimaryKey());
-        else
+        } else {
             dos.write(SchemaType.MAP.getTypeId());
+        }
 
         dos.writeUTF(getName());
         dos.writeUTF(getKeyType());

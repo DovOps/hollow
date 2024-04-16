@@ -59,8 +59,9 @@ public class SimpleHollowDataset implements HollowDataset {
     @Override
     public HollowSchema getNonNullSchema(String typeName) throws SchemaNotFoundException {
         HollowSchema schema = getSchema(typeName);
-        if(schema == null)
+        if(schema == null) {
             throw new SchemaNotFoundException(typeName, schemas.keySet());
+        }
         return schema;
     }
 

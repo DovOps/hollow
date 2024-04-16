@@ -37,8 +37,8 @@ public class TypeFilterTest {
                       "SetOfSE", "SE", "SERef",
                       "MapOfKToV", "K", "KRef", "V", "VRef")),
 
-            c("exclude all: hierarchy",   l(Alpha.class), f -> f.excludeAll(), none()),
-            c("exclude all: collections", l(Omega.class), f -> f.excludeAll(), none()),
+            c("exclude all: hierarchy",   l(Alpha.class), TypeFilter.Builder::excludeAll, none()),
+            c("exclude all: collections", l(Omega.class), TypeFilter.Builder::excludeAll, none()),
 
             c("include: hierarchy",   l(Alpha.class), f -> f.excludeAll().include("Alpha"), l("Alpha")),
             c("include: collections", l(Omega.class), f -> f.excludeAll().include("Omega"), l("Omega")),
@@ -186,7 +186,9 @@ public class TypeFilterTest {
 
         @Test
         public void verify() {
-            if (skip) return;
+            if(skip) {
+                return;
+            }
 
             List<HollowSchema> schemas = generateSchema(models);
 
@@ -228,7 +230,9 @@ public class TypeFilterTest {
 
         @Test
         public void verify() {
-            if (skip) return;
+            if(skip) {
+                return;
+            }
             List<HollowSchema> schemas = generateSchema(models);
 
             TypeFilter subject = filteredBy
@@ -262,7 +266,7 @@ public class TypeFilterTest {
         }
     }
 
-    private static abstract class AbstractTypeFilterTest extends TypeFilterTest {
+    private abstract static class AbstractTypeFilterTest extends TypeFilterTest {
         static final String SKIP = "SKIP:";
         protected final boolean skip;
 

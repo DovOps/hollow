@@ -67,12 +67,14 @@ public class HollowPOJOClassGenerator implements HollowJavaFileGenerator {
         this.packageName = packageName;
         this.classNameSuffix = classNameSuffix;
         this.className = buildClassName(schema.getName(), classNameSuffix);
-        this.importClasses = new HashSet<Class<?>>();
+        this.importClasses = new HashSet<>();
         this.memoizeOrdinal = memoizeOrdinal;
     }
     
     private static String buildClassName(String name, String suffix) {
-        if (suffix == null) return name;
+        if(suffix == null) {
+            return name;
+        }
         return name + suffix;
     }
 
@@ -111,7 +113,7 @@ public class HollowPOJOClassGenerator implements HollowJavaFileGenerator {
         StringBuilder builder = new StringBuilder();
         builder.append("package ").append(packageName).append(";\n\n");
 
-        List<String> importClassNames = new ArrayList<String>();
+        List<String> importClassNames = new ArrayList<>();
 
         for (Class<?> c : importClasses) {
             importClassNames.add(c.getName());
@@ -265,31 +267,32 @@ public class HollowPOJOClassGenerator implements HollowJavaFileGenerator {
             String fieldName = getFieldName(i);
             switch (schema.getFieldType(i)) {
                 case BOOLEAN:
-                    classBodyBuilder.append("        hashCode = hashCode * 31 + (" + fieldName + "? 1231 : 1237);\n");
+                    classBodyBuilder.append("        hashCode = hashCode * 31 + (").append(fieldName).append("? 1231 : 1237);\n");
                     break;
                 case DOUBLE:
-                    if (!tempExists)
+                    if(!tempExists) {
                         classBodyBuilder.append("        long temp;\n");
-                    classBodyBuilder.append("        temp = java.lang.Double.doubleToLongBits(" + fieldName + ")\n");
+                    }
+                    classBodyBuilder.append("        temp = java.lang.Double.doubleToLongBits(").append(fieldName).append(")\n");
                     classBodyBuilder.append("        hashCode = hashCode * 31 + (int) (temp ^ (temp >>> 32));\n");
                     break;
                 case FLOAT:
-                    classBodyBuilder.append("        hashCode = hashCode * 31 + java.lang.Float.floatToIntBits(" + fieldName + ");\n");
+                    classBodyBuilder.append("        hashCode = hashCode * 31 + java.lang.Float.floatToIntBits(").append(fieldName).append(");\n");
                     break;
                 case INT:
-                    classBodyBuilder.append("        hashCode = hashCode * 31 + " + fieldName + ";\n");
+                    classBodyBuilder.append("        hashCode = hashCode * 31 + ").append(fieldName).append(";\n");
                     break;
                 case LONG:
-                    classBodyBuilder.append("        hashCode = hashCode * 31 + (int) (" + fieldName + " ^ ("+ fieldName + " >>> 32));\n");
+                    classBodyBuilder.append("        hashCode = hashCode * 31 + (int) (").append(fieldName).append(" ^ (").append(fieldName).append(" >>> 32));\n");
                     break;
                 case BYTES:
                 case STRING:
                     importClasses.add(Objects.class);
-                    classBodyBuilder.append("        hashCode = hashCode * 31 + Objects.hash(" + fieldName + ");\n");
+                    classBodyBuilder.append("        hashCode = hashCode * 31 + Objects.hash(").append(fieldName).append(");\n");
                     break;
                 case REFERENCE:
                     importClasses.add(Objects.class);
-                    classBodyBuilder.append("        hashCode = hashCode * 31 + Objects.hash(" + fieldName + ");\n");
+                    classBodyBuilder.append("        hashCode = hashCode * 31 + Objects.hash(").append(fieldName).append(");\n");
                     break;
             }
         }
@@ -302,8 +305,9 @@ public class HollowPOJOClassGenerator implements HollowJavaFileGenerator {
         classBodyBuilder.append("        StringBuilder builder = new StringBuilder(\"").append(getClassName()).append("{\");\n");
         for (int i=0;i<schema.numFields();i++) {
             classBodyBuilder.append("        builder.append(\"");
-            if (i > 0)
+            if(i > 0) {
                 classBodyBuilder.append(",");
+            }
             classBodyBuilder.append(getFieldName(i)).append("=\").append(").append(getFieldName(i)).append(");\n");
         }
         classBodyBuilder.append("        builder.append(\"}\");\n");
@@ -315,7 +319,9 @@ public class HollowPOJOClassGenerator implements HollowJavaFileGenerator {
         classBodyBuilder.append("    public ").append(getClassName()).append(" clone() {\n");
         classBodyBuilder.append("        try {\n");
         classBodyBuilder.append("            ").append(getClassName())
-            .append(" clone = (" + getClassName() + ") super.clone();\n");
+            .append(" clone = (")
+            .append(getClassName())
+            .append(") super.clone();\n");
         if (memoizeOrdinal) {
             classBodyBuilder.append("            clone.__assigned_ordinal = -1;\n");
         }

@@ -92,12 +92,14 @@ public class PrimitiveTypeTestAPI extends HollowAPI implements  HollowConsumerAP
         }
         addTypeAPI(booleanTypeAPI);
         factory = factoryOverrides.get("Boolean");
-        if(factory == null)
+        if(factory == null) {
             factory = new BooleanHollowFactory();
+        }
         if(cachedTypes.contains("Boolean")) {
             HollowObjectCacheProvider previousCacheProvider = null;
-            if(previousCycleAPI != null && (previousCycleAPI.booleanProvider instanceof HollowObjectCacheProvider))
-                previousCacheProvider = (HollowObjectCacheProvider) previousCycleAPI.booleanProvider;
+            if(previousCycleAPI != null && (previousCycleAPI.booleanProvider instanceof HollowObjectCacheProvider)) {
+                previousCacheProvider = (HollowObjectCacheProvider)previousCycleAPI.booleanProvider;
+            }
             booleanProvider = new HollowObjectCacheProvider(typeDataAccess, booleanTypeAPI, factory, previousCacheProvider);
         } else {
             booleanProvider = new HollowObjectFactoryProvider(typeDataAccess, booleanTypeAPI, factory);
@@ -111,12 +113,14 @@ public class PrimitiveTypeTestAPI extends HollowAPI implements  HollowConsumerAP
         }
         addTypeAPI(doubleTypeAPI);
         factory = factoryOverrides.get("Double");
-        if(factory == null)
+        if(factory == null) {
             factory = new DoubleHollowFactory();
+        }
         if(cachedTypes.contains("Double")) {
             HollowObjectCacheProvider previousCacheProvider = null;
-            if(previousCycleAPI != null && (previousCycleAPI.doubleProvider instanceof HollowObjectCacheProvider))
-                previousCacheProvider = (HollowObjectCacheProvider) previousCycleAPI.doubleProvider;
+            if(previousCycleAPI != null && (previousCycleAPI.doubleProvider instanceof HollowObjectCacheProvider)) {
+                previousCacheProvider = (HollowObjectCacheProvider)previousCycleAPI.doubleProvider;
+            }
             doubleProvider = new HollowObjectCacheProvider(typeDataAccess, doubleTypeAPI, factory, previousCacheProvider);
         } else {
             doubleProvider = new HollowObjectFactoryProvider(typeDataAccess, doubleTypeAPI, factory);
@@ -130,12 +134,14 @@ public class PrimitiveTypeTestAPI extends HollowAPI implements  HollowConsumerAP
         }
         addTypeAPI(floatTypeAPI);
         factory = factoryOverrides.get("Float");
-        if(factory == null)
+        if(factory == null) {
             factory = new FloatHollowFactory();
+        }
         if(cachedTypes.contains("Float")) {
             HollowObjectCacheProvider previousCacheProvider = null;
-            if(previousCycleAPI != null && (previousCycleAPI.floatProvider instanceof HollowObjectCacheProvider))
-                previousCacheProvider = (HollowObjectCacheProvider) previousCycleAPI.floatProvider;
+            if(previousCycleAPI != null && (previousCycleAPI.floatProvider instanceof HollowObjectCacheProvider)) {
+                previousCacheProvider = (HollowObjectCacheProvider)previousCycleAPI.floatProvider;
+            }
             floatProvider = new HollowObjectCacheProvider(typeDataAccess, floatTypeAPI, factory, previousCacheProvider);
         } else {
             floatProvider = new HollowObjectFactoryProvider(typeDataAccess, floatTypeAPI, factory);
@@ -149,12 +155,14 @@ public class PrimitiveTypeTestAPI extends HollowAPI implements  HollowConsumerAP
         }
         addTypeAPI(integerTypeAPI);
         factory = factoryOverrides.get("Integer");
-        if(factory == null)
+        if(factory == null) {
             factory = new IntegerHollowFactory();
+        }
         if(cachedTypes.contains("Integer")) {
             HollowObjectCacheProvider previousCacheProvider = null;
-            if(previousCycleAPI != null && (previousCycleAPI.integerProvider instanceof HollowObjectCacheProvider))
-                previousCacheProvider = (HollowObjectCacheProvider) previousCycleAPI.integerProvider;
+            if(previousCycleAPI != null && (previousCycleAPI.integerProvider instanceof HollowObjectCacheProvider)) {
+                previousCacheProvider = (HollowObjectCacheProvider)previousCycleAPI.integerProvider;
+            }
             integerProvider = new HollowObjectCacheProvider(typeDataAccess, integerTypeAPI, factory, previousCacheProvider);
         } else {
             integerProvider = new HollowObjectFactoryProvider(typeDataAccess, integerTypeAPI, factory);
@@ -168,12 +176,14 @@ public class PrimitiveTypeTestAPI extends HollowAPI implements  HollowConsumerAP
         }
         addTypeAPI(longTypeAPI);
         factory = factoryOverrides.get("Long");
-        if(factory == null)
+        if(factory == null) {
             factory = new LongHollowFactory();
+        }
         if(cachedTypes.contains("Long")) {
             HollowObjectCacheProvider previousCacheProvider = null;
-            if(previousCycleAPI != null && (previousCycleAPI.longProvider instanceof HollowObjectCacheProvider))
-                previousCacheProvider = (HollowObjectCacheProvider) previousCycleAPI.longProvider;
+            if(previousCycleAPI != null && (previousCycleAPI.longProvider instanceof HollowObjectCacheProvider)) {
+                previousCacheProvider = (HollowObjectCacheProvider)previousCycleAPI.longProvider;
+            }
             longProvider = new HollowObjectCacheProvider(typeDataAccess, longTypeAPI, factory, previousCacheProvider);
         } else {
             longProvider = new HollowObjectFactoryProvider(typeDataAccess, longTypeAPI, factory);
@@ -187,12 +197,14 @@ public class PrimitiveTypeTestAPI extends HollowAPI implements  HollowConsumerAP
         }
         addTypeAPI(stringTypeAPI);
         factory = factoryOverrides.get("String");
-        if(factory == null)
+        if(factory == null) {
             factory = new StringHollowFactory();
+        }
         if(cachedTypes.contains("String")) {
             HollowObjectCacheProvider previousCacheProvider = null;
-            if(previousCycleAPI != null && (previousCycleAPI.stringProvider instanceof HollowObjectCacheProvider))
-                previousCacheProvider = (HollowObjectCacheProvider) previousCycleAPI.stringProvider;
+            if(previousCycleAPI != null && (previousCycleAPI.stringProvider instanceof HollowObjectCacheProvider)) {
+                previousCacheProvider = (HollowObjectCacheProvider)previousCycleAPI.stringProvider;
+            }
             stringProvider = new HollowObjectCacheProvider(typeDataAccess, stringTypeAPI, factory, previousCacheProvider);
         } else {
             stringProvider = new HollowObjectFactoryProvider(typeDataAccess, stringTypeAPI, factory);
@@ -201,18 +213,24 @@ public class PrimitiveTypeTestAPI extends HollowAPI implements  HollowConsumerAP
 
     @Override
     public void detachCaches() {
-        if(booleanProvider instanceof HollowObjectCacheProvider)
+        if(booleanProvider instanceof HollowObjectCacheProvider) {
             ((HollowObjectCacheProvider)booleanProvider).detach();
-        if(doubleProvider instanceof HollowObjectCacheProvider)
+        }
+        if(doubleProvider instanceof HollowObjectCacheProvider) {
             ((HollowObjectCacheProvider)doubleProvider).detach();
-        if(floatProvider instanceof HollowObjectCacheProvider)
+        }
+        if(floatProvider instanceof HollowObjectCacheProvider) {
             ((HollowObjectCacheProvider)floatProvider).detach();
-        if(integerProvider instanceof HollowObjectCacheProvider)
+        }
+        if(integerProvider instanceof HollowObjectCacheProvider) {
             ((HollowObjectCacheProvider)integerProvider).detach();
-        if(longProvider instanceof HollowObjectCacheProvider)
+        }
+        if(longProvider instanceof HollowObjectCacheProvider) {
             ((HollowObjectCacheProvider)longProvider).detach();
-        if(stringProvider instanceof HollowObjectCacheProvider)
+        }
+        if(stringProvider instanceof HollowObjectCacheProvider) {
             ((HollowObjectCacheProvider)stringProvider).detach();
+        }
     }
 
     public BooleanTypeAPI getBooleanTypeAPI() {

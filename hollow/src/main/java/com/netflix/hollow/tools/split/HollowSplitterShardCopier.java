@@ -49,7 +49,7 @@ public class HollowSplitterShardCopier {
         this.director = director;
         this.shardNumber = shardNumber;
         this.ordinalRemapper = new HollowSplitterOrdinalRemapper(input, this);
-        this.copiersPerType = new HashMap<String, HollowRecordCopier>();
+        this.copiersPerType = new HashMap<>();
     }
 
     public void copy() {
@@ -89,10 +89,12 @@ public class HollowSplitterShardCopier {
     }
 
     private boolean isDefinedHashCode(HollowTypeReadState typeState) {
-        if(typeState instanceof HollowSetTypeReadState)
+        if(typeState instanceof HollowSetTypeReadState) {
             return input.getTypesWithDefinedHashCodes().contains(((HollowSetSchema)typeState.getSchema()).getElementType());
-        if(typeState instanceof HollowMapTypeReadState)
+        }
+        if(typeState instanceof HollowMapTypeReadState) {
             return input.getTypesWithDefinedHashCodes().contains(((HollowMapSchema)typeState.getSchema()).getKeyType());
+        }
         return false;
     }
 

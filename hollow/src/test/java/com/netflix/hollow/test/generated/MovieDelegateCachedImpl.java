@@ -25,8 +25,9 @@ public class MovieDelegateCachedImpl extends HollowObjectAbstractDelegate implem
     }
 
     public long getId(int ordinal) {
-        if(id == null)
+        if(id == null) {
             return Long.MIN_VALUE;
+        }
         return id.longValue();
     }
 
@@ -39,8 +40,9 @@ public class MovieDelegateCachedImpl extends HollowObjectAbstractDelegate implem
     }
 
     public boolean isTitleEqual(int ordinal, String testValue) {
-        if(testValue == null)
+        if(testValue == null) {
             return title == null;
+        }
         return testValue.equals(title);
     }
 
@@ -49,8 +51,9 @@ public class MovieDelegateCachedImpl extends HollowObjectAbstractDelegate implem
     }
 
     public int getYear(int ordinal) {
-        if(year == null)
+        if(year == null) {
             return Integer.MIN_VALUE;
+        }
         return year.intValue();
     }
 

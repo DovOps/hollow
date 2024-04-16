@@ -47,11 +47,13 @@ class HollowIndexerMapTraversalNode extends HollowIndexerTraversalNode {
 
         while(ordinalIterator.next()) {
             prepareMultiply();
-            
-            if(keyNode != null)
+
+            if(keyNode != null) {
                 keyNode.traverse(ordinalIterator.getKey());
-            if(valueNode != null)
+            }
+            if(valueNode != null) {
                 valueNode.traverse(ordinalIterator.getValue());
+            }
         
             numMatches += doMultiply();
         }

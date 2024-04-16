@@ -64,12 +64,12 @@ public class HollowIndexTraversalTest extends AbstractStateEngineTest {
     }
 
     private Map<String, List<Integer>> map(Object... keyValues) {
-        Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
+        Map<String, List<Integer>> map = new HashMap<>();
         int i = 0;
 
         while(i < keyValues.length) {
             String key = (String)keyValues[i];
-            List<Integer> values = new ArrayList<Integer>();
+            List<Integer> values = new ArrayList<>();
             i++;
             while(i < keyValues.length && keyValues[i] instanceof Integer) {
                 values.add((Integer)keyValues[i]);

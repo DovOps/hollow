@@ -53,8 +53,9 @@ public abstract class HollowTypeMapper {
     protected abstract HollowTypeWriteState getTypeWriteState();
 
     protected void addTypeState(HollowWriteStateEngine stateEngine) {
-        if(stateEngine.getTypeState(getTypeName()) == null)
+        if(stateEngine.getTypeState(getTypeName()) == null) {
             stateEngine.addTypeState(getTypeWriteState());
+        }
     }
 
     protected HollowWriteRecord writeRecord() {
@@ -102,20 +103,24 @@ public abstract class HollowTypeMapper {
         if(type instanceof Class) {
             Class<?> clazz = (Class<?>)type;
             HollowTypeName explicitTypeName = clazz.getAnnotation(HollowTypeName.class);
-            if(explicitTypeName != null)
+            if(explicitTypeName != null) {
                 return explicitTypeName.name();
+            }
             return clazz.getSimpleName();
         }
 
         ParameterizedType parameterizedType = (ParameterizedType)type;
         Class<?> clazz = (Class<?>)parameterizedType.getRawType();
 
-        if(List.class.isAssignableFrom(clazz))
+        if(List.class.isAssignableFrom(clazz)) {
             return "ListOf" + getDefaultTypeName(parameterizedType.getActualTypeArguments()[0]);
-        if(Set.class.isAssignableFrom(clazz))
+        }
+        if(Set.class.isAssignableFrom(clazz)) {
             return "SetOf" + getDefaultTypeName(parameterizedType.getActualTypeArguments()[0]);
-        if(Map.class.isAssignableFrom(clazz))
+        }
+        if(Map.class.isAssignableFrom(clazz)) {
             return "MapOf" + getDefaultTypeName(parameterizedType.getActualTypeArguments()[0]) + "To" + getDefaultTypeName(parameterizedType.getActualTypeArguments()[1]);
+        }
 
         return clazz.getSimpleName();
     }

@@ -162,79 +162,79 @@ public class HollowObjectDelegateLookupImplGenerator extends HollowObjectDelegat
             builder.append("    public boolean get").append(methodFieldName).append("(int ordinal) {\n");
             builder.append("        ordinal = typeAPI.get").append(methodFieldName).append("Ordinal(ordinal);\n");
             addShortcutTraversal(builder, shortcut);
-            builder.append("        return ordinal == -1 ? false : typeAPI.getAPI().get" + finalTypeAPI + "().get").append(finalFieldName).append("(ordinal);\n");
+            builder.append("        return ordinal == -1 ? false : typeAPI.getAPI().get").append(finalTypeAPI).append("().get").append(finalFieldName).append("(ordinal);\n");
             builder.append("    }\n\n");
             builder.append("    public Boolean get").append(methodFieldName).append("Boxed(int ordinal) {\n");
             builder.append("        ordinal = typeAPI.get").append(methodFieldName).append("Ordinal(ordinal);\n");
             addShortcutTraversal(builder, shortcut);
-            builder.append("        return ordinal == -1 ? null : typeAPI.getAPI().get" + finalTypeAPI + "().get").append(finalFieldName).append("Boxed(ordinal);\n");
+            builder.append("        return ordinal == -1 ? null : typeAPI.getAPI().get").append(finalTypeAPI).append("().get").append(finalFieldName).append("Boxed(ordinal);\n");
             builder.append("    }\n\n");
             break;
         case BYTES:
             builder.append("    public byte[] get").append(methodFieldName).append("(int ordinal) {\n");
             builder.append("        ordinal = typeAPI.get").append(methodFieldName).append("Ordinal(ordinal);\n");
             addShortcutTraversal(builder, shortcut);
-            builder.append("        return ordinal == -1 ? null : typeAPI.getAPI().get" + finalTypeAPI + "().get").append(finalFieldName).append("(ordinal);\n");
+            builder.append("        return ordinal == -1 ? null : typeAPI.getAPI().get").append(finalTypeAPI).append("().get").append(finalFieldName).append("(ordinal);\n");
             builder.append("    }\n\n");
             break;
         case DOUBLE:
             builder.append("    public double get").append(methodFieldName).append("(int ordinal) {\n");
             builder.append("        ordinal = typeAPI.get").append(methodFieldName).append("Ordinal(ordinal);\n");
             addShortcutTraversal(builder, shortcut);
-            builder.append("        return ordinal == -1 ? Double.NaN : typeAPI.getAPI().get" + finalTypeAPI + "().get").append(finalFieldName).append("(ordinal);\n");
+            builder.append("        return ordinal == -1 ? Double.NaN : typeAPI.getAPI().get").append(finalTypeAPI).append("().get").append(finalFieldName).append("(ordinal);\n");
             builder.append("    }\n\n");
             builder.append("    public Double get").append(methodFieldName).append("Boxed(int ordinal) {\n");
             builder.append("        ordinal = typeAPI.get").append(methodFieldName).append("Ordinal(ordinal);\n");
             addShortcutTraversal(builder, shortcut);
-            builder.append("        return ordinal == -1 ? null : typeAPI.getAPI().get" + finalTypeAPI + "().get").append(finalFieldName).append("Boxed(ordinal);\n");
+            builder.append("        return ordinal == -1 ? null : typeAPI.getAPI().get").append(finalTypeAPI).append("().get").append(finalFieldName).append("Boxed(ordinal);\n");
             builder.append("    }\n\n");
             break;
         case FLOAT:
             builder.append("    public float get").append(methodFieldName).append("(int ordinal) {\n");
             builder.append("        ordinal = typeAPI.get").append(methodFieldName).append("Ordinal(ordinal);\n");
             addShortcutTraversal(builder, shortcut);
-            builder.append("        return ordinal == -1 ? Float.NaN : typeAPI.getAPI().get" + finalTypeAPI + "().get").append(finalFieldName).append("(ordinal);\n");
+            builder.append("        return ordinal == -1 ? Float.NaN : typeAPI.getAPI().get").append(finalTypeAPI).append("().get").append(finalFieldName).append("(ordinal);\n");
             builder.append("    }\n\n");
             builder.append("    public Float get").append(methodFieldName).append("Boxed(int ordinal) {\n");
             builder.append("        ordinal = typeAPI.get").append(methodFieldName).append("Ordinal(ordinal);\n");
             addShortcutTraversal(builder, shortcut);
-            builder.append("        return ordinal == -1 ? null : typeAPI.getAPI().get" + finalTypeAPI + "().get").append(finalFieldName).append("Boxed(ordinal);\n");
+            builder.append("        return ordinal == -1 ? null : typeAPI.getAPI().get").append(finalTypeAPI).append("().get").append(finalFieldName).append("Boxed(ordinal);\n");
             builder.append("    }\n\n");
             break;
         case INT:
             builder.append("    public int get").append(methodFieldName).append("(int ordinal) {\n");
             builder.append("        ordinal = typeAPI.get").append(methodFieldName).append("Ordinal(ordinal);\n");
             addShortcutTraversal(builder, shortcut);
-            builder.append("        return ordinal == -1 ? Integer.MIN_VALUE : typeAPI.getAPI().get" + finalTypeAPI + "().get").append(finalFieldName).append("(ordinal);\n");
+            builder.append("        return ordinal == -1 ? Integer.MIN_VALUE : typeAPI.getAPI().get").append(finalTypeAPI).append("().get").append(finalFieldName).append("(ordinal);\n");
             builder.append("    }\n\n");
             builder.append("    public Integer get").append(methodFieldName).append("Boxed(int ordinal) {\n");
             builder.append("        ordinal = typeAPI.get").append(methodFieldName).append("Ordinal(ordinal);\n");
             addShortcutTraversal(builder, shortcut);
-            builder.append("        return ordinal == -1 ? null : typeAPI.getAPI().get" + finalTypeAPI + "().get").append(finalFieldName).append("Boxed(ordinal);\n");
+            builder.append("        return ordinal == -1 ? null : typeAPI.getAPI().get").append(finalTypeAPI).append("().get").append(finalFieldName).append("Boxed(ordinal);\n");
             builder.append("    }\n\n");
             break;
         case LONG:
             builder.append("    public long get").append(methodFieldName).append("(int ordinal) {\n");
             builder.append("        ordinal = typeAPI.get").append(methodFieldName).append("Ordinal(ordinal);\n");
             addShortcutTraversal(builder, shortcut);
-            builder.append("        return ordinal == -1 ? Long.MIN_VALUE : typeAPI.getAPI().get" + finalTypeAPI + "().get").append(finalFieldName).append("(ordinal);\n");
+            builder.append("        return ordinal == -1 ? Long.MIN_VALUE : typeAPI.getAPI().get").append(finalTypeAPI).append("().get").append(finalFieldName).append("(ordinal);\n");
             builder.append("    }\n\n");
             builder.append("    public Long get").append(methodFieldName).append("Boxed(int ordinal) {\n");
             builder.append("        ordinal = typeAPI.get").append(methodFieldName).append("Ordinal(ordinal);\n");
             addShortcutTraversal(builder, shortcut);
-            builder.append("        return ordinal == -1 ? null : typeAPI.getAPI().get" + finalTypeAPI + "().get").append(finalFieldName).append("Boxed(ordinal);\n");
+            builder.append("        return ordinal == -1 ? null : typeAPI.getAPI().get").append(finalTypeAPI).append("().get").append(finalFieldName).append("Boxed(ordinal);\n");
             builder.append("    }\n\n");
             break;
         case STRING:
             builder.append("    public String get").append(methodFieldName).append("(int ordinal) {\n");
             builder.append("        ordinal = typeAPI.get").append(methodFieldName).append("Ordinal(ordinal);\n");
             addShortcutTraversal(builder, shortcut);
-            builder.append("        return ordinal == -1 ? null : typeAPI.getAPI().get" + finalTypeAPI + "().get").append(finalFieldName).append("(ordinal);\n");
+            builder.append("        return ordinal == -1 ? null : typeAPI.getAPI().get").append(finalTypeAPI).append("().get").append(finalFieldName).append("(ordinal);\n");
             builder.append("    }\n\n");
             builder.append("    public boolean is").append(methodFieldName).append("Equal(int ordinal, String testValue) {\n");
             builder.append("        ordinal = typeAPI.get").append(methodFieldName).append("Ordinal(ordinal);\n");
             addShortcutTraversal(builder, shortcut);
-            builder.append("        return ordinal == -1 ? testValue == null : typeAPI.getAPI().get" + finalTypeAPI + "().is").append(finalFieldName).append("Equal(ordinal, testValue);\n");
+            builder.append("        return ordinal == -1 ? testValue == null : typeAPI.getAPI().get").append(finalTypeAPI).append("().is").append(finalFieldName).append("Equal(ordinal, testValue);\n");
             builder.append("    }\n\n");
             break;
         default:
@@ -245,7 +245,7 @@ public class HollowObjectDelegateLookupImplGenerator extends HollowObjectDelegat
     private void addShortcutTraversal(StringBuilder builder, Shortcut shortcut) {
         for(int i=0;i<shortcut.getPath().length-1;i++) {
             String typeAPIClassname = typeAPIClassname(shortcut.getPathTypes()[i]);
-            builder.append("        if(ordinal != -1) ordinal = typeAPI.getAPI().get" + typeAPIClassname + "().get" + uppercase(shortcut.getPath()[i]) + "Ordinal(ordinal);\n");
+            builder.append("        if(ordinal != -1) ordinal = typeAPI.getAPI().get").append(typeAPIClassname).append("().get").append(uppercase(shortcut.getPath()[i])).append("Ordinal(ordinal);\n");
         }
     }
 

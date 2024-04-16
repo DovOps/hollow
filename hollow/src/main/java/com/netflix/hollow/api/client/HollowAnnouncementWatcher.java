@@ -134,8 +134,9 @@ public abstract class HollowAnnouncementWatcher {
             public void run() {
                 try {
                     long delay = targetBeginTime - System.currentTimeMillis();
-                    if(delay > 0)
+                    if(delay > 0) {
                         Thread.sleep(delay);
+                    }
                     client.triggerRefresh();
                 } catch(Throwable th) {
                     log.log(Level.SEVERE, "Async refresh failed", th);

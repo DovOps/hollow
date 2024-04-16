@@ -50,7 +50,7 @@ public abstract class AbstractHollowIndexBenchmark<T> {
 
     //@Param( {"false", "true"})
     @Param( {"false"})
-    public boolean nested = false;
+    public boolean nested;
 
     @SuppressWarnings("unchecked")
     @Setup

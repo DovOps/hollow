@@ -299,7 +299,7 @@ public class HollowProducerListenerTest {
 
         producer.runCycle(ws -> ws.add(new Top(1)));
 
-        Assert.assertTrue(ls.callCount.entrySet().stream().filter(c -> !c.getKey().equals("onAnnouncementStart")).allMatch(c -> c.getValue() == 1));
+        Assert.assertTrue(ls.callCount.entrySet().stream().filter(c -> !"onAnnouncementStart".equals(c.getKey())).allMatch(c -> c.getValue() == 1));
         Assert.assertEquals(ls.callCount.get("onAnnouncementStart").intValue(), 2);
         Assert.assertEquals(16, ls.callCount.size());
 
@@ -483,8 +483,8 @@ public class HollowProducerListenerTest {
         producer.runCycle(ws -> ws.add(new Top(2)));
 
         Assert.assertTrue(ls.callCount.entrySet().stream()
-                .filter(e -> !e.getKey().equals("onBlobStage"))
-                .filter(e -> !e.getKey().equals("onBlobPublish"))
+                .filter(e -> !"onBlobStage".equals(e.getKey()))
+                .filter(e -> !"onBlobPublish".equals(e.getKey()))
                 .map(Map.Entry::getValue)
                 .allMatch(c -> c == 1));
         Assert.assertEquals(3, ls.callCount.get("onBlobStage").intValue());
@@ -806,7 +806,7 @@ public class HollowProducerListenerTest {
 
     @Test
     public void testBlobPublishAsyncExecutorFail() {
-        Executor executor = (r) -> { throw new RejectedExecutionException(); };
+        Executor executor = r -> { throw new RejectedExecutionException(); };
         HollowProducer producer = HollowProducer.withPublisher(blobStore)
                 .withBlobStager(new HollowInMemoryBlobStager())
                 .withSnapshotPublishExecutor(executor)

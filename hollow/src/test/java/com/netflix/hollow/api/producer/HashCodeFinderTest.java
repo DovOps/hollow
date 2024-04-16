@@ -82,7 +82,7 @@ public class HashCodeFinderTest {
         }
 
         @Override public int hashCode(String typeName, int ordinal, Object objectToHash) {
-            if (typeName.equals("StringUsingHashCodeFinder")) {
+            if ("StringUsingHashCodeFinder".equals(typeName)) {
                 i.incrementAndGet();
                 String s = ((StringUsingHashCodeFinder) objectToHash).s;
                 return s.hashCode() ^ s.charAt(0);

@@ -12,10 +12,10 @@ import org.junit.Test;
 
 public class HollowHistoryUITest {
 
-    private final int PORT_EXPECTED = 7777;
-    private final int PORT_ACTUAL = 7778;
+    private static final int PORT_EXPECTED = 7777;
+    private static final int PORT_ACTUAL = 7778;
 
-    private TestBlobRetriever testBlobRetriever;
+    private final TestBlobRetriever testBlobRetriever;
     private TestHollowConsumer consumerExpected;    // builds history using only deltas
     private TestHollowConsumer consumerFwd;
     private TestHollowConsumer consumerRev;

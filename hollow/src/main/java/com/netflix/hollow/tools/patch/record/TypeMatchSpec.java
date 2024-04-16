@@ -22,13 +22,13 @@ import java.util.List;
 public class TypeMatchSpec {
 
     private final String typeName;
-    private final String keyPaths[];
+    private final String[] keyPaths;
     private final List<Object[]> keyMatchingValues;
 
     public TypeMatchSpec(String typeName, String... keyPaths) {
         this.typeName = typeName;
         this.keyPaths = keyPaths;
-        this.keyMatchingValues = new ArrayList<Object[]>();
+        this.keyMatchingValues = new ArrayList<>();
     }
 
     public void addMatchingValue(Object... matchValues) {

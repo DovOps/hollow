@@ -99,8 +99,8 @@ public class HollowDiffChangedSchemaTest {
     @Test
     @SuppressWarnings("unused")
     public void testDiffWithChangedSchemas() throws IOException {
-        int a1_0 = a1(new byte[] {1, 2, 3}, 1024L, 1020.3523d);
-        int a2_0 = a2(new byte[] {1, 2, 3}, 1024L,
+        int a10 = a1(new byte[] {1, 2, 3}, 1024L, 1020.3523d);
+        int a20 = a2(new byte[] {1, 2, 3}, 1024L,
                 list(c("list1"), c("list2")),
                 set(c("list1"), c("set1"), c("set2")),
                 map(c("key1"), c("val1"),
@@ -109,8 +109,8 @@ public class HollowDiffChangedSchemaTest {
                 c("singleton1"));
 
 
-        int a1_1 = a1(new byte[] {2, 4, 6}, 12345678L, 1020.3523d);
-        int a2_1 = a2(new byte[] {2, 4, 6}, 123456L,
+        int a11 = a1(new byte[] {2, 4, 6}, 12345678L, 1020.3523d);
+        int a21 = a2(new byte[] {2, 4, 6}, 123456L,
                 list(c("list3")),
                 set(c("set4"), c("set5"), c("set6"), c("set7")),
                 map(c("key10"), c("val10"),

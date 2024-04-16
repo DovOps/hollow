@@ -78,11 +78,14 @@ public class HollowDiffCollectionCountingNode extends HollowDiffCountingNode {
         
         int score = 0;
 
-        if(referenceFilter.getUnmatchedFromOrdinals().size() != 0 || referenceFilter.getUnmatchedToOrdinals().size() != 0)
+        if(referenceFilter.getUnmatchedFromOrdinals().size() != 0 || referenceFilter.getUnmatchedToOrdinals().size() != 0) {
             score += elementNode.traverseDiffs(referenceFilter.getUnmatchedFromOrdinals(), referenceFilter.getUnmatchedToOrdinals());
-        if(requiresTraversalForMissingFields)
-            if(referenceFilter.getMatchedFromOrdinals().size() != 0 || referenceFilter.getMatchedToOrdinals().size() != 0)
+        }
+        if(requiresTraversalForMissingFields) {
+            if(referenceFilter.getMatchedFromOrdinals().size() != 0 || referenceFilter.getMatchedToOrdinals().size() != 0) {
                 score += elementNode.traverseMissingFields(referenceFilter.getMatchedFromOrdinals(), referenceFilter.getMatchedToOrdinals());
+            }
+        }
         
         return score;
     }

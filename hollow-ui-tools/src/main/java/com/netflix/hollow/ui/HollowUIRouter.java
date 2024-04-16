@@ -48,10 +48,12 @@ public abstract class HollowUIRouter extends HttpServlet {
     public abstract boolean handle(String target, HttpServletRequest req, HttpServletResponse resp) throws IOException;
 
     public HollowUIRouter(String baseUrlPath) {
-        if(!baseUrlPath.startsWith("/"))
+        if(!baseUrlPath.startsWith("/")) {
             baseUrlPath = "/" + baseUrlPath;
-        if(baseUrlPath.endsWith("/"))
+        }
+        if(baseUrlPath.endsWith("/")) {
             baseUrlPath = baseUrlPath.substring(0, baseUrlPath.length() - 1);
+        }
 
         this.baseUrlPath = baseUrlPath;
         this.velocityEngine = initVelocity();
@@ -68,8 +70,9 @@ public abstract class HollowUIRouter extends HttpServlet {
     protected String getTargetRootPath(String target) {
         int baseLength = baseUrlPath.length() + 1;
 
-        if(target.length() < baseLength)
+        if(target.length() < baseLength) {
             return "";
+        }
 
         if (target == null) {
             throw new IllegalStateException("target is null. It defaults to HttpServletRequest::getPathInfo() but can be " +
@@ -77,8 +80,9 @@ public abstract class HollowUIRouter extends HttpServlet {
         }
         int secondSlashIndex = target.indexOf('/', baseLength);
 
-        if(secondSlashIndex == -1)
+        if(secondSlashIndex == -1) {
             return target.substring(baseLength);
+        }
 
         return target.substring(baseLength, secondSlashIndex);
     }

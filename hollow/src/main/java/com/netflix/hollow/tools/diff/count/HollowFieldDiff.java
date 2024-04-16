@@ -126,10 +126,11 @@ public class HollowFieldDiff implements Comparable<HollowFieldDiff> {
      */
     @Override
     public int compareTo(HollowFieldDiff o) {
-        if(o.getTotalDiffScore() > totalDiffScore)
+        if(o.getTotalDiffScore() > totalDiffScore) {
             return 1;
-        else if(o.getTotalDiffScore() < totalDiffScore)
+        } else if(o.getTotalDiffScore() < totalDiffScore) {
             return -1;
+        }
         return 0;
     }
 

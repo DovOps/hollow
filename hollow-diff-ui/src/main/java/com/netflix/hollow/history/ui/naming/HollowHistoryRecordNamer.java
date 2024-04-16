@@ -26,9 +26,10 @@ public class HollowHistoryRecordNamer {
 
     public String getRecordName(HollowHistoricalState historicalState, HollowHistoricalStateTypeKeyOrdinalMapping typeKeyMapping, int keyOrdinal, HollowObjectTypeDataAccess dataAccess, int recordOrdinal) {
         String recordName = getRecordName(dataAccess, recordOrdinal);
-        
-        if(recordName != null)
+
+        if(recordName != null) {
             return recordName;
+        }
         
         return typeKeyMapping.getKeyIndex().getKeyDisplayString(keyOrdinal);
     }

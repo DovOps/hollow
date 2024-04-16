@@ -31,26 +31,26 @@ class TST {   // ternary search tree
     }
 
     // each node segment can be thought of as 16 bit key and bits to hold index of its children
-    private int bitsPerNode;
-    private int bitsPerKey;
-    private int bitsForChildPointer;
-    private int bitsPerOrdinal;
+    private final int bitsPerNode;
+    private final int bitsPerKey;
+    private final int bitsForChildPointer;
+    private final int bitsPerOrdinal;
 
     // helper offsets
-    private long leftChildOffset;
-    private long middleChildOffset;
-    private long rightChildOffset;
-    private long isEndFlagOffset;   // indicates end of a value stored in TST
+    private final long leftChildOffset;
+    private final long middleChildOffset;
+    private final long rightChildOffset;
+    private final long isEndFlagOffset;   // indicates end of a value stored in TST
 
     private final long maxNodes;
     private final boolean caseSensitive;
 
     // pre-allocated array to store all nodes in the TST
     // each node contains a data key, links to 3 child nodes, and one bit for indicating if this node marks the end of a value
-    private FixedLengthElementArray nodes;
+    private final FixedLengthElementArray nodes;
 
     // dynamically resized array that can store multiple ordinals in the type state corresponding to a node in the TST
-    private FixedLengthMultipleOccurrenceElementArray ordinalSet;
+    private final FixedLengthMultipleOccurrenceElementArray ordinalSet;
     private long indexTracker;
     private long maxDepth;
 
@@ -98,9 +98,13 @@ class TST {   // ternary search tree
 
     private long getChildOffset(NodeType nodeType) {
         long offset;
-        if (nodeType.equals(NodeType.Left)) offset = leftChildOffset;
-        else if (nodeType.equals(NodeType.Middle)) offset = middleChildOffset;
-        else offset = rightChildOffset;
+        if(nodeType.equals(NodeType.Left)) {
+            offset = leftChildOffset;
+        } else if(nodeType.equals(NodeType.Middle)) {
+            offset = middleChildOffset;
+        } else {
+            offset = rightChildOffset;
+        }
         return offset;
     }
 
@@ -133,7 +137,7 @@ class TST {   // ternary search tree
 
     List<Integer> getOrdinals(long nodeIndex) {
         if (nodeIndex < 0) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         return ordinalSet.getElements(nodeIndex).stream()
                 .map(Long::intValue).collect(Collectors.toList());
@@ -144,8 +148,12 @@ class TST {   // ternary search tree
      * Case sensitivity is specified at the time of index initialization.  nulls and empty strings are not supported.
      */
     void insert(String key, int ordinal) {
-        if (key == null) throw new IllegalArgumentException("Null key cannot be indexed");
-        if (key.length() == 0) throw new IllegalArgumentException("Empty string cannot be indexed");
+        if(key == null) {
+            throw new IllegalArgumentException("Null key cannot be indexed");
+        }
+        if(key.length() == 0) {
+            throw new IllegalArgumentException("Empty string cannot be indexed");
+        }
         long currentNodeIndex = 0;
         int keyIndex = 0;
         int depth = 0;
@@ -158,26 +166,33 @@ class TST {   // ternary search tree
             if (getKey(currentNodeIndex) == 0) {
                 setKey(currentNodeIndex, ch);
                 indexTracker++;
-                if (indexTracker >= maxNodes)
+                if(indexTracker >= maxNodes) {
                     throw new IllegalStateException("Index Tracker reached max capacity. Try with larger estimate of number of nodes");
+                }
             }
 
             long keyAtCurrentNode = getKey(currentNodeIndex);
             if (ch < keyAtCurrentNode) {
                 long leftIndex = getChildIndex(currentNodeIndex, NodeType.Left);
-                if (leftIndex == 0) leftIndex = indexTracker;
+                if(leftIndex == 0) {
+                    leftIndex = indexTracker;
+                }
                 setChildIndex(currentNodeIndex, NodeType.Left, leftIndex);
                 currentNodeIndex = leftIndex;
             } else if (ch > keyAtCurrentNode) {
                 long rightIndex = getChildIndex(currentNodeIndex, NodeType.Right);
-                if (rightIndex == 0) rightIndex = indexTracker;
+                if(rightIndex == 0) {
+                    rightIndex = indexTracker;
+                }
                 setChildIndex(currentNodeIndex, NodeType.Right, rightIndex);
                 currentNodeIndex = rightIndex;
             } else {
                 keyIndex++;
                 if (keyIndex < key.length()) {
                     long midIndex = getChildIndex(currentNodeIndex, NodeType.Middle);
-                    if (midIndex == 0) midIndex = indexTracker;
+                    if(midIndex == 0) {
+                        midIndex = indexTracker;
+                    }
                     setChildIndex(currentNodeIndex, NodeType.Middle, midIndex);
                     currentNodeIndex = midIndex;
                 }
@@ -211,7 +226,9 @@ class TST {   // ternary search tree
         int keyIndex = 0;
 
         while (true) {
-            if (currentNodeIndex == 0 && !atRoot) break;
+            if(currentNodeIndex == 0 && !atRoot) {
+                break;
+            }
             long currentValue = getKey(currentNodeIndex);
             char ch = prefix.charAt(keyIndex);
             if (ch < currentValue) {
@@ -230,7 +247,9 @@ class TST {   // ternary search tree
                 currentNodeIndex = getChildIndex(currentNodeIndex, NodeType.Middle);
                 keyIndex ++;
             }
-            if (atRoot) atRoot = false;
+            if(atRoot) {
+                atRoot = false;
+            }
         }
         return nodeIndex;
     }
@@ -255,20 +274,26 @@ class TST {   // ternary search tree
         int keyIndex = 0;
 
         while (true) {
-            if (currentNodeIndex == 0 && !atRoot) break;
+            if(currentNodeIndex == 0 && !atRoot) {
+                break;
+            }
             long currentValue = getKey(currentNodeIndex);
             char ch = key.charAt(keyIndex);
-            if (ch < currentValue) currentNodeIndex = getChildIndex(currentNodeIndex, NodeType.Left);
-            else if (ch > currentValue) currentNodeIndex = getChildIndex(currentNodeIndex, NodeType.Right);
-            else {
-                if (keyIndex == (key.length() - 1)) {
+            if(ch < currentValue) {
+                currentNodeIndex = getChildIndex(currentNodeIndex, NodeType.Left);
+            } else if(ch > currentValue) {
+                currentNodeIndex = getChildIndex(currentNodeIndex, NodeType.Right);
+            } else {
+                if(keyIndex == (key.length() - 1)) {
                     index = currentNodeIndex;
                     break;
                 }
                 currentNodeIndex = getChildIndex(currentNodeIndex, NodeType.Middle);
                 keyIndex++;
             }
-            if (atRoot) atRoot = false;
+            if(atRoot) {
+                atRoot = false;
+            }
         }
         return index;
     }
@@ -300,8 +325,9 @@ class TST {   // ternary search tree
         }
 
         if (currentNodeIndex >= 0) {
-            if (isEndNode(currentNodeIndex))
+            if(isEndNode(currentNodeIndex)) {
                 ordinals.addAll(getOrdinals(currentNodeIndex));
+            }
 
             // go to all leaf nodes from current node mid pointer
             Queue<Long> queue = new ArrayDeque<>();
@@ -319,10 +345,18 @@ class TST {   // ternary search tree
                 long mid = getChildIndex(nodeIndex, NodeType.Middle);
                 long right = getChildIndex(nodeIndex, NodeType.Right);
 
-                if (isEndNode(nodeIndex)) ordinals.addAll(getOrdinals(nodeIndex));
-                if (left != 0) queue.add(left);
-                if (mid != 0) queue.add(mid);
-                if (right != 0) queue.add(right);
+                if(isEndNode(nodeIndex)) {
+                    ordinals.addAll(getOrdinals(nodeIndex));
+                }
+                if(left != 0) {
+                    queue.add(left);
+                }
+                if(mid != 0) {
+                    queue.add(mid);
+                }
+                if(right != 0) {
+                    queue.add(right);
+                }
             }
         }
 
@@ -331,7 +365,9 @@ class TST {   // ternary search tree
 
             @Override
             public int next() {
-                if (it.hasNext()) return it.next();
+                if(it.hasNext()) {
+                    return it.next();
+                }
                 return NO_MORE_ORDINALS;
             }
         };

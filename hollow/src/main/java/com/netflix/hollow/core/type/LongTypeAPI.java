@@ -33,8 +33,9 @@ public class LongTypeAPI extends HollowObjectTypeAPI {
     }
 
     public long getValue(int ordinal) {
-        if(fieldIndex[0] == -1)
+        if(fieldIndex[0] == -1) {
             return missingDataHandler().handleLong("Long", ordinal, "value");
+        }
         return getTypeDataAccess().readLong(ordinal, fieldIndex[0]);
     }
 
@@ -46,8 +47,9 @@ public class LongTypeAPI extends HollowObjectTypeAPI {
             boxedFieldAccessSampler.recordFieldAccess(fieldIndex[0]);
             l = getTypeDataAccess().readLong(ordinal, fieldIndex[0]);
         }
-        if(l == Long.MIN_VALUE)
+        if(l == Long.MIN_VALUE) {
             return null;
+        }
         return Long.valueOf(l);
     }
 

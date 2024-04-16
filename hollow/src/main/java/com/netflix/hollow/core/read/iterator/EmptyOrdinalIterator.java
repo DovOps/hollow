@@ -16,7 +16,7 @@
  */
 package com.netflix.hollow.core.read.iterator;
 
-public class EmptyOrdinalIterator implements HollowOrdinalIterator {
+public final class EmptyOrdinalIterator implements HollowOrdinalIterator {
 
     public static final EmptyOrdinalIterator INSTANCE = new EmptyOrdinalIterator();
 

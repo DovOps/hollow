@@ -88,8 +88,9 @@ public final class BlobByteBuffer {
         long bufferCount = size % bufferCapacity == 0
                 ? size / (long)bufferCapacity
                 : (size / (long)bufferCapacity) + 1;
-        if (bufferCount > Integer.MAX_VALUE)
+        if(bufferCount > Integer.MAX_VALUE) {
             throw new IllegalArgumentException("file too large; size=" + size);
+        }
 
         int shift = 31 - Integer.numberOfLeadingZeros(bufferCapacity); // log2
         int mask = (1 << shift) - 1;
@@ -124,8 +125,9 @@ public final class BlobByteBuffer {
      * @return new position in bytes
      */
     public BlobByteBuffer position(long position) {
-        if (position > capacity || position < 0)
+        if(position > capacity || position < 0) {
             throw new IllegalArgumentException("invalid position; position=" + position + " capacity=" + capacity);
+        }
         this.position = position;
         return this;
     }
@@ -138,7 +140,7 @@ public final class BlobByteBuffer {
      */
     public byte getByte(long index) throws BufferUnderflowException {
         if (index < capacity) {
-            int spineIndex = (int)(index >>> (shift));
+            int spineIndex = (int)(index >>> shift);
             int bufferIndex = (int)(index & mask);
             return spine[spineIndex].get(bufferIndex);
         }
@@ -167,14 +169,14 @@ public final class BlobByteBuffer {
             bytes[i] = getByte(bigEndian(startByteIndex + i, nextAlignedPos));
         }
 
-        return ((((long) (bytes[7]       )) << 56) |
+        return (((long) (bytes[7]       )) << 56) |
                 (((long) (bytes[6] & 0xff)) << 48) |
                 (((long) (bytes[5] & 0xff)) << 40) |
                 (((long) (bytes[4] & 0xff)) << 32) |
                 (((long) (bytes[3] & 0xff)) << 24) |
                 (((long) (bytes[2] & 0xff)) << 16) |
                 (((long) (bytes[1] & 0xff)) <<  8) |
-                (((long) (bytes[0] & 0xff))      ));
+                ((long) (bytes[0] & 0xff)      );
     }
 
     /**

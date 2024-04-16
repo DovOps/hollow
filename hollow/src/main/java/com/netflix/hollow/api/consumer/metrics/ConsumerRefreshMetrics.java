@@ -20,18 +20,18 @@ import com.netflix.hollow.api.consumer.HollowConsumer.Blob.BlobType;
 import java.util.List;
 import java.util.OptionalLong;
 
-public class ConsumerRefreshMetrics {
+public final class ConsumerRefreshMetrics {
 
-    private long durationMillis;
-    private boolean isRefreshSuccess;               // true if refresh was successful, false if refresh failed
-    private boolean isInitialLoad;                  // true if initial load, false if subsequent refresh
-    private BlobType overallRefreshType;            // snapshot, delta, or reverse delta
-    private UpdatePlanDetails updatePlanDetails;    // details about the update plan such as no. and types of transitions and no. of successful transitions
-    private long consecutiveFailures;
-    private OptionalLong refreshSuccessAgeMillisOptional; // time elapsed since the previous successful refresh
-    private long refreshEndTimeNano;                // monotonic system time when refresh ended
-    private OptionalLong cycleStartTimestamp;       // timestamp in millis of when cycle started for the loaded data version
-    private OptionalLong announcementTimestamp; // timestamp in milliseconds to mark announcement for the loaded data version
+    private final long durationMillis;
+    private final boolean isRefreshSuccess;               // true if refresh was successful, false if refresh failed
+    private final boolean isInitialLoad;                  // true if initial load, false if subsequent refresh
+    private final BlobType overallRefreshType;            // snapshot, delta, or reverse delta
+    private final UpdatePlanDetails updatePlanDetails;    // details about the update plan such as no. and types of transitions and no. of successful transitions
+    private final long consecutiveFailures;
+    private final OptionalLong refreshSuccessAgeMillisOptional; // time elapsed since the previous successful refresh
+    private final long refreshEndTimeNano;                // monotonic system time when refresh ended
+    private final OptionalLong cycleStartTimestamp;       // timestamp in millis of when cycle started for the loaded data version
+    private final OptionalLong announcementTimestamp; // timestamp in milliseconds to mark announcement for the loaded data version
 
     /**
      * A class that contains details of the consumer refresh update plan that may be useful to report as metrics or logs.

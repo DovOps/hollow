@@ -188,37 +188,43 @@ public class FlatRecordDumper {
         case BOOLEAN:
             if(!VarInt.readVNull(record.data, currentRecordPointer)) {
                 boolean value = record.data.get(currentRecordPointer) == 1;
-                if(rec != null)
+                if(rec != null) {
                     rec.setBoolean(fieldName, value);
+                }
             }
             
             return currentRecordPointer + 1;
         case INT:
-            if(VarInt.readVNull(record.data, currentRecordPointer))
+            if(VarInt.readVNull(record.data, currentRecordPointer)) {
                 return currentRecordPointer + 1;
+            }
 
             int ivalue = VarInt.readVInt(record.data, currentRecordPointer);
             currentRecordPointer += VarInt.sizeOfVInt(ivalue);
-            if(rec != null)
+            if(rec != null) {
                 rec.setInt(fieldName, ZigZag.decodeInt(ivalue));
+            }
             
             return currentRecordPointer;
         case LONG:
-            if(VarInt.readVNull(record.data, currentRecordPointer))
+            if(VarInt.readVNull(record.data, currentRecordPointer)) {
                 return currentRecordPointer + 1;
+            }
 
             long lvalue = VarInt.readVLong(record.data, currentRecordPointer);
             currentRecordPointer += VarInt.sizeOfVLong(lvalue);
-            if(rec != null)
+            if(rec != null) {
                 rec.setLong(fieldName, ZigZag.decodeLong(lvalue));
+            }
             
             return currentRecordPointer;
         case FLOAT:
             int intBits = record.data.readIntBits(currentRecordPointer);
             if(intBits != HollowObjectWriteRecord.NULL_FLOAT_BITS) {
                 float fvalue = Float.intBitsToFloat(intBits);
-                if(rec != null)
+                if(rec != null) {
                     rec.setFloat(fieldName, fvalue);
+                }
             }
             
             return currentRecordPointer + 4;
@@ -226,14 +232,16 @@ public class FlatRecordDumper {
             long longBits = record.data.readLongBits(currentRecordPointer);
             if(longBits != HollowObjectWriteRecord.NULL_DOUBLE_BITS) {
                 double dvalue = Double.longBitsToDouble(longBits);
-                if(rec != null)
+                if(rec != null) {
                     rec.setDouble(fieldName, dvalue);
+                }
             }
             
             return currentRecordPointer + 8;
         case STRING:
-            if(VarInt.readVNull(record.data, currentRecordPointer))
+            if(VarInt.readVNull(record.data, currentRecordPointer)) {
                 return currentRecordPointer + 1;
+            }
             
             int length = VarInt.readVInt(record.data, currentRecordPointer);
             currentRecordPointer += VarInt.sizeOfVInt(length);
@@ -246,13 +254,15 @@ public class FlatRecordDumper {
                 s[i] = (char)charValue;
                 currentRecordPointer += VarInt.sizeOfVInt(charValue);
             }
-            
-            if(rec != null)
+
+            if(rec != null) {
                 rec.setString(fieldName, new String(s));
+            }
             return currentRecordPointer;
         case BYTES:
-            if(VarInt.readVNull(record.data, currentRecordPointer))
+            if(VarInt.readVNull(record.data, currentRecordPointer)) {
                 return currentRecordPointer + 1;
+            }
             
             length = VarInt.readVInt(record.data, currentRecordPointer);
             currentRecordPointer += VarInt.sizeOfVInt(length);
@@ -262,12 +272,14 @@ public class FlatRecordDumper {
                 b[i] = record.data.get(currentRecordPointer++);
             }
 
-            if(rec != null)
+            if(rec != null) {
                 rec.setBytes(fieldName, b);
+            }
             return currentRecordPointer;
         case REFERENCE:
-            if(VarInt.readVNull(record.data, currentRecordPointer))
+            if(VarInt.readVNull(record.data, currentRecordPointer)) {
                 return currentRecordPointer + 1;
+            }
             
             int unmappedOrdinal = VarInt.readVInt(record.data, currentRecordPointer);
             

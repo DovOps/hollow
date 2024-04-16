@@ -223,10 +223,10 @@ public class HollowMapHashKeyTest {
         
         public TestTopLevelObject(int id, Obj... elements) {
             this.id = id;
-            this.mapById = new HashMap<Obj, Integer>();
-            this.mapByIdCountry = new HashMap<Obj, Integer>();
+            this.mapById = new HashMap<>();
+            this.mapByIdCountry = new HashMap<>();
             this.mapByIdCityCountry = new HashMap<>();
-            this.intMap = new HashMap<Integer, Integer>();
+            this.intMap = new HashMap<>();
             
             for(int i=0;i<elements.length;i++) {
                 mapById.put(elements[i], (int)elements[i].extraValue);

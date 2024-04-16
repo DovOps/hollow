@@ -65,12 +65,14 @@ public class HollowPerfBackedSet<T> extends AbstractSet<T> {
 
     @Override
     public boolean contains(Object o) {
-        if(hashKeyExtractor == null)
+        if(hashKeyExtractor == null) {
             throw new UnsupportedOperationException();
+        }
         
         Object[] key = hashKeyExtractor.extractArray(o);
-        if(key == null)
+        if(key == null) {
             return false;
+        }
         return dataAccess.findElement(ordinal, key) != -1;
     }
 

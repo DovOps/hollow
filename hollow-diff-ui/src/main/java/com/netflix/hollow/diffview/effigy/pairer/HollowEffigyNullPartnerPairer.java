@@ -28,7 +28,7 @@ public class HollowEffigyNullPartnerPairer extends HollowEffigyFieldPairer {
 
     @Override
     public List<EffigyFieldPair> pair() {
-        List<EffigyFieldPair> pairs = new ArrayList<EffigyFieldPair>();
+        List<EffigyFieldPair> pairs = new ArrayList<>();
 
         if(from != null) {
             for(int i=0;i<from.getFields().size();i++) {

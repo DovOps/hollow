@@ -46,25 +46,33 @@ public class GenericHollowRecordHelper {
         HollowTypeDataAccess typeState = dataAccess.getTypeDataAccess(typeName, ordinal);
 
         if(typeState != null) {
-            if(typeState instanceof HollowObjectTypeDataAccess)
+            if(typeState instanceof HollowObjectTypeDataAccess) {
                 return new GenericHollowObject(new HollowObjectGenericDelegate((HollowObjectTypeDataAccess)typeState), ordinal);
-            if(typeState instanceof HollowListTypeDataAccess)
+            }
+            if(typeState instanceof HollowListTypeDataAccess) {
                 return new GenericHollowList(new HollowListLookupDelegate<HollowRecord>((HollowListTypeDataAccess)typeState), ordinal);
-            if(typeState instanceof HollowSetTypeDataAccess)
+            }
+            if(typeState instanceof HollowSetTypeDataAccess) {
                 return new GenericHollowSet(new HollowSetLookupDelegate<HollowRecord>((HollowSetTypeDataAccess)typeState), ordinal);
-            if(typeState instanceof HollowMapTypeDataAccess)
+            }
+            if(typeState instanceof HollowMapTypeDataAccess) {
                 return new GenericHollowMap(new HollowMapLookupDelegate<HollowRecord, HollowRecord>((HollowMapTypeDataAccess)typeState), ordinal);
+            }
         } else {
             HollowSchema schema = dataAccess.getMissingDataHandler().handleSchema(typeName);
 
-            if(schema instanceof HollowObjectSchema)
+            if(schema instanceof HollowObjectSchema) {
                 return new GenericHollowObject(new HollowObjectGenericDelegate(new HollowObjectMissingDataAccess(dataAccess, typeName)), ordinal);
-            if(schema instanceof HollowListSchema)
+            }
+            if(schema instanceof HollowListSchema) {
                 return new GenericHollowList(new HollowListLookupDelegate<HollowRecord>(new HollowListMissingDataAccess(dataAccess, typeName)), ordinal);
-            if(schema instanceof HollowSetSchema)
+            }
+            if(schema instanceof HollowSetSchema) {
                 return new GenericHollowSet(new HollowSetLookupDelegate<HollowRecord>(new HollowSetMissingDataAccess(dataAccess, typeName)), ordinal);
-            if(schema instanceof HollowMapSchema)
+            }
+            if(schema instanceof HollowMapSchema) {
                 return new GenericHollowMap(new HollowMapLookupDelegate<HollowRecord, HollowRecord>(new HollowMapMissingDataAccess(dataAccess, typeName)), ordinal);
+            }
         }
 
         throw new UnsupportedOperationException("I don't know how to instantiate a generic object given a " + typeState.getClass().getSimpleName());

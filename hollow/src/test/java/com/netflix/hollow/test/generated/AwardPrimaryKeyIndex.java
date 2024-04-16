@@ -39,8 +39,9 @@ public class AwardPrimaryKeyIndex extends AbstractHollowUniqueKeyIndex<AwardsAPI
     @Override
     public Award findMatch(Object... keys) {
         int ordinal = idx.getMatchingOrdinal(keys);
-        if(ordinal == -1)
+        if(ordinal == -1) {
             return null;
+        }
         return api.getAward(ordinal);
     }
 

@@ -33,8 +33,8 @@ public abstract class AbstractHollowAPIGeneratorBuilder<B extends AbstractHollow
     protected String packageName;
     protected HollowDataset dataset;
     protected Set<String> parameterizedTypes = Collections.emptySet();
-    protected boolean parameterizeAllClassNames = false;
-    protected boolean useErgonomicShortcuts = false;
+    protected boolean parameterizeAllClassNames;
+    protected boolean useErgonomicShortcuts;
     protected Path destinationPath;
     protected CodeGeneratorConfig config = new CodeGeneratorConfig();
 
@@ -155,12 +155,15 @@ public abstract class AbstractHollowAPIGeneratorBuilder<B extends AbstractHollow
     }
 
     public G build() {
-        if (apiClassname == null)
+        if(apiClassname == null) {
             throw new IllegalStateException("Please specify an API classname (.withAPIClassname()) before calling .build()");
-        if (packageName == null)
+        }
+        if(packageName == null) {
             throw new IllegalStateException("Please specify a package name (.withPackageName()) before calling .build()");
-        if (dataset == null)
+        }
+        if(dataset == null) {
             throw new IllegalStateException("Please specify a data model (.withDataModel()) before calling .build()");
+        }
 
         if(config.isRestrictApiToFieldType() && !useErgonomicShortcuts) {
             throw new IllegalStateException(" restrictApiToFieldType requires withErgonomicShortcuts");

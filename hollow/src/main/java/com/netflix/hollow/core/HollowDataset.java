@@ -54,15 +54,17 @@ public interface HollowDataset {
     default boolean hasIdenticalSchemas(HollowDataset other) {
         List<HollowSchema> thisSchemas = getSchemas();
         List<HollowSchema> otherSchemas = other.getSchemas();
-        
-        if(thisSchemas.size() != otherSchemas.size())
+
+        if(thisSchemas.size() != otherSchemas.size()) {
             return false;
+        }
         
         for (HollowSchema thisSchema : thisSchemas) {
             HollowSchema otherSchema = other.getSchema(thisSchema.getName());
-            
-            if(otherSchema == null || !thisSchema.equals(otherSchema))
+
+            if(otherSchema == null || !thisSchema.equals(otherSchema)) {
                 return false;
+            }
         }
         return true;
     }

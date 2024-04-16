@@ -66,14 +66,18 @@ public abstract class HollowRecordCopier {
     }
 
     public static HollowRecordCopier createCopier(HollowTypeReadState typeState, HollowSchema destinationSchema, OrdinalRemapper ordinalRemapper, boolean preserveHashPositions) {
-        if(typeState instanceof HollowObjectTypeReadState)
-            return new HollowObjectCopier((HollowObjectTypeReadState) typeState, (HollowObjectSchema)destinationSchema, ordinalRemapper);
-        if(typeState instanceof HollowListTypeReadState)
-            return new HollowListCopier((HollowListTypeReadState) typeState, ordinalRemapper);
-        if(typeState instanceof HollowSetTypeReadState)
-            return new HollowSetCopier((HollowSetTypeReadState) typeState, ordinalRemapper, preserveHashPositions);
-        if(typeState instanceof HollowMapTypeReadState)
-            return new HollowMapCopier((HollowMapTypeReadState) typeState, ordinalRemapper, preserveHashPositions);
+        if(typeState instanceof HollowObjectTypeReadState) {
+            return new HollowObjectCopier((HollowObjectTypeReadState)typeState, (HollowObjectSchema)destinationSchema, ordinalRemapper);
+        }
+        if(typeState instanceof HollowListTypeReadState) {
+            return new HollowListCopier((HollowListTypeReadState)typeState, ordinalRemapper);
+        }
+        if(typeState instanceof HollowSetTypeReadState) {
+            return new HollowSetCopier((HollowSetTypeReadState)typeState, ordinalRemapper, preserveHashPositions);
+        }
+        if(typeState instanceof HollowMapTypeReadState) {
+            return new HollowMapCopier((HollowMapTypeReadState)typeState, ordinalRemapper, preserveHashPositions);
+        }
 
         throw new UnsupportedOperationException("I don't know how to create a copier for a " + typeState.getClass().getSimpleName());
     }

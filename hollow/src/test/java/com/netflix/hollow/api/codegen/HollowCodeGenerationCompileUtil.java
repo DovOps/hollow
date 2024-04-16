@@ -58,8 +58,9 @@ public class HollowCodeGenerationCompileUtil {
 
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         int err = compiler.run(null, System.out, System.out, args);
-        if (err != 0)
+        if(err != 0) {
             throw new RuntimeException("compiler errors, see system.out");
+        }
         runFindbugs(classDir);
     }
 

@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class VersionMinterWithCounter implements VersionMinter {
 
-    private static AtomicInteger versionCounter = new AtomicInteger();
+    private static final AtomicInteger versionCounter = new AtomicInteger();
 
     /**
      * Create a new state version.<p>

@@ -61,7 +61,9 @@ final class ReadStateHelper {
     }
 
     ReadStateHelper roundtrip(long version) {
-        if(pending != null) throw new IllegalStateException();
+        if(pending != null) {
+            throw new IllegalStateException();
+        }
         return new ReadStateHelper(this.current, newReadState(version, new HollowReadStateEngine()));
     }
 
@@ -77,12 +79,16 @@ final class ReadStateHelper {
     }
 
     ReadStateHelper commit() {
-        if(pending == null) throw new IllegalStateException();
+        if(pending == null) {
+            throw new IllegalStateException();
+        }
         return new ReadStateHelper(this.pending, null);
     }
 
     ReadStateHelper rollback() {
-        if(pending == null) throw new IllegalStateException();
+        if(pending == null) {
+            throw new IllegalStateException();
+        }
         return new ReadStateHelper(newReadState(current.getVersion(), pending.getStateEngine()), null);
     }
 

@@ -46,19 +46,20 @@ class HollowObjectTypeTestDataAPIClassGenerator {
         
         
         StringBuilder importBuilder = new StringBuilder();
-        importBuilder.append("package " + packageName + ";\n\n");
+        importBuilder.append("package ").append(packageName).append(";\n\n");
         
-        importBuilder.append("import com.netflix.hollow.api.testdata.HollowTestObjectRecord;\n"); 
-        if(schema.getPrimaryKey() != null)
+        importBuilder.append("import com.netflix.hollow.api.testdata.HollowTestObjectRecord;\n");
+        if(schema.getPrimaryKey() != null) {
             importBuilder.append("import com.netflix.hollow.core.index.key.PrimaryKey;\n");
+        }
         importBuilder.append("import com.netflix.hollow.core.schema.HollowObjectSchema;\n"); 
         importBuilder.append("import com.netflix.hollow.core.schema.HollowObjectSchema.FieldType;\n\n");
         
         Set<String> fieldTypesToImport = new HashSet<>();
         
-        builder.append("public class " + className + "<T> extends HollowTestObjectRecord<T> {\n\n");
+        builder.append("public class ").append(className).append("<T> extends HollowTestObjectRecord<T> {\n\n");
         
-        builder.append("    " + className + "(T parent){\n");
+        builder.append("    ").append(className).append("(T parent){\n");
         builder.append("        super(parent);\n");
         builder.append("    }\n\n");
         
@@ -66,53 +67,53 @@ class HollowObjectTypeTestDataAPIClassGenerator {
             String fieldName = schema.getFieldName(i);
             switch(schema.getFieldType(i)) {
             case INT:
-                builder.append("    public " + className + "<T> " + fieldName + "(Integer " + fieldName + ") {\n");
-                builder.append("        super.addField(\"" + fieldName + "\", " + fieldName + ");\n");
+                builder.append("    public ").append(className).append("<T> ").append(fieldName).append("(Integer ").append(fieldName).append(") {\n");
+                builder.append("        super.addField(\"").append(fieldName).append("\", ").append(fieldName).append(");\n");
                 builder.append("        return this;\n");
                 builder.append("    }\n\n");
                 break;
             case LONG:
-                builder.append("    public " + className + "<T> " + fieldName + "(Long " + fieldName + ") {\n");
-                builder.append("        super.addField(\"" + fieldName + "\", " + fieldName + ");\n");
+                builder.append("    public ").append(className).append("<T> ").append(fieldName).append("(Long ").append(fieldName).append(") {\n");
+                builder.append("        super.addField(\"").append(fieldName).append("\", ").append(fieldName).append(");\n");
                 builder.append("        return this;\n");
                 builder.append("    }\n\n");
                 break;
             case FLOAT:
-                builder.append("    public " + className + "<T> " + fieldName + "(Float " + fieldName + ") {\n");
-                builder.append("        super.addField(\"" + fieldName + "\", " + fieldName + ");\n");
+                builder.append("    public ").append(className).append("<T> ").append(fieldName).append("(Float ").append(fieldName).append(") {\n");
+                builder.append("        super.addField(\"").append(fieldName).append("\", ").append(fieldName).append(");\n");
                 builder.append("        return this;\n");
                 builder.append("    }\n\n");
                 break;
             case DOUBLE:
-                builder.append("    public " + className + "<T> " + fieldName + "(Double " + fieldName + ") {\n");
-                builder.append("        super.addField(\"" + fieldName + "\", " + fieldName + ");\n");
+                builder.append("    public ").append(className).append("<T> ").append(fieldName).append("(Double ").append(fieldName).append(") {\n");
+                builder.append("        super.addField(\"").append(fieldName).append("\", ").append(fieldName).append(");\n");
                 builder.append("        return this;\n");
                 builder.append("    }\n\n");
                 break;
             case BOOLEAN:
-                builder.append("    public " + className + "<T> " + fieldName + "(Boolean " + fieldName + ") {\n");
-                builder.append("        super.addField(\"" + fieldName + "\", " + fieldName + ");\n");
+                builder.append("    public ").append(className).append("<T> ").append(fieldName).append("(Boolean ").append(fieldName).append(") {\n");
+                builder.append("        super.addField(\"").append(fieldName).append("\", ").append(fieldName).append(");\n");
                 builder.append("        return this;\n");
                 builder.append("    }\n\n");
                 break;
             case BYTES:
-                builder.append("    public " + className + "<T> " + fieldName + "(byte[] " + fieldName + ") {\n");
-                builder.append("        super.addField(\"" + fieldName + "\", " + fieldName + ");\n");
+                builder.append("    public ").append(className).append("<T> ").append(fieldName).append("(byte[] ").append(fieldName).append(") {\n");
+                builder.append("        super.addField(\"").append(fieldName).append("\", ").append(fieldName).append(");\n");
                 builder.append("        return this;\n");
                 builder.append("    }\n\n");
                 break;
             case STRING:
-                builder.append("    public " + className + "<T> " + fieldName + "(String " + fieldName + ") {\n");
-                builder.append("        super.addField(\"" + fieldName + "\", " + fieldName + ");\n");
+                builder.append("    public ").append(className).append("<T> ").append(fieldName).append("(String ").append(fieldName).append(") {\n");
+                builder.append("        super.addField(\"").append(fieldName).append("\", ").append(fieldName).append(");\n");
                 builder.append("        return this;\n");
                 builder.append("    }\n\n");
                 break;
             case REFERENCE:
                 String refType = schema.getReferencedType(i);
                 String returnType = className(refType) + "<" + className + "<T>>";
-                builder.append("    public " + returnType + " " + fieldName + "() {\n");
-                builder.append("        " + returnType + " __x = new " + returnType + "(this);\n");
-                builder.append("        super.addField(\"" + fieldName + "\", __x);\n");
+                builder.append("    public ").append(returnType).append(" ").append(fieldName).append("() {\n");
+                builder.append("        ").append(returnType).append(" __x = new ").append(returnType).append("(this);\n");
+                builder.append("        super.addField(\"").append(fieldName).append("\", __x);\n");
                 builder.append("        return __x;\n");
                 builder.append("    }\n\n");
                 
@@ -121,44 +122,44 @@ class HollowObjectTypeTestDataAPIClassGenerator {
                     String refField = refSchema.getFieldName(0);
                     switch(refSchema.getFieldType(0)) {
                     case INT:
-                        builder.append("    public " + className + "<T> " + fieldName + "(Integer " + fieldName + ") {\n");
-                        builder.append("        " + fieldName + "()." + refField + "(" + fieldName + ");\n");
+                        builder.append("    public ").append(className).append("<T> ").append(fieldName).append("(Integer ").append(fieldName).append(") {\n");
+                        builder.append("        ").append(fieldName).append("().").append(refField).append("(").append(fieldName).append(");\n");
                         builder.append("        return this;\n");
                         builder.append("    }\n\n");
                         break;
                     case LONG:
-                        builder.append("    public " + className + "<T> " + fieldName + "(Long " + fieldName + ") {\n");
-                        builder.append("        " + fieldName + "()." + refField + "(" + fieldName + ");\n");
+                        builder.append("    public ").append(className).append("<T> ").append(fieldName).append("(Long ").append(fieldName).append(") {\n");
+                        builder.append("        ").append(fieldName).append("().").append(refField).append("(").append(fieldName).append(");\n");
                         builder.append("        return this;\n");
                         builder.append("    }\n\n");
                         break;
                     case FLOAT:
-                        builder.append("    public " + className + "<T> " + fieldName + "(Float " + fieldName + ") {\n");
-                        builder.append("        " + fieldName + "()." + refField + "(" + fieldName + ");\n");
+                        builder.append("    public ").append(className).append("<T> ").append(fieldName).append("(Float ").append(fieldName).append(") {\n");
+                        builder.append("        ").append(fieldName).append("().").append(refField).append("(").append(fieldName).append(");\n");
                         builder.append("        return this;\n");
                         builder.append("    }\n\n");
                         break;
                     case DOUBLE:
-                        builder.append("    public " + className + "<T> " + fieldName + "(Double " + fieldName + ") {\n");
-                        builder.append("        " + fieldName + "()." + refField + "(" + fieldName + ");\n");
+                        builder.append("    public ").append(className).append("<T> ").append(fieldName).append("(Double ").append(fieldName).append(") {\n");
+                        builder.append("        ").append(fieldName).append("().").append(refField).append("(").append(fieldName).append(");\n");
                         builder.append("        return this;\n");
                         builder.append("    }\n\n");
                         break;
                     case BOOLEAN:
-                        builder.append("    public " + className + "<T> " + fieldName + "(Boolean " + fieldName + ") {\n");
-                        builder.append("        " + fieldName + "()." + refField + "(" + fieldName + ");\n");
+                        builder.append("    public ").append(className).append("<T> ").append(fieldName).append("(Boolean ").append(fieldName).append(") {\n");
+                        builder.append("        ").append(fieldName).append("().").append(refField).append("(").append(fieldName).append(");\n");
                         builder.append("        return this;\n");
                         builder.append("    }\n\n");
                         break;
                     case BYTES:
-                        builder.append("    public " + className + "<T> " + fieldName + "(byte[] " + fieldName + ") {\n");
-                        builder.append("        " + fieldName + "()." + refField + "(" + fieldName + ");\n");
+                        builder.append("    public ").append(className).append("<T> ").append(fieldName).append("(byte[] ").append(fieldName).append(") {\n");
+                        builder.append("        ").append(fieldName).append("().").append(refField).append("(").append(fieldName).append(");\n");
                         builder.append("        return this;\n");
                         builder.append("    }\n\n");
                         break;
                     case STRING:
-                        builder.append("    public " + className + "<T> " + fieldName + "(String " + fieldName + ") {\n");
-                        builder.append("        " + fieldName + "()." + refField + "(" + fieldName + ");\n");
+                        builder.append("    public ").append(className).append("<T> ").append(fieldName).append("(String ").append(fieldName).append(") {\n");
+                        builder.append("        ").append(fieldName).append("().").append(refField).append("(").append(fieldName).append(");\n");
                         builder.append("        return this;\n");
                         builder.append("    }\n\n");
                         break;
@@ -170,12 +171,12 @@ class HollowObjectTypeTestDataAPIClassGenerator {
             }
         }
         
-        builder.append("    public static final HollowObjectSchema SCHEMA = new HollowObjectSchema(\"" + schema.getName() + "\", " + schema.numFields());
+        builder.append("    public static final HollowObjectSchema SCHEMA = new HollowObjectSchema(\"").append(schema.getName()).append("\", ").append(schema.numFields());
         if(schema.getPrimaryKey() != null) {
-            builder.append(", new PrimaryKey(\"" + schema.getName() + "\"");
+            builder.append(", new PrimaryKey(\"").append(schema.getName()).append("\"");
             
             for(int i=0;i<schema.getPrimaryKey().numFields();i++) {
-                builder.append(", \"" + schema.getPrimaryKey().getFieldPath(i) + "\"");
+                builder.append(", \"").append(schema.getPrimaryKey().getFieldPath(i)).append("\"");
             }
             
             builder.append(")");
@@ -186,9 +187,11 @@ class HollowObjectTypeTestDataAPIClassGenerator {
         
         builder.append("    static {\n");
         for(int i=0;i<schema.numFields();i++) {
-            builder.append("        SCHEMA.addField(\"" + schema.getFieldName(i) + "\", FieldType." + schema.getFieldType(i).name());
-            if(schema.getFieldType(i) == FieldType.REFERENCE)
-                builder.append(", \"" + schema.getReferencedType(i) + "\"");
+            builder.append("        SCHEMA.addField(\"").append(schema.getFieldName(i)).append("\", FieldType.").append(schema.getFieldType(i).name());
+            if(schema.getFieldType(i) == FieldType.REFERENCE) {
+                
+                builder.append(", \"").append(schema.getReferencedType(i)).append("\"");
+            }
             builder.append(");\n");
         }
         builder.append("    }\n\n");
@@ -201,7 +204,7 @@ class HollowObjectTypeTestDataAPIClassGenerator {
             List<String> fieldTypesList = new ArrayList<>(fieldTypesToImport);
             Collections.sort(fieldTypesList);
             for(String fieldType : fieldTypesList) {
-                importBuilder.append("import " + packageName + "." + className(fieldType) + "." + fieldType + "Field;\n");
+                importBuilder.append("import ").append(packageName).append(".").append(className(fieldType)).append(".").append(fieldType).append("Field;\n");
             }
             importBuilder.append("\n");
         }
@@ -214,8 +217,9 @@ class HollowObjectTypeTestDataAPIClassGenerator {
     }
     
     public boolean canErgonomicShortcut(int fieldIdx) {
-        if(schema.getFieldType(fieldIdx) != FieldType.REFERENCE)
+        if(schema.getFieldType(fieldIdx) != FieldType.REFERENCE) {
             return false;
+        }
         
         String refType = schema.getReferencedType(fieldIdx);
         HollowSchema refSchema = dataset.getSchema(refType);
@@ -224,13 +228,15 @@ class HollowObjectTypeTestDataAPIClassGenerator {
     }
     
     public boolean canErgonomicShortcut(HollowSchema schema) {
-        if(schema.getSchemaType() != SchemaType.OBJECT)
+        if(schema.getSchemaType() != SchemaType.OBJECT) {
             return false;
+        }
         
         HollowObjectSchema objSchema = (HollowObjectSchema)schema;
-        
-        if(objSchema.numFields() != 1)
+
+        if(objSchema.numFields() != 1) {
             return false;
+        }
         
         return objSchema.getFieldType(0) != FieldType.REFERENCE;
     }

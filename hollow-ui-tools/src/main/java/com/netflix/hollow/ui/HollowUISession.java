@@ -35,7 +35,7 @@ public class HollowUISession {
     private long lastAccessed;
 
     public HollowUISession() {
-        this.sessionParams = new ConcurrentHashMap<String, Object>();
+        this.sessionParams = new ConcurrentHashMap<>();
     }
 
     public void clearAttribute(String param) {
@@ -54,7 +54,7 @@ public class HollowUISession {
         lastAccessed = System.currentTimeMillis();
     }
 
-    private static final ConcurrentHashMap<Long, HollowUISession> sessions = new ConcurrentHashMap<Long, HollowUISession>();
+    private static final ConcurrentHashMap<Long, HollowUISession> sessions = new ConcurrentHashMap<>();
 
     public static HollowUISession getSession(HttpServletRequest req, HttpServletResponse resp) {
         Long sessionId = null;
@@ -78,8 +78,9 @@ public class HollowUISession {
         if(session == null) {
             session = new HollowUISession();
             HollowUISession existingSession = sessions.putIfAbsent(sessionId, session);
-            if(existingSession != null)
+            if(existingSession != null) {
                 session = existingSession;
+            }
         }
         session.updateLastAccessed();
 

@@ -25,10 +25,10 @@ import java.util.Map;
  */
 class HollowIndexerObjectTraversalNode extends HollowIndexerTraversalNode {
 
-    protected HollowIndexerTraversalNode children[];
-    protected int childOrdinalFieldPositions[];
+    protected HollowIndexerTraversalNode[] children;
+    protected int[] childOrdinalFieldPositions;
 
-    public HollowIndexerObjectTraversalNode(HollowObjectTypeDataAccess dataAccess, IntList fieldMatches[]) {
+    public HollowIndexerObjectTraversalNode(HollowObjectTypeDataAccess dataAccess, IntList[] fieldMatches) {
         super(dataAccess, fieldMatches);
     }
 
@@ -55,8 +55,9 @@ class HollowIndexerObjectTraversalNode extends HollowIndexerTraversalNode {
                 children[i].traverse(ordinal);
             } else {
                 int childOrdinal = dataAccess().readOrdinal(ordinal, childOrdinalFieldPositions[i]);
-                if(childOrdinal != -1)
+                if(childOrdinal != -1) {
                     children[i].traverse(childOrdinal);
+                }
             }
         }
 

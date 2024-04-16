@@ -54,7 +54,7 @@ public class HollowMapCollectionTest {
         GenericHollowMap m = new GenericHollowMap(rse, "MapOfIntegerToInteger", 0);
 
         List<Integer> keys = m.entrySet().stream().map(Map.Entry::getKey)
-                .map(r -> (GenericHollowObject) r)
+                .map(GenericHollowObject.class::cast)
                 .map(o -> o.getInt("value"))
                 .sorted()
                 .collect(toList());

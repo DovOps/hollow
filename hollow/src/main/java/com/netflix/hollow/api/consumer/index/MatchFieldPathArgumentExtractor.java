@@ -232,7 +232,7 @@ final class MatchFieldPathArgumentExtractor<Q> {
                 String typeName = lastSegment.getTypeName();
 
                 // Manage for String and all box types
-                if (typeName.equals("String")) {
+                if ("String".equals(typeName)) {
                     if (!HollowObject.class.isAssignableFrom(extractorType)) {
                         throw incompatibleMatchType(extractorType, fieldPath, typeName);
                     }

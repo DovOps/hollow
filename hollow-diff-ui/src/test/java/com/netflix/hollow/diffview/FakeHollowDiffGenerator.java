@@ -252,8 +252,7 @@ public class FakeHollowDiffGenerator {
             int dOrdinal = addDRec(stateEngine, entry.value);
             mapRec.addEntry(cOrdinal, dOrdinal);
         }
-        int mapOrdinal = stateEngine.add(mapOfTypeCToTypeDSchema.getName(), mapRec);
-        return mapOrdinal;
+        return stateEngine.add(mapOfTypeCToTypeDSchema.getName(), mapRec);
     }
 
     private int addBRec(HollowWriteStateEngine stateEngine, int b1, int listOrdinal, int setOrdinal) {
@@ -261,8 +260,7 @@ public class FakeHollowDiffGenerator {
         bRec.setInt("b1", b1);
         bRec.setReference("b2", listOrdinal);
         bRec.setReference("b3", setOrdinal);
-        int bOrdinal = stateEngine.add("TypeB", bRec);
-        return bOrdinal;
+        return stateEngine.add("TypeB", bRec);
     }
 
     private int addListRec(HollowWriteStateEngine stateEngine, TypeCRec[] typeCs) {
@@ -270,8 +268,7 @@ public class FakeHollowDiffGenerator {
         for(TypeCRec typeC : typeCs) {
             listRec.addElement(addCRec(stateEngine, typeC));
         }
-        int listOrdinal = stateEngine.add(listOfTypeCSchema.getName(), listRec);
-        return listOrdinal;
+        return stateEngine.add(listOfTypeCSchema.getName(), listRec);
     }
 
     private int addSetRec(HollowWriteStateEngine stateEngine, TypeDRec[] typeDs) {
@@ -279,8 +276,7 @@ public class FakeHollowDiffGenerator {
         for(TypeDRec typeD : typeDs) {
             setRec.addElement(addDRec(stateEngine, typeD));
         }
-        int setOrdinal = stateEngine.add(setOfTypeDSchema.getName(), setRec);
-        return setOrdinal;
+        return stateEngine.add(setOfTypeDSchema.getName(), setRec);
     }
 
     private int addCRec(HollowWriteStateEngine stateEngine, TypeCRec typeC) {

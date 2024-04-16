@@ -152,8 +152,9 @@ public class HollowWriteStateCreator {
         SimultaneousExecutor executor = new SimultaneousExecutor(HollowWriteStateCreator.class, "populate");
         
         for(HollowTypeWriteState writeState : writeEngine.getOrderedTypeStates()) {
-            if(writeState.getPopulatedBitSet().cardinality() != 0 || writeState.getPreviousCyclePopulatedBitSet().cardinality() != 0)
+            if(writeState.getPopulatedBitSet().cardinality() != 0 || writeState.getPreviousCyclePopulatedBitSet().cardinality() != 0) {
                 throw new IllegalStateException("The supplied HollowWriteStateEngine is already populated!");
+            }
         }
         
         for(final HollowTypeReadState readState : readEngine.getTypeStates()) {

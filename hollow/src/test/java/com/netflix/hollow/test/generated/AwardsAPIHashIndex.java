@@ -33,7 +33,9 @@ public class AwardsAPIHashIndex extends AbstractHollowHashIndex<AwardsAPI> {
 
     public Iterable<HString> findStringMatches(Object... keys) {
         HollowHashIndexResult matches = idx.findMatches(keys);
-        if(matches == null) return Collections.emptySet();
+        if(matches == null) {
+            return Collections.emptySet();
+        }
 
         return new AbstractHollowOrdinalIterable<HString>(matches.iterator()) {
             public HString getData(int ordinal) {
@@ -44,7 +46,9 @@ public class AwardsAPIHashIndex extends AbstractHollowHashIndex<AwardsAPI> {
 
     public Iterable<Movie> findMovieMatches(Object... keys) {
         HollowHashIndexResult matches = idx.findMatches(keys);
-        if(matches == null) return Collections.emptySet();
+        if(matches == null) {
+            return Collections.emptySet();
+        }
 
         return new AbstractHollowOrdinalIterable<Movie>(matches.iterator()) {
             public Movie getData(int ordinal) {
@@ -55,7 +59,9 @@ public class AwardsAPIHashIndex extends AbstractHollowHashIndex<AwardsAPI> {
 
     public Iterable<SetOfMovie> findSetOfMovieMatches(Object... keys) {
         HollowHashIndexResult matches = idx.findMatches(keys);
-        if(matches == null) return Collections.emptySet();
+        if(matches == null) {
+            return Collections.emptySet();
+        }
 
         return new AbstractHollowOrdinalIterable<SetOfMovie>(matches.iterator()) {
             public SetOfMovie getData(int ordinal) {
@@ -66,7 +72,9 @@ public class AwardsAPIHashIndex extends AbstractHollowHashIndex<AwardsAPI> {
 
     public Iterable<Award> findAwardMatches(Object... keys) {
         HollowHashIndexResult matches = idx.findMatches(keys);
-        if(matches == null) return Collections.emptySet();
+        if(matches == null) {
+            return Collections.emptySet();
+        }
 
         return new AbstractHollowOrdinalIterable<Award>(matches.iterator()) {
             public Award getData(int ordinal) {

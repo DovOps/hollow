@@ -45,7 +45,7 @@ public class TypeAPIObjectJavaGenerator extends HollowTypeAPIGenerator {
 
     private final HollowObjectSchema objectSchema;
 
-    private final Set<Class<?>> importClasses = new TreeSet<Class<?>>(new Comparator<Class<?>>() {
+    private final Set<Class<?>> importClasses = new TreeSet<>(new Comparator<Class<?>>() {
         @Override
         public int compare(Class<?> o1, Class<?> o2) {
             return o1.getName().compareTo(o2.getName());
@@ -66,7 +66,7 @@ public class TypeAPIObjectJavaGenerator extends HollowTypeAPIGenerator {
         StringBuilder classBodyBuilder = new StringBuilder();
 
         classBodyBuilder.append("@SuppressWarnings(\"all\")\n");
-        classBodyBuilder.append("public class " + className + " extends HollowObjectTypeAPI {\n\n");
+        classBodyBuilder.append("public class ").append(className).append(" extends HollowObjectTypeAPI {\n\n");
 
         classBodyBuilder.append("    private final ").append(delegateLookupClassname(objectSchema)).append(" delegateLookupImpl;\n\n");
 
@@ -133,13 +133,14 @@ public class TypeAPIObjectJavaGenerator extends HollowTypeAPIGenerator {
     private String generateConstructor() {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("    public " + className + "(" + apiClassname + " api, HollowObjectTypeDataAccess typeDataAccess) {\n");
+        builder.append("    public ").append(className).append("(").append(apiClassname).append(" api, HollowObjectTypeDataAccess typeDataAccess) {\n");
         builder.append("        super(api, typeDataAccess, new String[] {\n");
 
         for(int i=0;i<objectSchema.numFields();i++) {
-            builder.append("            \"" + objectSchema.getFieldName(i) + "\"");
-            if(i < objectSchema.numFields() - 1)
+            builder.append("            \"").append(objectSchema.getFieldName(i)).append("\"");
+            if(i < objectSchema.numFields() - 1) {
                 builder.append(",");
+            }
             builder.append("\n");
         }
 
@@ -155,11 +156,11 @@ public class TypeAPIObjectJavaGenerator extends HollowTypeAPIGenerator {
 
         String fieldName = substituteInvalidChars(objectSchema.getFieldName(fieldNum));
 
-        builder.append("    public byte[] get" + uppercase(fieldName) + "(int ordinal) {\n");
-        builder.append("        if(fieldIndex[" + fieldNum +"] == -1)\n");
+        builder.append("    public byte[] get").append(uppercase(fieldName)).append("(int ordinal) {\n");
+        builder.append("        if(fieldIndex[").append(fieldNum).append("] == -1)\n");
         builder.append("            return missingDataHandler().handleBytes(\"").append(objectSchema.getName()).append("\", ordinal, \"").append(fieldName).append("\");\n");
-        builder.append("        boxedFieldAccessSampler.recordFieldAccess(fieldIndex[" + fieldNum + "]);\n");
-        builder.append("        return getTypeDataAccess().readBytes(ordinal, fieldIndex[" + fieldNum + "]);\n");
+        builder.append("        boxedFieldAccessSampler.recordFieldAccess(fieldIndex[").append(fieldNum).append("]);\n");
+        builder.append("        return getTypeDataAccess().readBytes(ordinal, fieldIndex[").append(fieldNum).append("]);\n");
         builder.append("    }\n\n");
 
         return builder.toString();
@@ -170,17 +171,17 @@ public class TypeAPIObjectJavaGenerator extends HollowTypeAPIGenerator {
 
         String fieldName = substituteInvalidChars(objectSchema.getFieldName(fieldNum));
 
-        builder.append("    public String get" + uppercase(fieldName) + "(int ordinal) {\n");
-        builder.append("        if(fieldIndex[" + fieldNum +"] == -1)\n");
+        builder.append("    public String get").append(uppercase(fieldName)).append("(int ordinal) {\n");
+        builder.append("        if(fieldIndex[").append(fieldNum).append("] == -1)\n");
         builder.append("            return missingDataHandler().handleString(\"").append(objectSchema.getName()).append("\", ordinal, \"").append(fieldName).append("\");\n");
-        builder.append("        boxedFieldAccessSampler.recordFieldAccess(fieldIndex[" + fieldNum + "]);\n");
-        builder.append("        return getTypeDataAccess().readString(ordinal, fieldIndex[" + fieldNum + "]);\n");
+        builder.append("        boxedFieldAccessSampler.recordFieldAccess(fieldIndex[").append(fieldNum).append("]);\n");
+        builder.append("        return getTypeDataAccess().readString(ordinal, fieldIndex[").append(fieldNum).append("]);\n");
         builder.append("    }\n\n");
 
-        builder.append("    public boolean is" + uppercase(fieldName) + "Equal(int ordinal, String testValue) {\n");
-        builder.append("        if(fieldIndex[" + fieldNum +"] == -1)\n");
+        builder.append("    public boolean is").append(uppercase(fieldName)).append("Equal(int ordinal, String testValue) {\n");
+        builder.append("        if(fieldIndex[").append(fieldNum).append("] == -1)\n");
         builder.append("            return missingDataHandler().handleStringEquals(\"").append(objectSchema.getName()).append("\", ordinal, \"").append(fieldName).append("\", testValue);\n");
-        builder.append("        return getTypeDataAccess().isStringFieldEqual(ordinal, fieldIndex[" + fieldNum + "], testValue);\n");
+        builder.append("        return getTypeDataAccess().isStringFieldEqual(ordinal, fieldIndex[").append(fieldNum).append("], testValue);\n");
         builder.append("    }");
 
         return builder.toString();
@@ -192,13 +193,13 @@ public class TypeAPIObjectJavaGenerator extends HollowTypeAPIGenerator {
         String fieldName = substituteInvalidChars(objectSchema.getFieldName(fieldNum));
         String referencedType = substituteInvalidChars(objectSchema.getReferencedType(fieldNum));
 
-        builder.append("    public int get"+ uppercase(fieldName) + "Ordinal(int ordinal) {\n");
-        builder.append("        if(fieldIndex[" + fieldNum +"] == -1)\n");
+        builder.append("    public int get").append(uppercase(fieldName)).append("Ordinal(int ordinal) {\n");
+        builder.append("        if(fieldIndex[").append(fieldNum).append("] == -1)\n");
         builder.append("            return missingDataHandler().handleReferencedOrdinal(\"").append(objectSchema.getName()).append("\", ordinal, \"").append(fieldName).append("\");\n");
-        builder.append("        return getTypeDataAccess().readOrdinal(ordinal, fieldIndex[" + fieldNum + "]);\n");
+        builder.append("        return getTypeDataAccess().readOrdinal(ordinal, fieldIndex[").append(fieldNum).append("]);\n");
         builder.append("    }\n\n");
 
-        builder.append("    public " + typeAPIClassname(referencedType) + " get" + uppercase(fieldName) + "TypeAPI() {\n");
+        builder.append("    public ").append(typeAPIClassname(referencedType)).append(" get").append(uppercase(fieldName)).append("TypeAPI() {\n");
         builder.append("        return getAPI().get").append(uppercase(referencedType)).append("TypeAPI();\n");
         builder.append("    }");
 
@@ -211,18 +212,18 @@ public class TypeAPIObjectJavaGenerator extends HollowTypeAPIGenerator {
         String fieldName = substituteInvalidChars(objectSchema.getFieldName(fieldNum));
 
         builder.append("    public double get").append(uppercase(fieldName)).append("(int ordinal) {\n");
-        builder.append("        if(fieldIndex[" + fieldNum +"] == -1)\n");
+        builder.append("        if(fieldIndex[").append(fieldNum).append("] == -1)\n");
         builder.append("            return missingDataHandler().handleDouble(\"").append(objectSchema.getName()).append("\", ordinal, \"").append(fieldName).append("\");\n");
-        builder.append("        return getTypeDataAccess().readDouble(ordinal, fieldIndex["+fieldNum+"]);\n");
+        builder.append("        return getTypeDataAccess().readDouble(ordinal, fieldIndex[").append(fieldNum).append("]);\n");
         builder.append("    }\n\n");
 
         builder.append("    public Double get").append(uppercase(fieldName)).append("Boxed(int ordinal) {\n");
         builder.append("        double d;\n");
-        builder.append("        if(fieldIndex[" + fieldNum +"] == -1) {\n");
+        builder.append("        if(fieldIndex[").append(fieldNum).append("] == -1) {\n");
         builder.append("            d = missingDataHandler().handleDouble(\"").append(objectSchema.getName()).append("\", ordinal, \"").append(fieldName).append("\");\n");
         builder.append("        } else {\n");
-        builder.append("            boxedFieldAccessSampler.recordFieldAccess(fieldIndex[" + fieldNum + "]);\n");
-        builder.append("            d = getTypeDataAccess().readDouble(ordinal, fieldIndex["+fieldNum+"]);\n");
+        builder.append("            boxedFieldAccessSampler.recordFieldAccess(fieldIndex[").append(fieldNum).append("]);\n");
+        builder.append("            d = getTypeDataAccess().readDouble(ordinal, fieldIndex[").append(fieldNum).append("]);\n");
         builder.append("        }\n");
         builder.append("        return Double.isNaN(d) ? null : Double.valueOf(d);\n");
         builder.append("    }\n\n");
@@ -238,18 +239,18 @@ public class TypeAPIObjectJavaGenerator extends HollowTypeAPIGenerator {
         String fieldName = substituteInvalidChars(objectSchema.getFieldName(fieldNum));
 
         builder.append("    public float get").append(uppercase(fieldName)).append("(int ordinal) {\n");
-        builder.append("        if(fieldIndex[" + fieldNum +"] == -1)\n");
+        builder.append("        if(fieldIndex[").append(fieldNum).append("] == -1)\n");
         builder.append("            return missingDataHandler().handleFloat(\"").append(objectSchema.getName()).append("\", ordinal, \"").append(fieldName).append("\");\n");
-        builder.append("        return getTypeDataAccess().readFloat(ordinal, fieldIndex["+fieldNum+"]);\n");
+        builder.append("        return getTypeDataAccess().readFloat(ordinal, fieldIndex[").append(fieldNum).append("]);\n");
         builder.append("    }\n\n");
 
         builder.append("    public Float get").append(uppercase(fieldName)).append("Boxed(int ordinal) {\n");
         builder.append("        float f;\n");
-        builder.append("        if(fieldIndex[" + fieldNum +"] == -1) {\n");
+        builder.append("        if(fieldIndex[").append(fieldNum).append("] == -1) {\n");
         builder.append("            f = missingDataHandler().handleFloat(\"").append(objectSchema.getName()).append("\", ordinal, \"").append(fieldName).append("\");\n");
         builder.append("        } else {\n");
-        builder.append("            boxedFieldAccessSampler.recordFieldAccess(fieldIndex[" + fieldNum + "]);\n");
-        builder.append("            f = getTypeDataAccess().readFloat(ordinal, fieldIndex["+fieldNum+"]);\n");
+        builder.append("            boxedFieldAccessSampler.recordFieldAccess(fieldIndex[").append(fieldNum).append("]);\n");
+        builder.append("            f = getTypeDataAccess().readFloat(ordinal, fieldIndex[").append(fieldNum).append("]);\n");
         builder.append("        }");
         builder.append("        return Float.isNaN(f) ? null : Float.valueOf(f);\n");
         builder.append("    }\n\n");
@@ -265,18 +266,18 @@ public class TypeAPIObjectJavaGenerator extends HollowTypeAPIGenerator {
         String fieldName = substituteInvalidChars(objectSchema.getFieldName(fieldNum));
 
         builder.append("    public long get").append(uppercase(fieldName)).append("(int ordinal) {\n");
-        builder.append("        if(fieldIndex[" + fieldNum +"] == -1)\n");
+        builder.append("        if(fieldIndex[").append(fieldNum).append("] == -1)\n");
         builder.append("            return missingDataHandler().handleLong(\"").append(objectSchema.getName()).append("\", ordinal, \"").append(fieldName).append("\");\n");
-        builder.append("        return getTypeDataAccess().readLong(ordinal, fieldIndex[" + fieldNum + "]);\n");
+        builder.append("        return getTypeDataAccess().readLong(ordinal, fieldIndex[").append(fieldNum).append("]);\n");
         builder.append("    }\n\n");
 
         builder.append("    public Long get").append(uppercase(fieldName)).append("Boxed(int ordinal) {\n");
         builder.append("        long l;\n");
-        builder.append("        if(fieldIndex[" + fieldNum +"] == -1) {\n");
+        builder.append("        if(fieldIndex[").append(fieldNum).append("] == -1) {\n");
         builder.append("            l = missingDataHandler().handleLong(\"").append(objectSchema.getName()).append("\", ordinal, \"").append(fieldName).append("\");\n");
         builder.append("        } else {\n");
-        builder.append("            boxedFieldAccessSampler.recordFieldAccess(fieldIndex[" + fieldNum + "]);\n");
-        builder.append("            l = getTypeDataAccess().readLong(ordinal, fieldIndex[" + fieldNum + "]);\n");
+        builder.append("            boxedFieldAccessSampler.recordFieldAccess(fieldIndex[").append(fieldNum).append("]);\n");
+        builder.append("            l = getTypeDataAccess().readLong(ordinal, fieldIndex[").append(fieldNum).append("]);\n");
         builder.append("        }\n");
         builder.append("        if(l == Long.MIN_VALUE)\n");
         builder.append("            return null;\n");
@@ -292,18 +293,18 @@ public class TypeAPIObjectJavaGenerator extends HollowTypeAPIGenerator {
         String fieldName = substituteInvalidChars(objectSchema.getFieldName(fieldNum));
 
         builder.append("    public int get").append(uppercase(fieldName)).append("(int ordinal) {\n");
-        builder.append("        if(fieldIndex[" + fieldNum +"] == -1)\n");
+        builder.append("        if(fieldIndex[").append(fieldNum).append("] == -1)\n");
         builder.append("            return missingDataHandler().handleInt(\"").append(objectSchema.getName()).append("\", ordinal, \"").append(fieldName).append("\");\n");
-        builder.append("        return getTypeDataAccess().readInt(ordinal, fieldIndex[" + fieldNum + "]);\n");
+        builder.append("        return getTypeDataAccess().readInt(ordinal, fieldIndex[").append(fieldNum).append("]);\n");
         builder.append("    }\n\n");
 
         builder.append("    public Integer get").append(uppercase(fieldName)).append("Boxed(int ordinal) {\n");
         builder.append("        int i;\n");
-        builder.append("        if(fieldIndex[" + fieldNum +"] == -1) {\n");
+        builder.append("        if(fieldIndex[").append(fieldNum).append("] == -1) {\n");
         builder.append("            i = missingDataHandler().handleInt(\"").append(objectSchema.getName()).append("\", ordinal, \"").append(fieldName).append("\");\n");
         builder.append("        } else {\n");
-        builder.append("            boxedFieldAccessSampler.recordFieldAccess(fieldIndex[" + fieldNum + "]);\n");
-        builder.append("            i = getTypeDataAccess().readInt(ordinal, fieldIndex[" + fieldNum + "]);\n");
+        builder.append("            boxedFieldAccessSampler.recordFieldAccess(fieldIndex[").append(fieldNum).append("]);\n");
+        builder.append("            i = getTypeDataAccess().readInt(ordinal, fieldIndex[").append(fieldNum).append("]);\n");
         builder.append("        }\n");
         builder.append("        if(i == Integer.MIN_VALUE)\n");
         builder.append("            return null;\n");
@@ -319,15 +320,15 @@ public class TypeAPIObjectJavaGenerator extends HollowTypeAPIGenerator {
         String fieldName = substituteInvalidChars(objectSchema.getFieldName(fieldNum));
 
         builder.append("    public boolean get").append(uppercase(fieldName)).append("(int ordinal) {\n");
-        builder.append("        if(fieldIndex[" + fieldNum +"] == -1)\n");
+        builder.append("        if(fieldIndex[").append(fieldNum).append("] == -1)\n");
         builder.append("            return Boolean.TRUE.equals(missingDataHandler().handleBoolean(\"").append(objectSchema.getName()).append("\", ordinal, \"").append(fieldName).append("\"));\n");
-        builder.append("        return Boolean.TRUE.equals(getTypeDataAccess().readBoolean(ordinal, fieldIndex[" + fieldNum + "]));\n");
+        builder.append("        return Boolean.TRUE.equals(getTypeDataAccess().readBoolean(ordinal, fieldIndex[").append(fieldNum).append("]));\n");
         builder.append("    }\n\n");
 
         builder.append("    public Boolean get").append(uppercase(fieldName)).append("Boxed(int ordinal) {\n");
-        builder.append("        if(fieldIndex[" + fieldNum +"] == -1)\n");
+        builder.append("        if(fieldIndex[").append(fieldNum).append("] == -1)\n");
         builder.append("            return missingDataHandler().handleBoolean(\"").append(objectSchema.getName()).append("\", ordinal, \"").append(fieldName).append("\");\n");
-        builder.append("        return getTypeDataAccess().readBoolean(ordinal, fieldIndex[" + fieldNum + "]);\n");
+        builder.append("        return getTypeDataAccess().readBoolean(ordinal, fieldIndex[").append(fieldNum).append("]);\n");
         builder.append("    }\n\n");
 
         return builder.toString();

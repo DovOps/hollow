@@ -46,17 +46,18 @@ public class HollowMapTypeMapper extends HollowTypeMapper {
     private final HollowMapTypeWriteState writeState;
 
     private final HollowObjectHashCodeFinder hashCodeFinder;
-    
-    private HollowTypeMapper keyMapper;
-    private HollowTypeMapper valueMapper;
+
+    private final HollowTypeMapper keyMapper;
+    private final HollowTypeMapper valueMapper;
 
     public HollowMapTypeMapper(HollowObjectMapper parentMapper, ParameterizedType type, String declaredName, String[] hashKeyFieldPaths, int numShards, HollowWriteStateEngine stateEngine, boolean useDefaultHashKeys, Set<Type> visited) {
         this.keyMapper = parentMapper.getTypeMapper(type.getActualTypeArguments()[0], null, null, -1, visited);
         this.valueMapper = parentMapper.getTypeMapper(type.getActualTypeArguments()[1], null, null, -1, visited);
         String typeName = declaredName != null ? declaredName : getDefaultTypeName(type);
-        
-        if(hashKeyFieldPaths == null && useDefaultHashKeys && (keyMapper instanceof HollowObjectTypeMapper))
+
+        if(hashKeyFieldPaths == null && useDefaultHashKeys && (keyMapper instanceof HollowObjectTypeMapper)) {
             hashKeyFieldPaths = ((HollowObjectTypeMapper)keyMapper).getDefaultElementHashKey();
+        }
         
         this.schema = new HollowMapSchema(typeName, keyMapper.getTypeName(), valueMapper.getTypeName(), hashKeyFieldPaths);
         this.hashCodeFinder = stateEngine.getHashCodeFinder();
@@ -74,9 +75,10 @@ public class HollowMapTypeMapper extends HollowTypeMapper {
     protected int write(Object obj) {
         if(obj instanceof MemoizedMap) {
             long assignedOrdinal = ((MemoizedMap<?, ?>)obj).__assigned_ordinal;
-            
-            if((assignedOrdinal & ASSIGNED_ORDINAL_CYCLE_MASK) == cycleSpecificAssignedOrdinalBits())
+
+            if((assignedOrdinal & ASSIGNED_ORDINAL_CYCLE_MASK) == cycleSpecificAssignedOrdinalBits()) {
                 return (int)assignedOrdinal & Integer.MAX_VALUE;
+            }
         }
 
         Map<?, ?> m = (Map<?, ?>)obj;
@@ -110,7 +112,8 @@ public class HollowMapTypeMapper extends HollowTypeMapper {
                 throw new NullPointerException(String.format(NULL_VALUE_MESSAGE, schema));
             }
 
-            int keyOrdinal, valueOrdinal;
+            int keyOrdinal;
+            int valueOrdinal;
             if (flatRecordWriter == null) {
                 keyOrdinal = keyMapper.write(key);
                 valueOrdinal = valueMapper.write(value);

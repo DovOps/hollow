@@ -40,7 +40,7 @@ public class HollowExplorerUI extends HollowUIRouter {
      *  for backwards compatibility.
      **/
     private final HashMap<String, String> headerDisplayMap = new HashMap<>();
-    private final static String HEADER_DISPLAY_STRING = "headerDisplayString";
+    private static final String HEADER_DISPLAY_STRING = "headerDisplayString";
 
     private final ShowAllTypesPage showAllTypesPage;
     private final BrowseSelectedTypePage browseTypePage;
@@ -95,18 +95,22 @@ public class HollowExplorerUI extends HollowUIRouter {
     }
 
     public long getCurrentStateVersion() {
-        if(consumer != null)
+        if(consumer != null) {
             return consumer.getCurrentVersionId();
-        if(client != null)
+        }
+        if(client != null) {
             return client.getCurrentVersionId();
+        }
         return Long.MIN_VALUE;
     }
     
     public HollowReadStateEngine getStateEngine() {
-        if(consumer != null)
+        if(consumer != null) {
             return consumer.getStateEngine();
-        if(client != null)
+        }
+        if(client != null) {
             return client.getStateEngine();
+        }
         return stateEngine;
     }
 
